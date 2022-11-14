@@ -17,3 +17,5 @@ We recommend the use of SSH keys so make sure you have setup an sh-key for the c
 Some example JSON files are under the json subdirectory. The file json/modules/otm-3990be25-c9fd-4dae-904c-547ac11e8302.json is a root level DegreeProgramme module.
 
 You are allowed (and probably should) make changes to this file after you have started your project. :)
+
+MMa Test
