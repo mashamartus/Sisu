@@ -7,6 +7,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+
 /**
  * Sisu application class. Starts the Sisu application.
  * Try to run it, if no errors then all is well.
@@ -27,7 +28,7 @@ public class Sisu extends Application {
 
     /**
      * The initial window screen
-     * Only goes to the student view.
+     * Only goes to the student view for now.
      * @param stage stage to be set
      */
     private void initialScene(Stage stage) {
@@ -38,9 +39,7 @@ public class Sisu extends Application {
         // Button to the student view window.
         Button button1 = new Button();
         button1.setText("Enter SISU 2.0");
-        button1.setOnAction(e -> {
-            studentScene(stage);
-        });
+        button1.setOnAction(e -> studentScene(stage));
 
         GridPane gridPane = new GridPane();
         gridPane.add(label1, 0,0);
@@ -90,6 +89,7 @@ public class Sisu extends Application {
     /**
      * Main method, launches the app.
      * @param args not used.
+     *
      */
     public static void main(String[] args) {
         launch(args);
