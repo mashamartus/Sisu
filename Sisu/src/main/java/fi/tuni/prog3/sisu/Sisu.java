@@ -38,9 +38,13 @@ public class Sisu extends Application {
         
         root.setRight(null);
         
-        Scene scene = new Scene(root, 1000, 700);                      
-        stage.setScene(scene);
+        Scene scene = new Scene(root, 1000, 700);
         stage.setTitle("SisuGUI");
+        
+        stage.setScene(scene);
+        String css = this.getClass().getResource("/style.css").toExternalForm();  
+        System.out.println("css string = " + css);
+        scene.getStylesheets().add(css);
         stage.show();
     }
 
