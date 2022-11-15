@@ -1,10 +1,12 @@
 package fi.tuni.prog3.sisu;
 
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -55,11 +57,17 @@ public class Sisu extends Application {
     private VBox getCenterVbox() {
         //Creating an HBox.
         
+        DummyModule degree = getDummyDegreeStructure();
+        
         VBox centerVBox = new VBox(10);
         
         ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(handleModule(degree));
         
         
+        
+        centerVBox.getChildren().add(scrollPane);
+        /*
         for(int i = 0; i<4; i++){
             TitledPane titledPane = new TitledPane();
             titledPane.setId("Level_1_N_" + i);
@@ -73,18 +81,58 @@ public class Sisu extends Application {
                 onePaneContent.getChildren().add(box);
             }
             centerVBox.getChildren().add(titledPane);
-        }
-        
+        }*/
+        /*
         TitledPane titledPane1 = new TitledPane();
         HBox titledPaneBox1 = new HBox();
         HBox titledPaneBox2 = new HBox();
         centerVBox.getChildren().add(titledPane1);
+
+*/
         //Adding two VBox to the HBox.
         //centerVBox.getChildren().addAll(setMenuPane(), getRightVBox());
         
         return centerVBox;
-        
     }
+    
+    // make method for recursive creation of the titled panes
+    
+    private Node handleCourse(DummyCourse course){
+        HBox box = new HBox();
+        Label moduleName = new Label(course.getName());
+        Button addToMyCoursesBtn = new Button("pick the course");
+        box.getChildren().addAll(moduleName, addToMyCoursesBtn);
+        return box;
+    }
+    
+    
+    //Create tree structure of the course list
+    private Node handleModule(DummyModule module){
+        if(module instanceof DummyCourse){
+            HBox box = new HBox();
+            Label moduleName = new Label(module.toString());
+            Button addToMyCoursesBtn = new Button("pick that course");
+            box.getChildren().addAll(moduleName, addToMyCoursesBtn);
+            System.out.println("Handle a course");
+            return box;
+        }
+        else{
+            System.out.println("Hurai, not a course but a module!");
+            DummyBlock moduleBlock = (DummyBlock)module;
+            ArrayList<DummyModule> innerModules = moduleBlock.getModules();
+            
+            VBox onePaneContent = new VBox();
+            TitledPane titledPane = new TitledPane(moduleBlock.toString(), onePaneContent);
+            titledPane.setId(moduleBlock.getName());
+            
+            for(DummyModule innerModule : innerModules){
+                onePaneContent.getChildren().add(handleModule(innerModule));
+            }
+            return titledPane;
+        }
+    }
+    
+    
     
     private BorderPane setMenuPane() {
         //Creating a BorderPane for the left side.
@@ -131,5 +179,22 @@ public class Sisu extends Application {
         
         
         return button;
+    }
+    
+    private DummyModule getDummyDegreeStructure(){
+        DummyBlock degree = new DummyBlock("Degree_name");
+        for(int i = 0; i<3; i++){
+            DummyBlock module = new DummyBlock("Module lvl 1 - " + i);
+            for(int k = 0; k<2; k++){
+                DummyBlock module2 = new DummyBlock("Module lvl 2 - " + i + "_" + k);
+                    for(int p = 0; p<5; p++){
+                        DummyCourse course = new DummyCourse("Course " + i + "_" + k + "_" + p);
+                        module2.addModule(course);
+                    }
+                module.addModule(module2);
+            }
+            degree.addModule(module);
+        }
+        return degree;
     }
 }
