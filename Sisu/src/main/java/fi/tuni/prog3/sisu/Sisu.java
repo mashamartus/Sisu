@@ -1,97 +1,91 @@
 package fi.tuni.prog3.sisu;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
 /**
- * Sisu application class. Starts the Sisu application.
- * Try to run it, if no errors then all is well.
+ * JavaFX Sisu
  */
 public class Sisu extends Application {
-    // private datafields
-
 
     @Override
     public void start(Stage stage) {
-        stage.setTitle("SISU 2.0");
-        stage.setMinWidth(400);
-        stage.setMinHeight(400);
-        initialScene(stage);
+        
+        //Creating a new BorderPane.
+        BorderPane root = new BorderPane();
+        root.setPadding(new Insets(10, 10, 10, 10));
+        
+        //Adding HBox to the center of the BorderPane.
+        root.setCenter(getCenterHbox());
+        
+        //Adding button to the BorderPane and aligning it to the right.
+        var quitButton = getQuitButton();
+        BorderPane.setMargin(quitButton, new Insets(10, 10, 0, 10));
+        root.setBottom(quitButton);
+        BorderPane.setAlignment(quitButton, Pos.TOP_RIGHT);
+        
+        Scene scene = new Scene(root, 800, 500);                      
+        stage.setScene(scene);
+        stage.setTitle("SisuGUI");
         stage.show();
     }
 
-
-    /**
-     * The initial window screen
-     * Only goes to the student view for now.
-     * @param stage stage to be set
-     */
-    private void initialScene(Stage stage) {
-        Label label1 = new Label();
-        label1.setText("Input Student ID: ");
-        TextField textField1 = new TextField();
-
-        // Button to the student view window.
-        Button button1 = new Button();
-        button1.setText("Enter SISU 2.0");
-        button1.setOnAction(e -> studentScene(stage));
-
-        GridPane gridPane = new GridPane();
-        gridPane.add(label1, 0,0);
-        gridPane.add(textField1, 1, 0);
-        gridPane.add(button1, 0,1);
-        Scene initial = new Scene(gridPane);
-        stage.setScene(initial);
-    }
-
-
-    /**
-     * student view window
-     *
-     * NEEDS THE DEGREE PROGRAM AND ITS COURSES DATA FROM SISU API!
-     * ALSO NEEDS PARSED DATA FROM STUDENT JSON FILE IF EXISTS (courses completed)!
-     *
-     * @param stage stage to be set
-     */
-    private void studentScene(Stage stage) {
-        TabPane tabPane = new TabPane();
-        tabPane.setMinHeight(500);
-        tabPane.setMinWidth(500);
-
-        Tab tab1 = new Tab("Student information" );
-        tabPane.getTabs().add(tab1);
-        Tab tab2 = new Tab("Degree structure" );
-        tabPane.getTabs().add(tab2);
-
-        BorderPane studentInfoPane = new BorderPane();
-        tab1.setContent(studentInfoPane);
-        Label infoBox = new Label("STUDENT INFORMATION TAB");
-        studentInfoPane.setTop(infoBox);
-
-        // On the left side is the scroll window for courses in the degree program.
-        // studentInfoPane.setLeft();
-
-        // On right side maybe a Searchfield? and checkbox window for completing courses.
-        // studentInfoPane.setRight();
-
-        Label degreeTabLabel = new Label("DEGREE STRUCTURE TAB");
-        tab2.setContent(degreeTabLabel);
-        Scene studentScene = new Scene(tabPane);
-        stage.setScene(studentScene);
-    }
-
-
-    /**
-     * Main method, launches the app.
-     * @param args not used.
-     *
-     */
     public static void main(String[] args) {
-        launch(args);
+        launch();
+    }
+    
+    private HBox getCenterHbox() {
+        //Creating an HBox.
+        HBox centerHBox = new HBox(10);
+        
+        //Adding two VBox to the HBox.
+        centerHBox.getChildren().addAll(getLeftVBox(), getRightVBox());
+        
+        return centerHBox;
+    }
+    
+    private VBox getLeftVBox() {
+        //Creating a VBox for the left side.
+        VBox leftVBox = new VBox();
+        leftVBox.setPrefWidth(380);
+        leftVBox.setStyle("-fx-background-color: #8fc6fd;");
+        
+        leftVBox.getChildren().add(new Label("Left Panel"));
+        
+        return leftVBox;
+    }
+    
+    private VBox getRightVBox() {
+        //Creating a VBox for the right side.
+        VBox rightVBox = new VBox();
+        rightVBox.setPrefWidth(380);
+        rightVBox.setStyle("-fx-background-color: #b1c2d4;");
+        
+        rightVBox.getChildren().add(new Label("Right Panel"));
+        
+        return rightVBox;
+    }
+    
+    private Button getQuitButton() {
+        //Creating a button.
+        Button button = new Button("Quit");
+        
+        //Adding an event to the button to terminate the application.
+        button.setOnAction((ActionEvent event) -> {
+            Platform.exit();
+        });
+        
+        return button;
     }
 }
