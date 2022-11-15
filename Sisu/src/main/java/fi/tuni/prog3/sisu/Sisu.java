@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,16 +25,14 @@ public class Sisu extends Application {
         
         //Creating a new BorderPane.
         BorderPane root = new BorderPane();
-        root.setPadding(new Insets(10, 10, 10, 10));
         
+        
+        root.setLeft(setMenuPane());
         //Adding HBox to the center of the BorderPane.
-        root.setCenter(getCenterHbox());
+        root.setCenter(getCenterVbox());
+        // make right pane zero
         
-        //Adding button to the BorderPane and aligning it to the right.
-        var quitButton = getQuitButton();
-        BorderPane.setMargin(quitButton, new Insets(10, 10, 0, 10));
-        root.setBottom(quitButton);
-        BorderPane.setAlignment(quitButton, Pos.TOP_RIGHT);
+        root.setRight(null);
         
         Scene scene = new Scene(root, 800, 500);                      
         stage.setScene(scene);
@@ -45,37 +44,46 @@ public class Sisu extends Application {
         launch();
     }
     
-    private HBox getCenterHbox() {
+    private VBox getCenterVbox() {
         //Creating an HBox.
-        HBox centerHBox = new HBox(10);
+        VBox centerVBox = new VBox(10);
         
         //Adding two VBox to the HBox.
-        centerHBox.getChildren().addAll(getLeftVBox(), getRightVBox());
+        //centerVBox.getChildren().addAll(setMenuPane(), getRightVBox());
         
-        return centerHBox;
+        return centerVBox;
     }
     
-    private VBox getLeftVBox() {
-        //Creating a VBox for the left side.
-        VBox leftVBox = new VBox();
-        leftVBox.setPrefWidth(380);
-        leftVBox.setStyle("-fx-background-color: #8fc6fd;");
+    private BorderPane setMenuPane() {
+        //Creating a BorderPane for the left side.
+        BorderPane menuPane = new BorderPane();
         
-        leftVBox.getChildren().add(new Label("Left Panel"));
+        menuPane.setPrefWidth(200);
+        menuPane.setStyle("-fx-background-color: #8fc6fd;");
+        menuPane.setTop(headingPane());
         
-        return leftVBox;
+        menuPane.setBottom(getQuitButton());
+        menuPane.setAlignment(menuPane.getBottom(), Pos.BOTTOM_CENTER);
+        
+        menuPane.setMargin(menuPane.getTop(), new Insets(10, 10, 10, 10));
+        menuPane.setMargin(menuPane.getBottom(), new Insets(10, 10, 10, 10));
+        
+        return menuPane;
+    }
+    private VBox headingPane(){
+        VBox box = new VBox(10);
+        // add plan name text field
+        TextField text = new TextField("Your plan name");
+        
+        // add degree heading label
+        Label degNameLabel = new Label("Put the name of chosen studying degree here");
+        degNameLabel.setId("degNameLabel");
+        degNameLabel.setWrapText(true);
+        
+        box.getChildren().addAll(text, degNameLabel);
+        return box;
     }
     
-    private VBox getRightVBox() {
-        //Creating a VBox for the right side.
-        VBox rightVBox = new VBox();
-        rightVBox.setPrefWidth(380);
-        rightVBox.setStyle("-fx-background-color: #b1c2d4;");
-        
-        rightVBox.getChildren().add(new Label("Right Panel"));
-        
-        return rightVBox;
-    }
     
     private Button getQuitButton() {
         //Creating a button.
@@ -85,6 +93,7 @@ public class Sisu extends Application {
         button.setOnAction((ActionEvent event) -> {
             Platform.exit();
         });
+        
         
         return button;
     }
