@@ -33,4 +33,30 @@ public class Student implements iAPI, iReadAndWriteToFile{
     public boolean writeToFile(String fileName) throws IOException {
         return false;
     }
+    
+    /**
+     * To implement! - Return the amount of credits completed by student.
+     * @return return sum of credits of all completed courses
+     */
+    public double getCompletedCredits(){
+        return 35;
+    }
+    
+    /**
+     * To implement! - Return sum of credits of all courses chosen by student.
+     * @return Return sum of credits of all courses chosen by student
+     */
+    public double getPlannedCredits(){
+        return 135;
+    }
+    
+    /**
+     * To implement (may be another way of getting all program credits is 
+     * needed) - returns minimum amount of credits obligatory for student to 
+     * complete to graduate from the program
+     * @return credit amount required by student program 
+     */
+    public double getProgramCredits(){
+        return 180;
+    }
 }

@@ -32,25 +32,18 @@ public class Sisu extends Application {
     @Override
     public void start(Stage stage) {
         
-        //Creating a new BorderPane.
         BorderPane root = new BorderPane();
         
-        
         root.setLeft(setMenuPane());
-        //Adding HBox to the center of the BorderPane.
         root.setCenter(getCenterVbox());
-        //root.setHgrow(root.getCenter(), Priority.ALWAYS);
-        // make right pane zero
-        
-        root.setRight(null);
         
         Scene scene = new Scene(root, 1000, 700);
-        stage.setTitle("SisuGUI");
-        
+        stage.setTitle("Sisu - study planner");
         stage.setScene(scene);
+        
         String css = this.getClass().getResource("/style.css").toExternalForm();  
-        System.out.println("css string = " + css);
         scene.getStylesheets().add(css);
+        
         stage.show();
     }
 
@@ -147,6 +140,8 @@ public class Sisu extends Application {
         menuPane.setStyle("-fx-background-color: #8fc6fd;");
         menuPane.setTop(headingPane());
         
+        menuPane.setCenter(progressPane());
+        
         menuPane.setBottom(getQuitButton());
         menuPane.setAlignment(menuPane.getBottom(), Pos.BOTTOM_CENTER);
         
@@ -172,6 +167,14 @@ public class Sisu extends Application {
         return box;
     }
     
+    private VBox progressPane(){
+        VBox box = new VBox();
+        
+        Label progressText = new Label("You did");
+        Label progressValue = new Label();
+        
+        return box;
+    }
     
     private Button getQuitButton() {
         //Creating a button.
