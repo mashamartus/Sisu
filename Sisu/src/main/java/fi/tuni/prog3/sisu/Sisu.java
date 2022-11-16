@@ -9,12 +9,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -36,6 +39,7 @@ public class Sisu extends Application {
         root.setLeft(setMenuPane());
         //Adding HBox to the center of the BorderPane.
         root.setCenter(getCenterVbox());
+        //root.setHgrow(root.getCenter(), Priority.ALWAYS);
         // make right pane zero
         
         root.setRight(null);
@@ -60,37 +64,17 @@ public class Sisu extends Application {
         DummyModule degree = getDummyDegreeStructure();
         
         VBox centerVBox = new VBox(10);
+        //centerVBox.setAlignment(Pos.TOP_CENTER);
         
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(handleModule(degree));
-        
+        Node treeStructure = handleModule(degree);
+        ((Region)treeStructure).setPadding(new Insets(0,0,0,0));
+        scrollPane.setContent(treeStructure);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPadding(new Insets(0, 30, 0, 30));
         
         
         centerVBox.getChildren().add(scrollPane);
-        /*
-        for(int i = 0; i<4; i++){
-            TitledPane titledPane = new TitledPane();
-            titledPane.setId("Level_1_N_" + i);
-            VBox onePaneContent = new VBox();
-            titledPane.setContent(onePaneContent);
-            for(int j=0; j<2; j++){
-                HBox box = new HBox();
-                Label moduleName = new Label("Module/course " + i + ", " + j);
-                Button addToMyCoursesBtn = new Button("pick the course");
-                box.getChildren().addAll(moduleName, addToMyCoursesBtn);
-                onePaneContent.getChildren().add(box);
-            }
-            centerVBox.getChildren().add(titledPane);
-        }*/
-        /*
-        TitledPane titledPane1 = new TitledPane();
-        HBox titledPaneBox1 = new HBox();
-        HBox titledPaneBox2 = new HBox();
-        centerVBox.getChildren().add(titledPane1);
-
-*/
-        //Adding two VBox to the HBox.
-        //centerVBox.getChildren().addAll(setMenuPane(), getRightVBox());
         
         return centerVBox;
     }
@@ -109,21 +93,18 @@ public class Sisu extends Application {
     //Create tree structure of the course list
     private Node handleModule(DummyModule module){
         if(module instanceof DummyCourse){
-            HBox box = new HBox();
-            Label moduleName = new Label(module.toString());
-            Button addToMyCoursesBtn = new Button("pick that course");
-            box.getChildren().addAll(moduleName, addToMyCoursesBtn);
-            System.out.println("Handle a course");
-            return box;
+            return setSingleCourseBox(module);
         }
         else{
-            System.out.println("Hurai, not a course but a module!");
             DummyBlock moduleBlock = (DummyBlock)module;
             ArrayList<DummyModule> innerModules = moduleBlock.getModules();
             
             VBox onePaneContent = new VBox();
+            onePaneContent.setSpacing(10);
+            
             TitledPane titledPane = new TitledPane(moduleBlock.toString(), onePaneContent);
             titledPane.setId(moduleBlock.getName());
+            titledPane.setPadding(new Insets(0,0,0,20));
             
             for(DummyModule innerModule : innerModules){
                 onePaneContent.getChildren().add(handleModule(innerModule));
@@ -132,6 +113,30 @@ public class Sisu extends Application {
         }
     }
     
+    private HBox setSingleCourseBox(DummyModule module){
+        
+        HBox box = new HBox();
+        box.setAlignment(Pos.CENTER);
+
+        Label moduleName = new Label(module.toString());
+
+        Region region = new Region();
+        box.setHgrow(region, Priority.ALWAYS);
+
+        VBox creditSection = new VBox();
+        creditSection.setPadding(new Insets(0, 15, 0, 5));
+        Label cr = new Label("cr");
+        cr.setFont(new Font(8));
+        Label creditLabel = new Label(""+((DummyCourse) module).getCredits());
+        creditSection.getChildren().addAll(cr, creditLabel);
+
+
+        Button addToMyCoursesBtn = new Button("Take course");
+        addToMyCoursesBtn.setId(module.getName());
+
+        box.getChildren().addAll(moduleName, region, creditSection, addToMyCoursesBtn);
+        return box;
+    }
     
     
     private BorderPane setMenuPane() {

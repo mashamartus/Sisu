@@ -10,6 +10,8 @@ package fi.tuni.prog3.sisu;
  */
 public class DummyCourse extends DummyModule{
 
+    private int credits = 5;
+    
     public DummyCourse(String name) {
         super(name);
     }
@@ -17,6 +19,10 @@ public class DummyCourse extends DummyModule{
     @Override
     public String toString() {
         return "DummyCourse{" + super.getName() +'}';
+    }
+
+    public int getCredits() {
+        return credits;
     }
     
     
