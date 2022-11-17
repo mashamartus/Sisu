@@ -36,7 +36,7 @@ public class Sisu extends Application {
     static Scene mainWindow;
     String leftPanelColor = "-fx-background-color: #8fc6fd;";
     String rightPanelColor = "-fx-background-color: #ffffff;";
-    Student student = new Student("SomeId");
+    //Student student = new Student("SomeId");
     
     @Override
     public void start(Stage stage) {
@@ -309,7 +309,7 @@ public class Sisu extends Application {
             System.out.println("Take course button pressed");
             System.out.println(btnPress.getTarget());
             String courseId = "Got_this_id_from_course_button";//checkId((Button) btnPress.getSource());
-            student.takeCourse(courseId);
+            //student.takeCourse(courseId);
         }
     };
 
