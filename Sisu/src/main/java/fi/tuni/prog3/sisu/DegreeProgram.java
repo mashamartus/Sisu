@@ -5,8 +5,9 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 /**
- * A class for whole DegreeProgram. Keeps store of
- * every study module that belongs to a degree.
+ * DegreeProgram Class.
+ * The root level of a degree structure.
+ * Describes e.g. the name and extent (study credits) of the degree.
  */
 public class DegreeProgram extends DegreeModule {
     // Datastructure type can be changed!
@@ -19,8 +20,9 @@ public class DegreeProgram extends DegreeModule {
      * @param id         id of the DegreeProgram.
      * @param groupId    group id of the DegreeProgram.
      * @param minCredits minimum credits of the DegreeProgram.
+     * @param description description of the DegreeProgram.
      */
-    public DegreeProgram(String name, String id, String groupId, int minCredits) {
+    public DegreeProgram(String name, String id, String groupId, int minCredits, String description) {
         super(name, id, groupId, minCredits);
     }
 
