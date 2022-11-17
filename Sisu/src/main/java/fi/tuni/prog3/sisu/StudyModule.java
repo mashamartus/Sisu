@@ -17,6 +17,7 @@ public class StudyModule extends DegreeModule {
     private HashMap<String, StudyModule> submodules = new HashMap<>();
     private boolean gradable;
     private String description;
+    private String code;
 
 
     /**
@@ -27,12 +28,15 @@ public class StudyModule extends DegreeModule {
      * @param groupId     group id of the Module.
      * @param minCredits  minimum credits of the Module.
      * @param gradable    if the module is graded.
-     * @param description description of the course.
+     * @param description description of the Module.
+     * @param code        short code string of the module
      */
-    public StudyModule(String name, String id, String groupId, int minCredits, boolean gradable, String description) {
+    public StudyModule(String name, String id, String groupId, int minCredits,
+                       boolean gradable, String description, String code) {
         super(name, id, groupId, minCredits);
         this.gradable = gradable;
         this.description = description;
+        this.code = code;
     }
 
 
@@ -102,11 +106,6 @@ public class StudyModule extends DegreeModule {
         return new ArrayList<>(submodules.values());
     }
 
-    // TODO
-    public void removeCourse() {
-
-    }
-
     public boolean isGradable() {
         return gradable;
     }
@@ -115,4 +114,12 @@ public class StudyModule extends DegreeModule {
         return description;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    // TODO
+    public void removeCourse() {
+
+    }
 }

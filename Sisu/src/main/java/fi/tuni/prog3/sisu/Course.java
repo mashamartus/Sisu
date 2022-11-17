@@ -7,35 +7,39 @@ package fi.tuni.prog3.sisu;
  * Describes a course: e.g. the code, name, awarded study credits, course description, and so on.
  */
 public class Course extends DegreeModule {
-    private boolean passed;
+    private boolean isPassed;
     private int grade;
     private final boolean gradable;
     private final String description;
+    private final String code;
 
     /**
      * A constructor for initializing the member variables.
      *
-     * @param name       name of the Course.
-     * @param id         id of the Course.
-     * @param groupId    group id of Course.
-     * @param minCredits minimum credits of the Course.
-     * @param gradable   does the Course give grades.
+     * @param name        name of the Course.
+     * @param id          id of the Course.
+     * @param groupId     group id of Course.
+     * @param minCredits  minimum credits of the Course.
+     * @param gradable    does the Course give grades.
      * @param description the course description.
+     * @param code        the short string course identifier.
      */
-    public Course(String name, String id, String groupId, int minCredits, boolean gradable, String description) {
+    public Course(String name, String id, String groupId, int minCredits,
+                  boolean gradable, String description, String code) {
         super(name, id, groupId, minCredits);
         this.gradable = gradable;
         this.grade = 0;
-        this.passed = false;
+        this.isPassed = false;
         this.description = description;
+        this.code = code;
     }
 
     /**
      * Marks to course as passed (true) or not (false).
-     * @param passed boolean
+     * @param isPassed boolean
      */
-    public void setPassed(boolean passed) {
-        this.passed = passed;
+    public void setPassed(boolean isPassed) {
+        this.isPassed = isPassed;
     }
 
     /**
@@ -51,7 +55,7 @@ public class Course extends DegreeModule {
     }
 
     /**
-     * Returns the grade given to course
+     * Returns the grade given to course.
      * @return int grade
      */
     public int getGrade() {
@@ -63,7 +67,7 @@ public class Course extends DegreeModule {
      * @return true if it is else false
      */
     public boolean isPassed() {
-        return passed;
+        return isPassed;
     }
 
     /**
@@ -80,5 +84,13 @@ public class Course extends DegreeModule {
      */
     public String getDescription() {
         return description;
+    }
+
+    /**
+     * Returns the short course identifier code.
+     * @return the code
+     */
+    public String getCode() {
+        return code;
     }
 }
