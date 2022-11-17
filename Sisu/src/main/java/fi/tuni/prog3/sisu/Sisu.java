@@ -36,7 +36,7 @@ public class Sisu extends Application {
     static Scene mainWindow;
     String leftPanelColor = "-fx-background-color: #8fc6fd;";
     String rightPanelColor = "-fx-background-color: #ffffff;";
-    
+    Student student = new Student("SomeId");
     
     @Override
     public void start(Stage stage) {
@@ -52,7 +52,7 @@ public class Sisu extends Application {
         welcomeWindow = new Scene(welcomeRoot, 600, 400);
         
         welcomeWindow.getStylesheets().add(css);
-        stage.setScene(welcomeWindow);
+        //stage.setScene(welcomeWindow);
         stage.setResizable(false);
         
         
@@ -64,7 +64,7 @@ public class Sisu extends Application {
         
         mainWindow = new Scene(root, 1000, 700);
         stage.setTitle("Sisu - study planner");
-        //stage.setScene(mainWindow);
+        stage.setScene(mainWindow);
          
         mainWindow.getStylesheets().add(css);
         
@@ -156,6 +156,7 @@ public class Sisu extends Application {
 
         Button addToMyCoursesBtn = new Button("Take course");
         addToMyCoursesBtn.setId(module.getName());
+        addToMyCoursesBtn.setOnAction(takeCourseEventHandler);
 
         box.getChildren().addAll(moduleName, region, creditSection, addToMyCoursesBtn);
         return box;
@@ -275,7 +276,7 @@ public class Sisu extends Application {
         
         Button goButton = new Button();
         goButton.setText("Start planning");
-        goButton.setOnAction(startPlanning);
+        goButton.setOnAction(startPlanningEventHandler);
         goButton.setMinWidth(100);
         goButton.setMinHeight(40);
         
@@ -293,7 +294,7 @@ public class Sisu extends Application {
         return box;
     }
     
-    EventHandler<ActionEvent> startPlanning = new EventHandler<ActionEvent>(){
+    EventHandler<ActionEvent> startPlanningEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
             System.out.println("Start planning button pressed");
@@ -302,5 +303,14 @@ public class Sisu extends Application {
         }
     };
     
+    EventHandler<ActionEvent> takeCourseEventHandler = new EventHandler<ActionEvent>(){
+        @Override 
+        public void handle(ActionEvent btnPress) { 
+            System.out.println("Take course button pressed");
+            System.out.println(btnPress.getTarget());
+            String courseId = "Got_this_id_from_course_button";//checkId((Button) btnPress.getSource());
+            student.takeCourse(courseId);
+        }
+    };
 
 }
