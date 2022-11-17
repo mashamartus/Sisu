@@ -1,7 +1,5 @@
 package fi.tuni.prog3.sisu;
 
-import com.google.gson.JsonObject;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,18 +8,20 @@ import java.util.HashMap;
  * TODO
  * Student class
  */
-public class Student implements iAPI, iReadAndWriteToFile{
+public class Student implements iReadAndWriteToFile {
     private String studentID;
-    // Student may have multiple DegreePrograms?
     private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
 
-    public Student(String studentID) {
+    public Student(String studentID) throws FileNotFoundException {
         this.studentID = studentID;
     }
 
-    @Override
-    public JsonObject getJsonObjectFromApi(String urlString) {
-        return null;
+    public String getStudentID() {
+        return studentID;
+    }
+
+    public HashMap<String, DegreeProgram> getDegreePrograms() {
+        return degreePrograms;
     }
 
     @Override
