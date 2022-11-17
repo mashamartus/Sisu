@@ -5,23 +5,30 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 /**
- * A class for whole DegreeProgram. Keeps store of
- * every study module that belongs to a degree.
+ * DegreeProgram Class.
+ * The root level of a degree structure.
+ * Describes e.g. the name and extent (study credits) of the degree.
  */
 public class DegreeProgram extends DegreeModule {
     // Datastructure type can be changed!
     private HashMap<String, StudyModule> studyModules = new HashMap<>();
+    private final String description;
+    private final String code;
 
     /**
      * A constructor for initializing the member variables.
      *
-     * @param name       name of the DegreeProgram.
-     * @param id         id of the DegreeProgram.
-     * @param groupId    group id of the DegreeProgram.
-     * @param minCredits minimum credits of the DegreeProgram.
+     * @param name        name of the DegreeProgram.
+     * @param id          id of the DegreeProgram.
+     * @param groupId     group id of the DegreeProgram.
+     * @param minCredits  minimum credits of the DegreeProgram.
+     * @param description description of the DegreeProgram.
+     * @param code        short identifier code.
      */
-    public DegreeProgram(String name, String id, String groupId, int minCredits) {
+    public DegreeProgram(String name, String id, String groupId, int minCredits, String description, String code) {
         super(name, id, groupId, minCredits);
+        this.code = code;
+        this.description = description;
     }
 
     /**
@@ -53,5 +60,13 @@ public class DegreeProgram extends DegreeModule {
      */
     public ArrayList<StudyModule> getStudyModules() {
         return new ArrayList<>(studyModules.values());
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getCode() {
+        return code;
     }
 }

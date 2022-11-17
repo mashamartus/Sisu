@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -29,29 +31,47 @@ import javafx.stage.Stage;
  */
 public class Sisu extends Application {
 
+    static Stage theStage;
+    static Scene welcomeWindow;
+    static Scene mainWindow;
+    String leftPanelColor = "-fx-background-color: #8fc6fd;";
+    String rightPanelColor = "-fx-background-color: #ffffff;";
+    //Student student = new Student("SomeId");
+    
     @Override
     public void start(Stage stage) {
         
-        //Creating a new BorderPane.
+        theStage = stage;
+        
+        String css = this.getClass().getResource("/style.css").toExternalForm(); 
+        
+        //define welcome window
+        BorderPane welcomeRoot = new BorderPane();
+        welcomeRoot.setLeft(setWelcomeWindowLeft());
+        welcomeRoot.setCenter(setWelcomeWindowRight());
+        welcomeWindow = new Scene(welcomeRoot, 600, 400);
+        
+        welcomeWindow.getStylesheets().add(css);
+        //stage.setScene(welcomeWindow);
+        stage.setResizable(false);
+        
+        
+        //define main window
         BorderPane root = new BorderPane();
         
-        
         root.setLeft(setMenuPane());
-        //Adding HBox to the center of the BorderPane.
         root.setCenter(getCenterVbox());
-        //root.setHgrow(root.getCenter(), Priority.ALWAYS);
-        // make right pane zero
         
-        root.setRight(null);
+        mainWindow = new Scene(root, 1000, 700);
+        stage.setTitle("Sisu - study planner");
+        stage.setScene(mainWindow);
+         
+        mainWindow.getStylesheets().add(css);
         
-        Scene scene = new Scene(root, 1000, 700);
-        stage.setTitle("SisuGUI");
         
-        stage.setScene(scene);
-        String css = this.getClass().getResource("/style.css").toExternalForm();  
-        System.out.println("css string = " + css);
-        scene.getStylesheets().add(css);
+        
         stage.show();
+        System.out.println("method start worked till the end");
     }
 
     public static void main(String[] args) {
@@ -71,7 +91,8 @@ public class Sisu extends Application {
         ((Region)treeStructure).setPadding(new Insets(0,0,0,0));
         scrollPane.setContent(treeStructure);
         scrollPane.setFitToWidth(true);
-        scrollPane.setPadding(new Insets(0, 30, 0, 30));
+        scrollPane.setPadding(new Insets(20, 30, 0, 30));
+        scrollPane.setStyle(rightPanelColor);
         
         
         centerVBox.getChildren().add(scrollPane);
@@ -101,10 +122,12 @@ public class Sisu extends Application {
             
             VBox onePaneContent = new VBox();
             onePaneContent.setSpacing(10);
+            onePaneContent.setStyle(rightPanelColor);
             
             TitledPane titledPane = new TitledPane(moduleBlock.toString(), onePaneContent);
             titledPane.setId(moduleBlock.getName());
             titledPane.setPadding(new Insets(0,0,0,20));
+            titledPane.setStyle(rightPanelColor);
             
             for(DummyModule innerModule : innerModules){
                 onePaneContent.getChildren().add(handleModule(innerModule));
@@ -133,6 +156,7 @@ public class Sisu extends Application {
 
         Button addToMyCoursesBtn = new Button("Take course");
         addToMyCoursesBtn.setId(module.getName());
+        addToMyCoursesBtn.setOnAction(takeCourseEventHandler);
 
         box.getChildren().addAll(moduleName, region, creditSection, addToMyCoursesBtn);
         return box;
@@ -144,8 +168,10 @@ public class Sisu extends Application {
         BorderPane menuPane = new BorderPane();
         
         menuPane.setPrefWidth(250);
-        menuPane.setStyle("-fx-background-color: #8fc6fd;");
+        menuPane.setStyle(leftPanelColor);
         menuPane.setTop(headingPane());
+        
+        menuPane.setCenter(progressPane());
         
         menuPane.setBottom(getQuitButton());
         menuPane.setAlignment(menuPane.getBottom(), Pos.BOTTOM_CENTER);
@@ -158,11 +184,13 @@ public class Sisu extends Application {
     private VBox headingPane(){
         VBox box = new VBox(20);
         box.setAlignment(Pos.CENTER);
+        box.setStyle(rightPanelColor);
         // add plan name text field
         TextField text = new TextField("Your plan name");
         
         // add degree heading label
         Label degNameLabel = new Label("Here will be the name of chosen degree");
+        //degNameLabel.setStyle("-fx-background-color: transparent");
         degNameLabel.setId("degNameLabel");
         degNameLabel.setWrapText(true);
         degNameLabel.setTextAlignment(TextAlignment.CENTER);
@@ -172,6 +200,15 @@ public class Sisu extends Application {
         return box;
     }
     
+    private VBox progressPane(){
+        VBox box = new VBox();
+        box.setAlignment(Pos.CENTER);
+        
+        Label progressText = new Label("You did");
+        Label progressValue = new Label("35/180");
+        box.getChildren().addAll(progressText, progressValue);
+        return box;
+    }
     
     private Button getQuitButton() {
         //Creating a button.
@@ -202,4 +239,78 @@ public class Sisu extends Application {
         }
         return degree;
     }
+    
+    private VBox setWelcomeWindowLeft(){
+        VBox box = new VBox();
+        box.setStyle(leftPanelColor);
+        box.setAlignment(Pos.CENTER);
+        box.setPrefWidth(220);
+        box.setPrefHeight(100);
+        Button continueFromPastBtn = new Button();
+        continueFromPastBtn.setText("Continue from previous session");
+        continueFromPastBtn.setFont(new Font(16));
+        continueFromPastBtn.setTextAlignment(TextAlignment.CENTER);
+        continueFromPastBtn.wrapTextProperty().setValue(true);
+        continueFromPastBtn.setPrefWidth(150);
+        box.getChildren().add(continueFromPastBtn);
+        return box;
+    }
+    
+    private VBox setWelcomeWindowRight(){
+        VBox box = new VBox();
+        box.setSpacing(1);
+        box.setAlignment(Pos.CENTER);
+        box.setStyle(rightPanelColor);
+        Label heading = new Label("Create a new plan");
+        heading.setFont(new Font(20));
+        
+        Label planNameLabel = new Label("Name your plan");
+        TextField planNameField = new TextField();
+        planNameField.setPrefWidth(200);
+        planNameField.setMaxWidth(200);
+        
+        Label programLabel = new Label("Choose your degree");
+        ChoiceBox degreeChoiceBox = new ChoiceBox();
+        degreeChoiceBox.getItems().addAll("MSc of computer science", 
+                "MSc in Building Technology", "BSc of historical dancing");
+        
+        Button goButton = new Button();
+        goButton.setText("Start planning");
+        goButton.setOnAction(startPlanningEventHandler);
+        goButton.setMinWidth(100);
+        goButton.setMinHeight(40);
+        
+        double addSpace = 20;
+        Region space = new Region();
+        space.setPrefHeight(addSpace);
+        Region space2 = new Region();
+        space2.setPrefHeight(addSpace);
+        Region space3 = new Region();
+        space3.setPrefHeight(addSpace);
+        
+        box.getChildren().addAll(heading,space, planNameLabel, planNameField);
+        box.getChildren().addAll(space2,  programLabel,  degreeChoiceBox, space3, goButton);
+             
+        return box;
+    }
+    
+    EventHandler<ActionEvent> startPlanningEventHandler = new EventHandler<ActionEvent>(){
+        @Override 
+        public void handle(ActionEvent btnPress) { 
+            System.out.println("Start planning button pressed");
+            theStage.setScene(mainWindow);
+            Sisu.mainWindow.getRoot().requestFocus();
+        }
+    };
+    
+    EventHandler<ActionEvent> takeCourseEventHandler = new EventHandler<ActionEvent>(){
+        @Override 
+        public void handle(ActionEvent btnPress) { 
+            System.out.println("Take course button pressed");
+            System.out.println(btnPress.getTarget());
+            String courseId = "Got_this_id_from_course_button";//checkId((Button) btnPress.getSource());
+            //student.takeCourse(courseId);
+        }
+    };
+
 }
