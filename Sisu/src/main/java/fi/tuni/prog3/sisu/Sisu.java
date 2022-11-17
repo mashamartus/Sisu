@@ -53,7 +53,7 @@ public class Sisu extends Application {
         
         welcomeWindow.getStylesheets().add(css);
         //stage.setScene(welcomeWindow);
-        stage.setResizable(false);
+        //stage.setResizable(false);
         
         
         //define main window
@@ -70,7 +70,7 @@ public class Sisu extends Application {
         
         
         
-        stage.show();
+        //stage.show();
         System.out.println("method start worked till the end");
     }
 
@@ -173,7 +173,7 @@ public class Sisu extends Application {
         
         menuPane.setCenter(progressPane());
         
-        menuPane.setBottom(getQuitButton());
+        menuPane.setBottom(menuBottomPane());
         menuPane.setAlignment(menuPane.getBottom(), Pos.BOTTOM_CENTER);
         
         menuPane.setMargin(menuPane.getTop(), new Insets(15, 10, 10, 10));
@@ -210,7 +210,16 @@ public class Sisu extends Application {
         return box;
     }
     
-    private Button getQuitButton() {
+    private VBox menuBottomPane(){
+        VBox box = new VBox();
+        box.setAlignment(Pos.BOTTOM_CENTER);
+        
+        Button writeDataBtn = new Button("Write to file");
+        
+        box.getChildren().addAll(writeDataBtn, addVRegion(15), getQuitButton());
+        return box;
+    }
+    private Button getQuitButton(){
         //Creating a button.
         Button button = new Button("Quit");
         
@@ -281,18 +290,25 @@ public class Sisu extends Application {
         goButton.setMinHeight(40);
         
         double addSpace = 20;
-        Region space = new Region();
-        space.setPrefHeight(addSpace);
-        Region space2 = new Region();
-        space2.setPrefHeight(addSpace);
-        Region space3 = new Region();
-        space3.setPrefHeight(addSpace);
         
-        box.getChildren().addAll(heading,space, planNameLabel, planNameField);
-        box.getChildren().addAll(space2,  programLabel,  degreeChoiceBox, space3, goButton);
+        box.getChildren().addAll(heading, addVRegion(addSpace), planNameLabel, 
+                planNameField, addVRegion(addSpace),  programLabel,  
+                degreeChoiceBox, addVRegion(addSpace), goButton);
              
         return box;
     }
+    
+    private Region addVRegion(double spacing){
+        Region space = new Region();
+        space.setPrefHeight(spacing);
+        return space;
+    }
+    
+    
+    
+    
+    
+    //Event handlers:
     
     EventHandler<ActionEvent> startPlanningEventHandler = new EventHandler<ActionEvent>(){
         @Override 
