@@ -1,6 +1,17 @@
 
 package fi.tuni.prog3.sisu;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+
+
 
 
 public final class StudentDataExport {
@@ -17,38 +28,9 @@ public final class StudentDataExport {
     
     
     
+    }
     
-    /*
-    public void createJSON() 
-            throws MalformedURLException, ProtocolException, IOException {
-        URL url = new URL("https://sis-tuni.funidata.fi/kori/api/module-search?curriculumPeriodId=uta-lvv-2021&universityId=tuni-university-root-id&moduleType=DegreeProgramme&limit=2000");
-        
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.connect();
-
-        //Check if connect is made
-        int responseCode = conn.getResponseCode();
-
-        // 200 OK
-        if (responseCode != 200) {
-            throw new RuntimeException("HttpResponseCode: " + responseCode);
-        } else {
-            StringBuilder informationString = new StringBuilder();
-            Scanner scanner = new Scanner(url.openStream());
-            
-            while (scanner.hasNext()) {
-                informationString.append(scanner.nextLine());
-            }
-        //Close the scanner
-        scanner.close();
-        System.out.println(informationString);
-
-            }
-    }*/
-    
-}
-
+ 
     
 
 

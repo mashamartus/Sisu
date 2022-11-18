@@ -1,9 +1,15 @@
 package fi.tuni.prog3.sisu;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
 
 /**
  * SisuHelper class. (Stupid class name?)
@@ -17,9 +23,27 @@ public class SisuHelper implements iAPI {
     public static final String jsonFile = ".json";
 
 
-    //TODO
+    /**
+     * This method create JSON object from url
+     * Structure is generated form given Json files.     *
+     * @throws MalformedURLException if url is incorrect.
+     * @return JSONobject.
+     */
     @Override
     public JsonObject getJsonObjectFromApi(String urlString) {
+        try {
+            InputStream is = new URL(urlString).openStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    is, Charset.forName("UTF-8")));
+            JsonArray jsonArray = JsonParser.parseReader(br).getAsJsonArray();
+            JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
+            System.out.println("this is json" + jsonObject);
+            return jsonObject;
+        } catch (MalformedURLException ex) {
+             System.out.println("The url is not well formed: " + urlString);
+        } catch (IOException ex) {
+             System.out.println("The url is not well formed: " + urlString);
+        }
         return null;
     }
 

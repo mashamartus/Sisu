@@ -41,5 +41,17 @@ public class StudentDataExportTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+
+    /**
+     * Test of createJSON method, of class StudentDataExport.
+     */
+    @Test
+    public void testCreateJSON() throws Exception {
+        System.out.println("createJSON");
+        StudentDataExport instance = new StudentDataExport("ddddd");
+        instance.createJSON();
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
     
 }
