@@ -15,6 +15,11 @@ public class StudyModule extends DegreeModule {
     // Datastructure type can be changed!
     private HashMap<String, Course> courses = new HashMap<>();
     private HashMap<String, StudyModule> submodules = new HashMap<>();
+    
+    private ArrayList<Course> listOfStudyModules = new ArrayList <>();
+    private ArrayList<StudyModule> listOfCourses = new ArrayList <>();
+    
+    
     private boolean gradable;
     private String description;
     private String code;

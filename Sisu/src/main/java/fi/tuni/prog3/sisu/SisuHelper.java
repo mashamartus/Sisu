@@ -1,9 +1,16 @@
 package fi.tuni.prog3.sisu;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
 
 /**
  * SisuHelper class. (Stupid class name?)
@@ -17,13 +24,70 @@ public class SisuHelper implements iAPI {
     public static final String jsonFile = ".json";
 
 
-    //TODO
+    /**
+     * This method create JSON object from url
+     * Structure is generated form given Json files.     *
+     * @throws MalformedURLException if url is incorrect.
+     * @return JSONobject.
+     */
     @Override
     public JsonObject getJsonObjectFromApi(String urlString) {
+        try {
+            InputStream is = new URL(urlString).openStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    is, Charset.forName("UTF-8")));
+            JsonArray jsonArray = JsonParser.parseReader(br).getAsJsonArray();
+            JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
+            //System.out.println("this is json" + jsonObject);
+            return jsonObject;
+        } catch (MalformedURLException ex) {
+             System.out.println("The url is not well formed: " + urlString);
+        } catch (IOException ex) {
+             System.out.println("The url is not well formed: " + urlString);
+        }
         return null;
     }
+    
+    /**
+     * Create DegreeProgram 
+     * It generates a Degree Program structure for Sisu.
+     * Structure is generated form given Json files.     *
+     * @throws FileNotFoundException if any file is missing.
+     * @return DegreeProgram the generated DegreeProgram.
+     */
+    public DegreeProgram createDegreeProgram(String groupId) {
+        String url = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id&curriculumPeriodId=uta-lvv-2021";
+        JsonObject newDegreeProgram = getJsonObjectFromApi(url);
+        
+        String name = newDegreeProgram.getAsJsonObject("name").get("en").getAsString();
+        String id = newDegreeProgram.get("id").getAsString();
+        String description = newDegreeProgram.getAsJsonObject("learningOutcomes").get("fi").getAsString();
+        String code = newDegreeProgram.get("code").getAsString();
+        int credits = newDegreeProgram.getAsJsonObject("targetCredits").get("min").getAsInt();
+        JsonArray rules = newDegreeProgram.getAsJsonObject("rule").get("rules").getAsJsonArray();
+        ArrayList <StudyModule> subModules = new ArrayList <> ();
+        
+        for (int i = 0; i < rules.size(); i++){
+              JsonObject submodule = rules.get(i).getAsJsonObject();
+              if(submodule.get("type").getAsString().equals("ModuleRule")){
+                  // this is the the module below
+                  String nextModule = submodule.get("moduleGroupId").toString();
+              
+              }
+        
+        }
 
+        DegreeProgram degreeProgram = new DegreeProgram(name, id, groupId, credits, description, code);
+        return degreeProgram ; 
+    }
 
+    
+    public StudyModule createStudyModule(String groupId){
+        return null;
+    }
+    
+    
+    
     /**
      * This static method is for the minimum requirement and help testing Sisu.
      * It generates a Degree Program structure for Sisu.
