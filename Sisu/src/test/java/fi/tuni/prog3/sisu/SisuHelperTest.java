@@ -53,6 +53,21 @@ public class SisuHelperTest {
         assertEquals(expResult, result);
 
     }
+    
+        /**
+     * Test of createDegreeProgram method, of class SisuHelper.
+     */
+    @Test
+    public void testCreateDegreeProgram() {
+        System.out.println("createDegreeProgram");
+        String groupId = "tut-dp-g-1280";
+        SisuHelper instance = new SisuHelper();
+        Boolean expResult = true;
+        DegreeProgram result = instance.createDegreeProgram(groupId);
+        assertEquals(expResult, true);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
 
     /**
      * Test of createDegreeProgramFromExample method, of class SisuHelper.
@@ -60,9 +75,9 @@ public class SisuHelperTest {
     @Test
     public void testCreateDegreeProgramFromExample() throws Exception {
         System.out.println("createDegreeProgramFromExample");
-        DegreeProgram expResult = null;
+        Boolean expResult = true;
         DegreeProgram result = SisuHelper.createDegreeProgramFromExample();
-        assertEquals(expResult, result);
+        assertEquals(expResult, true);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -106,5 +121,7 @@ public class SisuHelperTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+
+
     
 }

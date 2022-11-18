@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 
@@ -55,22 +56,35 @@ public class SisuHelper implements iAPI {
      * @return DegreeProgram the generated DegreeProgram.
      */
     public DegreeProgram createDegreeProgram(String groupId) {
-        String url = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
+        String url = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id&curriculumPeriodId=uta-lvv-2021";
         JsonObject newDegreeProgram = getJsonObjectFromApi(url);
         
         String name = newDegreeProgram.getAsJsonObject("name").get("en").getAsString();
         String id = newDegreeProgram.get("id").getAsString();
         String description = newDegreeProgram.getAsJsonObject("learningOutcomes").get("fi").getAsString();
         String code = newDegreeProgram.get("code").getAsString();
-        int credits = newDegreeProgram.getAsJsonObject("rule").getAsJsonObject("credits").get("min").getAsInt();
-        //ArrayList rules 
+        int credits = newDegreeProgram.getAsJsonObject("targetCredits").get("min").getAsInt();
+        JsonArray rules = newDegreeProgram.getAsJsonObject("rule").get("rules").getAsJsonArray();
+        ArrayList <StudyModule> subModules = new ArrayList <> ();
         
+        for (int i = 0; i < rules.size(); i++){
+              JsonObject submodule = rules.get(i).getAsJsonObject();
+              if(submodule.get("type").getAsString().equals("ModuleRule")){
+                  // this is the the module below
+                  String nextModule = submodule.get("moduleGroupId").toString();
+              
+              }
+        
+        }
+
         DegreeProgram degreeProgram = new DegreeProgram(name, id, groupId, credits, description, code);
-        
-        return degreeProgram ;
-        
+        return degreeProgram ; 
     }
 
+    
+    public StudyModule createStudyModule(String groupId){
+        return null;
+    }
     
     
     
