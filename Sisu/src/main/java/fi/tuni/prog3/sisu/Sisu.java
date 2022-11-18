@@ -3,12 +3,15 @@ package fi.tuni.prog3.sisu;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
@@ -16,8 +19,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -34,8 +40,11 @@ public class Sisu extends Application {
     static Stage theStage;
     static Scene welcomeWindow;
     static Scene mainWindow;
-    String leftPanelColor = "-fx-background-color: #8fc6fd;";
-    String rightPanelColor = "-fx-background-color: #ffffff;";
+    String leftPanelColor = "#567B91;";
+    String rightPanelColor = "#99C4DE;";
+    String courseBoxColor = "#C9EAFF;";
+    String courseButtonColor = "#DEC199;";
+    
     //Student student = new Student("SomeId");
     
     @Override
@@ -70,7 +79,7 @@ public class Sisu extends Application {
         
         
         
-        //stage.show();
+        stage.show();
         System.out.println("method start worked till the end");
     }
 
@@ -92,7 +101,7 @@ public class Sisu extends Application {
         scrollPane.setContent(treeStructure);
         scrollPane.setFitToWidth(true);
         scrollPane.setPadding(new Insets(20, 30, 0, 30));
-        scrollPane.setStyle(rightPanelColor);
+        scrollPane.setStyle("-fx-background-color: " + rightPanelColor);
         
         
         centerVBox.getChildren().add(scrollPane);
@@ -121,13 +130,13 @@ public class Sisu extends Application {
             ArrayList<DummyModule> innerModules = moduleBlock.getModules();
             
             VBox onePaneContent = new VBox();
-            onePaneContent.setSpacing(10);
-            onePaneContent.setStyle(rightPanelColor);
+            onePaneContent.setSpacing(2);
+            onePaneContent.setStyle("-fx-background-color: " + rightPanelColor);
             
-            TitledPane titledPane = new TitledPane(moduleBlock.toString(), onePaneContent);
+            TitledPane titledPane = new TitledPane(moduleBlock.toString() + " 0/60", onePaneContent);
             titledPane.setId(moduleBlock.getName());
             titledPane.setPadding(new Insets(0,0,0,20));
-            titledPane.setStyle(rightPanelColor);
+            titledPane.setStyle("-fx-background-color: " + rightPanelColor);
             
             for(DummyModule innerModule : innerModules){
                 onePaneContent.getChildren().add(handleModule(innerModule));
@@ -140,6 +149,10 @@ public class Sisu extends Application {
         
         HBox box = new HBox();
         box.setAlignment(Pos.CENTER);
+        box.setPrefHeight(45);
+        box.setPadding(new Insets(0, 15, 0, 15));
+        box.setSpacing(10);
+        box.setStyle( "-fx-background-radius: 5 5 5 5; -fx-background-color: " + courseBoxColor);
 
         Label moduleName = new Label(module.toString());
 
@@ -147,18 +160,24 @@ public class Sisu extends Application {
         box.setHgrow(region, Priority.ALWAYS);
 
         VBox creditSection = new VBox();
+        creditSection.setAlignment(Pos.CENTER);
         creditSection.setPadding(new Insets(0, 15, 0, 5));
         Label cr = new Label("cr");
-        cr.setFont(new Font(8));
+        cr.setStyle("-fx-font-size:10;");
         Label creditLabel = new Label(""+((DummyCourse) module).getCredits());
         creditSection.getChildren().addAll(cr, creditLabel);
 
 
         Button addToMyCoursesBtn = new Button("Take course");
+        addToMyCoursesBtn.setPrefWidth(150);
         addToMyCoursesBtn.setId(module.getName());
         addToMyCoursesBtn.setOnAction(takeCourseEventHandler);
+        addToMyCoursesBtn.setStyle( "-fx-background-color: " + courseButtonColor);
+        
+        
 
-        box.getChildren().addAll(moduleName, region, creditSection, addToMyCoursesBtn);
+        box.getChildren().addAll(moduleName, region, creditSection, 
+                addToMyCoursesBtn);
         return box;
     }
     
@@ -167,8 +186,8 @@ public class Sisu extends Application {
         //Creating a BorderPane for the left side.
         BorderPane menuPane = new BorderPane();
         
-        menuPane.setPrefWidth(250);
-        menuPane.setStyle(leftPanelColor);
+        menuPane.setPrefWidth(300);
+        menuPane.setStyle("-fx-background-color: " + leftPanelColor);
         menuPane.setTop(headingPane());
         
         menuPane.setCenter(progressPane());
@@ -182,37 +201,50 @@ public class Sisu extends Application {
         return menuPane;
     }
     private VBox headingPane(){
-        VBox box = new VBox(20);
-        box.setAlignment(Pos.CENTER);
-        box.setStyle(rightPanelColor);
-        // add plan name text field
-        TextField text = new TextField("Your plan name");
+        VBox box = new VBox();
+        box.setAlignment(Pos.CENTER_LEFT);
+        // add plan name
+        Label planName = new Label("Your plan name");
+        planName.setStyle("-fx-font-size: 16pt ;");
         
         // add degree heading label
         Label degNameLabel = new Label("Here will be the name of chosen degree");
-        //degNameLabel.setStyle("-fx-background-color: transparent");
         degNameLabel.setId("degNameLabel");
         degNameLabel.setWrapText(true);
-        degNameLabel.setTextAlignment(TextAlignment.CENTER);
-        degNameLabel.setFont(new Font(20)); 
+        degNameLabel.setStyle("-fx-font-size: 20pt ;");
         
-        box.getChildren().addAll(text, degNameLabel);
+        //add year
+        Label yearLabel = new Label("2023-2025");
+        
+        box.getChildren().addAll(planName, addVRegion(10) ,degNameLabel, yearLabel);
         return box;
     }
     
     private VBox progressPane(){
         VBox box = new VBox();
-        box.setAlignment(Pos.CENTER);
+        box.setAlignment(Pos.CENTER); 
         
         Label progressText = new Label("You did");
         Label progressValue = new Label("35/180");
-        box.getChildren().addAll(progressText, progressValue);
+        
+        
+        ObservableList<PieChart.Data> pieChartData =
+                FXCollections.observableArrayList(
+                new PieChart.Data("Completed", 35),
+                new PieChart.Data("Not yet", 145));
+        PieChart chart = new PieChart(pieChartData);
+        chart.setStartAngle(90);
+        chart.setPrefHeight(250);
+        chart.setLegendVisible(false);
+        chart.setLabelLineLength(10);
+        
+        box.getChildren().addAll(progressText, progressValue, chart);
         return box;
     }
     
     private VBox menuBottomPane(){
         VBox box = new VBox();
-        box.setAlignment(Pos.BOTTOM_CENTER);
+        box.setAlignment(Pos.BOTTOM_LEFT);
         
         Button writeDataBtn = new Button("Write to file");
         
@@ -251,7 +283,7 @@ public class Sisu extends Application {
     
     private VBox setWelcomeWindowLeft(){
         VBox box = new VBox();
-        box.setStyle(leftPanelColor);
+        box.setStyle("-fx-background-color: " + leftPanelColor);
         box.setAlignment(Pos.CENTER);
         box.setPrefWidth(220);
         box.setPrefHeight(100);
@@ -269,7 +301,7 @@ public class Sisu extends Application {
         VBox box = new VBox();
         box.setSpacing(1);
         box.setAlignment(Pos.CENTER);
-        box.setStyle(rightPanelColor);
+        box.setStyle("-fx-background-color: " + rightPanelColor);
         Label heading = new Label("Create a new plan");
         heading.setFont(new Font(20));
         
@@ -322,11 +354,42 @@ public class Sisu extends Application {
     EventHandler<ActionEvent> takeCourseEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
-            System.out.println("Take course button pressed");
-            System.out.println(btnPress.getTarget());
-            String courseId = "Got_this_id_from_course_button";//checkId((Button) btnPress.getSource());
-            //student.takeCourse(courseId);
+            String courseId = ((Control)btnPress.getSource()).getId();
+            Button courseBtn = (Button)btnPress.getSource();
+            
+            if(courseBtn.getText().equals("Take course")){
+                //add course
+                courseBtn.getParent().setStyle("-fx-background-color: ffffff");
+                courseBtn.setText("Drop");
+                courseBtn.setPrefWidth(70);
+                updateBlockHeading((TitledPane)courseBtn.getParent().getParent().getParent().getParent());
+                
+                Button putGradeBtn = new Button("Grade");
+                putGradeBtn.setPrefWidth(70);
+                putGradeBtn.setId(courseBtn.getId() + "_grade");
+                putGradeBtn.setOnAction(gradeCourseEventHandler);
+                ((Pane)courseBtn.getParent()).getChildren().add(putGradeBtn);
+                
+            }
+            else{
+                //remove course
+                courseBtn.getParent().setStyle("-fx-background-color: " + courseBoxColor);
+                courseBtn.setText("Take course");
+                courseBtn.setPrefWidth(150);
+                ((Pane)courseBtn.getParent()).getChildren().remove(((Pane)courseBtn.getParent()).getChildren().get(4));
+            }
         }
     };
-
+    
+    private void updateBlockHeading(TitledPane pane){
+        String oldHeading = pane.getText();
+        String moduleName = oldHeading.substring(0, oldHeading.lastIndexOf(" "));
+        pane.setText(moduleName + " 5/60");
+    }
+    
+    EventHandler<ActionEvent> gradeCourseEventHandler = new EventHandler<ActionEvent>(){
+        @Override 
+        public void handle(ActionEvent btnPress) { 
+        }
+    };
 }
