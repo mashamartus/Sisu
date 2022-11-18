@@ -1,6 +1,7 @@
 package fi.tuni.prog3.sisu;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -36,10 +37,21 @@ public class SisuHelper implements iAPI {
             InputStream is = new URL(urlString).openStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     is, Charset.forName("UTF-8")));
-            JsonArray jsonArray = JsonParser.parseReader(br).getAsJsonArray();
-            JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
-            //System.out.println("this is json" + jsonObject);
-            return jsonObject;
+            JsonElement jsonElement = JsonParser.parseReader(br);
+            //System.out.println("this is elemment" + temp);
+            if (jsonElement instanceof JsonObject){
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+                //System.out.println("this is json" + jsonObject);
+                return jsonObject;
+            }
+            else {
+                JsonArray jsonArray = jsonElement.getAsJsonArray();
+                //System.out.println("this is jsonarray" + jsonArray);
+                JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
+                //System.out.println("this is json" + jsonObject);
+                return jsonObject;
+            }            
+           
         } catch (MalformedURLException ex) {
              System.out.println("The url is not well formed: " + urlString);
         } catch (IOException ex) {
@@ -64,29 +76,88 @@ public class SisuHelper implements iAPI {
         String description = newDegreeProgram.getAsJsonObject("learningOutcomes").get("fi").getAsString();
         String code = newDegreeProgram.get("code").getAsString();
         int credits = newDegreeProgram.getAsJsonObject("targetCredits").get("min").getAsInt();
-        JsonArray rules = newDegreeProgram.getAsJsonObject("rule").get("rules").getAsJsonArray();
         ArrayList <StudyModule> subModules = new ArrayList <> ();
-        
+        JsonArray rules = getAllSubModulesOrCourses(newDegreeProgram.getAsJsonObject("rule")).getAsJsonArray();
         for (int i = 0; i < rules.size(); i++){
-              JsonObject submodule = rules.get(i).getAsJsonObject();
-              if(submodule.get("type").getAsString().equals("ModuleRule")){
-                  // this is the the module below
-                  String nextModule = submodule.get("moduleGroupId").toString();
-              
-              }
-        
+            JsonObject submodule = rules.get(i).getAsJsonObject();
+            if(submodule.get("type").getAsString().equals("ModuleRule")){
+                String nextModule = submodule.get("moduleGroupId").getAsString();
+                // start to create the hierarcy
+                subModules.add(createStudyModule(nextModule));
+            }
         }
-
         DegreeProgram degreeProgram = new DegreeProgram(name, id, groupId, credits, description, code);
         return degreeProgram ; 
     }
 
     
     public StudyModule createStudyModule(String groupId){
-        return null;
+        String url;
+        if(groupId.startsWith("tut")){
+            url =" https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
+        }
+        else {
+            url = "https://sis-tuni.funidata.fi/kori/api/modules/"+groupId+"?universityId=tuni-university-root-id&curriculumPeriodId=uta-lvv-2021";
+        }
+        
+        JsonObject newStudyModule = getJsonObjectFromApi(url);
+        
+        String name = newStudyModule.getAsJsonObject("name").get("en").getAsString();
+        //System.out.println(name);
+        String id = newStudyModule.get("id").getAsString();
+        //System.out.println(id);
+        String code = newStudyModule.get("code").getAsString();
+        //System.out.println(code);
+        int credits = newStudyModule.getAsJsonObject("targetCredits").get("min").getAsInt();
+        //System.out.println(credits);
+        Boolean gradable;
+        if(newStudyModule.get("gradeScaleId").isJsonNull()){
+            gradable = false;
+        }else{
+            gradable = newStudyModule.get("gradeScaleId").getAsString().equals("sis-0-5");
+        }
+
+        JsonArray rules = getAllSubModulesOrCourses(newStudyModule.getAsJsonObject("rule")).getAsJsonArray();
+        //System.out.println(rules);
+        //System.out.print(newStudyModule.getAsJsonObject("rule"));
+        StudyModule studyModule = new StudyModule(name, id, groupId, credits, gradable, "", code);
+        return studyModule;
+    }
+    
+    // This could be probably implemented better
+    public JsonArray getAllSubModulesOrCourses(JsonObject rule){
+        JsonArray listOfSubModulesOrCourses = new JsonArray();
+        // if its compositeRule it will have submodules / courses underneath (best quesss)
+        
+        if(rule.get("type").getAsString().equals("CompositeRule")){
+            //System.out.print(rule.get("rules"));
+            return rule.get("rules").getAsJsonArray();
+        }
+        
+        else if(rule.get("type").getAsString().equals("CreditsRule")){
+            
+            JsonArray subRules = rule.getAsJsonObject("rule").get("rules").getAsJsonArray();
+            //System.out.println(subRules.size());
+            for (int i = 0; i < subRules.size(); i++){
+                // More stuff can be found
+                if(subRules.get(i).getAsJsonObject().get("type").getAsString().equals("CompositeRule")){
+                    //System.out.println(subRules.get(i).getAsJsonObject().get("rules").getAsJsonArray());
+                    //listOfSubModulesOrCourses = subRules.get(i).getAsJsonObject().get("rules").getAsJsonArray();
+                    
+                    return subRules.get(i).getAsJsonObject().get("rules").getAsJsonArray();
+                }
+                // No more stuff
+                if(subRules.get(i).getAsJsonObject().get("type").getAsString().equals("ModuleRule")){
+
+                    listOfSubModulesOrCourses.add(subRules.get(i));
+                }
+            } 
+        }
+        return listOfSubModulesOrCourses;
     }
     
     
+    ///////////////////////////////////////////////////////////////////////////////////////////
     
     /**
      * This static method is for the minimum requirement and help testing Sisu.

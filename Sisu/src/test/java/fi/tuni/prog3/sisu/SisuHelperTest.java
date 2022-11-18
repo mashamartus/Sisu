@@ -4,6 +4,7 @@
  */
 package fi.tuni.prog3.sisu;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -69,6 +70,37 @@ public class SisuHelperTest {
         //fail("The test case is a prototype.");
     }
 
+        /**
+     * Test of createStudyModule method, of class SisuHelper.
+     */
+    @Test
+    public void testCreateStudyModule() {
+        System.out.println("createStudyModule");
+        //String groupId = "otm-0185dff0-cc6f-4d5e-8ec8-84854ce44e9c";
+        //String groupId = "otm-07a61546-3a51-429a-9120-2ce1da02298d";
+        String groupId = "tut-sm-g-4720";
+        SisuHelper instance = new SisuHelper();
+        Boolean expResult = true;
+        StudyModule result = instance.createStudyModule(groupId);
+        assertEquals(expResult, true);
+    }
+
+    /**
+     * Test of getAllSubModulesOrCourses method, of class SisuHelper.
+     */
+    @Test
+    public void testGetAllSubModulesOrCourses() {
+        System.out.println("getAllSubModulesOrCourses");
+        JsonObject rule = null;
+        SisuHelper instance = new SisuHelper();
+        JsonArray expResult = null;
+        JsonArray result = instance.getAllSubModulesOrCourses(rule);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+    
+    
     /**
      * Test of createDegreeProgramFromExample method, of class SisuHelper.
      */
@@ -121,6 +153,8 @@ public class SisuHelperTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+
+
 
 
     
