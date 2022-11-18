@@ -12,6 +12,9 @@ import java.util.NoSuchElementException;
 public class DegreeProgram extends DegreeModule {
     // Datastructure type can be changed!
     private HashMap<String, StudyModule> studyModules = new HashMap<>();
+ 
+    private ArrayList<StudyModule> listOfStudyModules = new ArrayList <>();
+    
     private final String description;
     private final String code;
 

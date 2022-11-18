@@ -37,7 +37,7 @@ public class SisuHelper implements iAPI {
                     is, Charset.forName("UTF-8")));
             JsonArray jsonArray = JsonParser.parseReader(br).getAsJsonArray();
             JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
-            System.out.println("this is json" + jsonObject);
+            //System.out.println("this is json" + jsonObject);
             return jsonObject;
         } catch (MalformedURLException ex) {
              System.out.println("The url is not well formed: " + urlString);
@@ -46,8 +46,34 @@ public class SisuHelper implements iAPI {
         }
         return null;
     }
+    
+    /**
+     * Create DegreeProgram 
+     * It generates a Degree Program structure for Sisu.
+     * Structure is generated form given Json files.     *
+     * @throws FileNotFoundException if any file is missing.
+     * @return DegreeProgram the generated DegreeProgram.
+     */
+    public DegreeProgram createDegreeProgram(String groupId) {
+        String url = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
+        JsonObject newDegreeProgram = getJsonObjectFromApi(url);
+        
+        String name = newDegreeProgram.getAsJsonObject("name").get("en").getAsString();
+        String id = newDegreeProgram.get("id").getAsString();
+        String description = newDegreeProgram.getAsJsonObject("learningOutcomes").get("fi").getAsString();
+        String code = newDegreeProgram.get("code").getAsString();
+        int credits = newDegreeProgram.getAsJsonObject("rule").getAsJsonObject("credits").get("min").getAsInt();
+        //ArrayList rules 
+        
+        DegreeProgram degreeProgram = new DegreeProgram(name, id, groupId, credits, description, code);
+        
+        return degreeProgram ;
+        
+    }
 
-
+    
+    
+    
     /**
      * This static method is for the minimum requirement and help testing Sisu.
      * It generates a Degree Program structure for Sisu.
