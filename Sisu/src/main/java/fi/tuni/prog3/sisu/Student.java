@@ -67,7 +67,7 @@ public class Student implements iReadAndWriteToFile {
      * @return credit amount required by student program 
      */
     public double getProgramCredits(){
-        return 180;
+        return  180;
     }
     
     /**
