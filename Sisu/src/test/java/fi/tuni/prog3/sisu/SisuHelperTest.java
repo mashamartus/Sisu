@@ -55,20 +55,7 @@ public class SisuHelperTest {
 
     }
     
-        /**
-     * Test of createDegreeProgram method, of class SisuHelper.
-     */
-    @Test
-    public void testCreateDegreeProgram() {
-        System.out.println("createDegreeProgram");
-        String groupId = "tut-dp-g-1280";
-        SisuHelper instance = new SisuHelper();
-        Boolean expResult = true;
-        DegreeProgram result = instance.createDegreeProgram(groupId);
-        assertEquals(expResult, true);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
+
 
         /**
      * Test of createStudyModule method, of class SisuHelper.

@@ -60,36 +60,7 @@ public class SisuHelper implements iAPI {
         return null;
     }
     
-    /**
-     * Create DegreeProgram  NOT NEEDED WE WILL USE STUDYMODULE
-     * It generates a Degree Program structure for Sisu.
-     * Structure is generated form given Json files.     *
-     * @throws FileNotFoundException if any file is missing.
-     * @return DegreeProgram the generated DegreeProgram.
-     */
-   
-    public DegreeProgram createDegreeProgram(String groupId) {
-        String url = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id&curriculumPeriodId=uta-lvv-2021";
-        JsonObject newDegreeProgram = getJsonObjectFromApi(url);
-        
-        String name = newDegreeProgram.getAsJsonObject("name").get("en").getAsString();
-        String id = newDegreeProgram.get("id").getAsString();
-        String description = newDegreeProgram.getAsJsonObject("learningOutcomes").get("fi").getAsString();
-        String code = newDegreeProgram.get("code").getAsString();
-        int credits = newDegreeProgram.getAsJsonObject("targetCredits").get("min").getAsInt();
-        ArrayList <StudyModule> subModules = new ArrayList <> ();
-        /*JsonArray rules = getChildrenFromOneDocument(newDegreeProgram.getAsJsonObject("rule")).getAsJsonArray();
-        for (int i = 0; i < rules.size(); i++){
-            JsonObject submodule = rules.get(i).getAsJsonObject();
-            if(submodule.get("type").getAsString().equals("ModuleRule")){
-                String nextModule = submodule.get("moduleGroupId").getAsString();
-                // start to create the hierarcy
-                subModules.add(createStudyModule(nextModule));
-            }
-        }*/
-        DegreeProgram degreeProgram = new DegreeProgram(name, id, groupId, credits, description, code);
-        return degreeProgram ; 
-    }
+ 
 
     
      /**
@@ -169,7 +140,7 @@ public class SisuHelper implements iAPI {
             }
             else{
                 StudyModule subStudyModule = createStudyModule(children.get(i).getAsJsonObject().get("moduleGroupId").getAsString());
-                studyModule.addStudyModule(studyModule);
+                studyModule.addStudyModule(subStudyModule);
             }    
         }
         return studyModule;
@@ -228,7 +199,37 @@ public class SisuHelper implements iAPI {
   
     }
     
-    
+       /**
+     * Create DegreeProgram  NOT NEEDED WE WILL USE STUDYMODULE
+     * It generates a Degree Program structure for Sisu.
+     * Structure is generated form given Json files.     *
+     * @throws FileNotFoundException if any file is missing.
+     * @return DegreeProgram the generated DegreeProgram.
+     */
+  
+    /*
+    public DegreeProgram createDegreeProgram(String groupId) {
+        String url = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id&curriculumPeriodId=uta-lvv-2021";
+        JsonObject newDegreeProgram = getJsonObjectFromApi(url);
+        
+        String name = newDegreeProgram.getAsJsonObject("name").get("en").getAsString();
+        String id = newDegreeProgram.get("id").getAsString();
+        String description = newDegreeProgram.getAsJsonObject("learningOutcomes").get("fi").getAsString();
+        String code = newDegreeProgram.get("code").getAsString();
+        int credits = newDegreeProgram.getAsJsonObject("targetCredits").get("min").getAsInt();
+        ArrayList <StudyModule> subModules = new ArrayList <> ();
+        JsonArray rules = getChildrenFromOneDocument(newDegreeProgram.getAsJsonObject("rule")).getAsJsonArray();
+        for (int i = 0; i < rules.size(); i++){
+            JsonObject submodule = rules.get(i).getAsJsonObject();
+            if(submodule.get("type").getAsString().equals("ModuleRule")){
+                String nextModule = submodule.get("moduleGroupId").getAsString();
+                // start to create the hierarcy
+                subModules.add(createStudyModule(nextModule));
+            }
+        }
+        DegreeProgram degreeProgram = new DegreeProgram(name, id, groupId, credits, description, code);
+        return degreeProgram ; 
+    }*/
     
     /*
     public JsonArray getChildrenFromOneDocument(JsonObject rule){
