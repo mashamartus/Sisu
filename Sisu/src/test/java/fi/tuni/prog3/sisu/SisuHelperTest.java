@@ -78,13 +78,49 @@ public class SisuHelperTest {
         System.out.println("createStudyModule");
         //String groupId = "otm-0185dff0-cc6f-4d5e-8ec8-84854ce44e9c";
         //String groupId = "otm-07a61546-3a51-429a-9120-2ce1da02298d";
-        String groupId = "tut-sm-g-4720";
+        //String groupId = "tut-sm-g-4720";
+        String groupId = "tut-dp-g-1280";
+        //String groupId = "otm-d16d6df1-92a5-4079-8101-c44e26cb072c";
+        //String groupId = "tut-dp-g-1180";
         SisuHelper instance = new SisuHelper();
         Boolean expResult = true;
         StudyModule result = instance.createStudyModule(groupId);
         assertEquals(expResult, true);
     }
 
+       /**
+     * Test of getChildrenFromOneDocument method, of class SisuHelper.
+     */
+    @Test
+    public void testGetChildrenFromOneDocument() {
+        System.out.println("getChildrenFromOneDocument");
+        JsonArray rules = null;
+        JsonArray children = null;
+        SisuHelper instance = new SisuHelper();
+        instance.getChildrenFromOneDocument(rules, children);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of createCourse method, of class SisuHelper.
+     */
+    @Test
+    public void testCreateCourse() {
+        System.out.println("createCourse");
+        //String groupId = "tut-cu-g-48243";
+        //String groupId = "tut-cu-g-43073";
+        String groupId = "tut-cu-g-48230";
+        SisuHelper instance = new SisuHelper();
+        Boolean expResult = true;
+        Course result = instance.createCourse(groupId);
+        assertEquals(expResult, true);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    
+    
     /**
      * Test of getAllSubModulesOrCourses method, of class SisuHelper.
      */
@@ -94,8 +130,8 @@ public class SisuHelperTest {
         JsonObject rule = null;
         SisuHelper instance = new SisuHelper();
         JsonArray expResult = null;
-        JsonArray result = instance.getAllSubModulesOrCourses(rule);
-        assertEquals(expResult, result);
+        //JsonArray result = instance.getChildrenFromOneDocument(rule);
+        assertEquals(expResult, true);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -154,6 +190,7 @@ public class SisuHelperTest {
         fail("The test case is a prototype.");
     }
 
+ 
 
 
 

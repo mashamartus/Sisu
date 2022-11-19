@@ -61,12 +61,13 @@ public class SisuHelper implements iAPI {
     }
     
     /**
-     * Create DegreeProgram 
+     * Create DegreeProgram  NOT NEEDED WE WILL USE STUDYMODULE
      * It generates a Degree Program structure for Sisu.
      * Structure is generated form given Json files.     *
      * @throws FileNotFoundException if any file is missing.
      * @return DegreeProgram the generated DegreeProgram.
      */
+   
     public DegreeProgram createDegreeProgram(String groupId) {
         String url = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id&curriculumPeriodId=uta-lvv-2021";
         JsonObject newDegreeProgram = getJsonObjectFromApi(url);
@@ -77,7 +78,7 @@ public class SisuHelper implements iAPI {
         String code = newDegreeProgram.get("code").getAsString();
         int credits = newDegreeProgram.getAsJsonObject("targetCredits").get("min").getAsInt();
         ArrayList <StudyModule> subModules = new ArrayList <> ();
-        JsonArray rules = getAllSubModulesOrCourses(newDegreeProgram.getAsJsonObject("rule")).getAsJsonArray();
+        /*JsonArray rules = getChildrenFromOneDocument(newDegreeProgram.getAsJsonObject("rule")).getAsJsonArray();
         for (int i = 0; i < rules.size(); i++){
             JsonObject submodule = rules.get(i).getAsJsonObject();
             if(submodule.get("type").getAsString().equals("ModuleRule")){
@@ -85,13 +86,22 @@ public class SisuHelper implements iAPI {
                 // start to create the hierarcy
                 subModules.add(createStudyModule(nextModule));
             }
-        }
+        }*/
         DegreeProgram degreeProgram = new DegreeProgram(name, id, groupId, credits, description, code);
         return degreeProgram ; 
     }
 
     
+     /**
+     * Create StudyModule
+     * It generates a Degree Program structure for Sisu.
+     * Structure is generated form given Json files.     *
+     * @throws FileNotFoundException if any file is missing.
+     * @return DegreeProgram the generated DegreeProgram.
+     */
+    
     public StudyModule createStudyModule(String groupId){
+        //System.out.print(groupId+" ");
         String url;
         if(groupId.startsWith("tut")){
             url =" https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
@@ -99,38 +109,141 @@ public class SisuHelper implements iAPI {
         else {
             url = "https://sis-tuni.funidata.fi/kori/api/modules/"+groupId+"?universityId=tuni-university-root-id&curriculumPeriodId=uta-lvv-2021";
         }
-        
+ 
         JsonObject newStudyModule = getJsonObjectFromApi(url);
-        
-        String name = newStudyModule.getAsJsonObject("name").get("en").getAsString();
-        //System.out.println(name);
+        String name;
+        JsonObject content = newStudyModule.getAsJsonObject("name");
+         if (content.has("en")){
+                name = newStudyModule.getAsJsonObject("name").get("en").getAsString();
+            }else{
+                name = newStudyModule.getAsJsonObject("name").get("fi").getAsString();
+            }
+        System.out.println("StudyModule: "+name+" : "+groupId);
         String id = newStudyModule.get("id").getAsString();
-        //System.out.println(id);
-        String code = newStudyModule.get("code").getAsString();
-        //System.out.println(code);
-        int credits = newStudyModule.getAsJsonObject("targetCredits").get("min").getAsInt();
-        //System.out.println(credits);
-        Boolean gradable;
-        if(newStudyModule.get("gradeScaleId").isJsonNull()){
-            gradable = false;
-        }else{
-            gradable = newStudyModule.get("gradeScaleId").getAsString().equals("sis-0-5");
+        //System.out.println("ID: "+id);
+        String code = "";
+        if(newStudyModule.has("code")){
+            if(!newStudyModule.get("code").isJsonNull()){
+                code = newStudyModule.get("code").getAsString();
+            }
         }
+        
+        //System.out.println("code: "+code);
+        int credits;
+        if(newStudyModule.has("credits")){
+            credits = newStudyModule.getAsJsonObject("targetCredits").get("min").getAsInt();
+        }else{
+            credits = 0;
+        }
+        //System.out.println("credit: " + credits);
 
-        JsonArray rules = getAllSubModulesOrCourses(newStudyModule.getAsJsonObject("rule")).getAsJsonArray();
-        //System.out.println(rules);
-        //System.out.print(newStudyModule.getAsJsonObject("rule"));
-        StudyModule studyModule = new StudyModule(name, id, groupId, credits, gradable, "", code);
+        String description; 
+        if(newStudyModule.has("learningOutcomes")){
+            description = newStudyModule.getAsJsonObject("learningOutcomes").get("fi").getAsString();    
+        }else{
+            description = "";
+        }
+        //System.out.println("description: "+description);
+        Boolean gradable = false;
+        if(newStudyModule.has("gradeScaleId")){
+            if(!newStudyModule.get("gradeScaleId").isJsonNull()){
+                gradable = newStudyModule.get("gradeScaleId").getAsString().equals("sis-0-5");
+            }   
+        }
+        //System.out.println(gradable);
+        JsonArray children = new JsonArray();
+        if(newStudyModule.getAsJsonObject("rule").get("type").getAsString().equals("CompositeRule")){
+             getChildrenFromOneDocument(newStudyModule.getAsJsonObject("rule").get("rules").getAsJsonArray(), children);
+        }
+        else if (newStudyModule.getAsJsonObject("rule").get("type").getAsString().equals("CreditsRule")) {
+            getChildrenFromOneDocument(newStudyModule.getAsJsonObject("rule").getAsJsonObject("rule").get("rules").getAsJsonArray(), children);
+        
+        }
+        //System.out.println(children);
+        StudyModule studyModule = new StudyModule(name, id, groupId, credits, gradable, description, code);
+        
+        for (int i = 0; i<children.size();i++){
+            if(children.get(i).getAsJsonObject().get("type").getAsString().equals("CourseUnitRule")){
+                Course course = createCourse(children.get(i).getAsJsonObject().get("courseUnitGroupId").getAsString());
+                studyModule.addCourse(course);
+            }
+            else{
+                StudyModule subStudyModule = createStudyModule(children.get(i).getAsJsonObject().get("moduleGroupId").getAsString());
+                studyModule.addStudyModule(studyModule);
+            }    
+        }
         return studyModule;
     }
     
-    // This could be probably implemented better
-    public JsonArray getAllSubModulesOrCourses(JsonObject rule){
+     /**
+     * Get direct children of one JSON object
+     * It updated ArrayList of children
+     * Structure is generated form given Json files.     *
+     * @param jsonArray JSON objects rules
+     * @param jsonArray children
+     */
+    public void getChildrenFromOneDocument(JsonArray rules, JsonArray children){
+        for (int i = 0; i<rules.size();i++){
+            if(rules.get(i).getAsJsonObject().get("type").getAsString().matches("ModuleRule|CourseUnitRule")){
+                    children.add(rules.get(i));
+            }else if (rules.get(i).getAsJsonObject().get("type").getAsString().equals("CompositeRule")) {
+                getChildrenFromOneDocument(rules.get(i).getAsJsonObject().get("rules").getAsJsonArray(),children);
+            }
+        }
+    }
+    
+ 
+    /**
+    * Get direct children of one JSON object
+    * It updated ArrayList of children
+    * Structure is generated form given Json files.     *
+    * @param jsonArray JSON objects rules
+    * @param jsonArray children
+    */
+    public Course createCourse(String groupId) {
+        String url = "https://sis-tuni.funidata.fi/kori/api/course-units/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
+        JsonObject newCourse = getJsonObjectFromApi(url);
+        String name = newCourse.getAsJsonObject("name").get("en").getAsString();
+        System.out.println("Course name: " + name + " : " + groupId);
+        String id = newCourse.get("id").getAsString();
+        //System.out.println("Course id: "+id);
+        String description = "";
+        if (!newCourse.get("content").isJsonNull()){
+            JsonObject content = newCourse.getAsJsonObject("content");
+            if (content.has("en")){
+                description = newCourse.getAsJsonObject("content").get("en").getAsString();
+            }else{
+                description = newCourse.getAsJsonObject("content").get("fi").getAsString();
+            }
+        }
+ 
+        //System.out.println("Description: " + description);
+        String code = newCourse.get("code").getAsString();
+        //System.out.println("Code: " + code);
+        int credits = newCourse.getAsJsonObject("credits").get("min").getAsInt();
+        //System.out.println("Credits: " + credits);
+        boolean gradable = newCourse.get("gradeScaleId").getAsString().equals("sis-0-5");
+        //System.out.println("gradable: " + gradable);
+        return new Course(name, id, groupId, credits, gradable, description, code);
+  
+    }
+    
+    
+    
+    /*
+    public JsonArray getChildrenFromOneDocument(JsonObject rule){
         JsonArray listOfSubModulesOrCourses = new JsonArray();
         // if its compositeRule it will have submodules / courses underneath (best quesss)
         
         if(rule.get("type").getAsString().equals("CompositeRule")){
             //System.out.print(rule.get("rules"));
+            JsonArray temp = rule.get("rules").getAsJsonArray();
+            for (int i = 0; i<temp.size();i++){
+                if(temp.get(i).getAsJsonObject().get("type").getAsString().matches("ModuleRule|CourseUnitRule")){
+
+                    listOfSubModulesOrCourses.add(temp.get(i));
+                }
+            }
             return rule.get("rules").getAsJsonArray();
         }
         
@@ -155,7 +268,7 @@ public class SisuHelper implements iAPI {
         }
         return listOfSubModulesOrCourses;
     }
-    
+    */
     
     ///////////////////////////////////////////////////////////////////////////////////////////
     

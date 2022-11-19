@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 /**
- * DegreeProgram Class.
+ * DegreeProgram Class. We dont probably need this, we can use StudyModule 
  * The root level of a degree structure.
  * Describes e.g. the name and extent (study credits) of the degree.
  */
