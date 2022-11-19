@@ -91,4 +91,13 @@ public class StudyModuleTest {
         fail("The test case is a prototype.");
     }
     
+        
+    @Test
+    public void testPrintModuleDetailed(){
+        
+        SisuHelper sh = new SisuHelper();
+        StudyModule degree = sh.createStudyModule("tut-dp-g-1280");
+        degree.printModuleDetailed(degree, "");
+    }
+    
 }

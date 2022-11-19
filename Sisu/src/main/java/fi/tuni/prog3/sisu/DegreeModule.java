@@ -4,6 +4,8 @@
  */
 package fi.tuni.prog3.sisu;
 
+import java.util.ArrayList;
+
 /**
  *An abstract class for storing information on Modules and Courses.
  */
@@ -62,5 +64,12 @@ public abstract class DegreeModule {
     public int getMinCredits() {
         return this.minCredits;
     }
-
+    /**
+     * This method needed to make recursive algorithms on degreeModules work 
+     * and should be overridden in StudyModule to return all children. 
+     * @return null
+     */
+    public ArrayList<DegreeModule> getStudyModulesAndCourses(){
+        return null;
+    }
 }
