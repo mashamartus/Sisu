@@ -73,12 +73,16 @@ public class SisuHelper implements iAPI {
     
     public StudyModule createStudyModule(String groupId){
         //System.out.print(groupId+" ");
+        
         String url;
-        if(groupId.startsWith("tut")){
-            url =" https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
+        if(groupId.startsWith("tut") || groupId.startsWith("uta")){
+            url =" https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id&curriculumPeriodId=uta-lvv-2021";
         }
-        else {
+        else if (groupId.startsWith("otm")){
             url = "https://sis-tuni.funidata.fi/kori/api/modules/"+groupId+"?universityId=tuni-university-root-id&curriculumPeriodId=uta-lvv-2021";
+        }
+        else{
+            url = "";
         }
  
         JsonObject newStudyModule = getJsonObjectFromApi(url);
@@ -136,7 +140,9 @@ public class SisuHelper implements iAPI {
         for (int i = 0; i<children.size();i++){
             if(children.get(i).getAsJsonObject().get("type").getAsString().equals("CourseUnitRule")){
                 Course course = createCourse(children.get(i).getAsJsonObject().get("courseUnitGroupId").getAsString());
+                course.setParent(studyModule);
                 studyModule.addCourse(course);
+                
             }
             else{
                 //System.out.print(" "+groupId);

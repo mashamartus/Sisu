@@ -86,7 +86,8 @@ public class StudyModuleTest {
     public void testRemoveCourse() {
         System.out.println("removeCourse");
         StudyModule instance = null;
-        instance.removeCourse();
+        String id = "";
+        instance.removeCourse(id);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

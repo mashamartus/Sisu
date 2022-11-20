@@ -14,6 +14,11 @@ public class Course extends DegreeModule {
     private final boolean gradable;
     private final String description;
     private final String code;
+    private StudyModule parent;
+
+    
+
+    
 
     /**
      * A constructor for initializing the member variables.
@@ -63,6 +68,10 @@ public class Course extends DegreeModule {
     public int getGrade() {
         return grade;
     }
+    
+    public void setParent(StudyModule parent) {
+        this.parent = parent;
+    }
 
     /**
      * Returns if the course is passed.
@@ -94,6 +103,14 @@ public class Course extends DegreeModule {
      */
     public String getCode() {
         return code;
+    }
+    
+    public StudyModule getParent() {
+        return parent;
+    }
+    
+    public String getParentID() {
+        return parent.getId();
     }
    
 

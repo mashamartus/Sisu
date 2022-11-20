@@ -66,9 +66,9 @@ public class SisuHelperTest {
         //String groupId = "otm-0185dff0-cc6f-4d5e-8ec8-84854ce44e9c";
         //String groupId = "otm-07a61546-3a51-429a-9120-2ce1da02298d";
         //String groupId = "tut-sm-g-4720";
-        String groupId = "tut-dp-g-1280";
+        //String groupId = "tut-dp-g-1280";
         //String groupId = "otm-d16d6df1-92a5-4079-8101-c44e26cb072c";
-        //String groupId = "tut-dp-g-1180";
+        String groupId = "tut-dp-g-1180";
         SisuHelper instance = new SisuHelper();
         Boolean expResult = true;
         StudyModule result = instance.createStudyModule(groupId);

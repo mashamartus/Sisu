@@ -14,11 +14,7 @@ import java.util.NoSuchElementException;
 public class StudyModule extends DegreeModule {
     // Datastructure type can be changed!
     private HashMap<String, Course> courses = new HashMap<>();
-    private HashMap<String, StudyModule> submodules = new HashMap<>();
-
-    
-
-   
+    private HashMap<String, StudyModule> submodules = new HashMap<>();   
     private StudyModule parent;
     
     // not needed probably
@@ -158,12 +154,14 @@ public class StudyModule extends DegreeModule {
         return code;
     }
 
-    // TODO
-    public void removeCourse() {
-
+    public void removeCourse(String id) {
+        courses.remove(id);
     }
     
     public StudyModule getParent() {
         return parent;
+    }
+    public String getParentID() {
+        return parent.getId();
     }
 }
