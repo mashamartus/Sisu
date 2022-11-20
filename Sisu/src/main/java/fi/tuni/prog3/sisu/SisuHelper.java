@@ -93,7 +93,7 @@ public class SisuHelper implements iAPI {
             }else{
                 name = newStudyModule.getAsJsonObject("name").get("fi").getAsString();
             }
-        System.out.println("StudyModule: "+name+" : "+groupId);
+        //System.out.println("StudyModule: "+name+" : "+groupId);
         String id = newStudyModule.get("id").getAsString();
         //System.out.println("ID: "+id);
         String code = "";
@@ -183,7 +183,7 @@ public class SisuHelper implements iAPI {
         String url = "https://sis-tuni.funidata.fi/kori/api/course-units/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
         JsonObject newCourse = getJsonObjectFromApi(url);
         String name = newCourse.getAsJsonObject("name").get("en").getAsString();
-        System.out.println("Course name: " + name + " : " + groupId);
+        //System.out.println("Course name: " + name + " : " + groupId);
         String id = newCourse.get("id").getAsString();
         //System.out.println("Course id: "+id);
         String description = "";
