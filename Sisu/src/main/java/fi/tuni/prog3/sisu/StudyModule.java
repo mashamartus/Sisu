@@ -15,10 +15,15 @@ public class StudyModule extends DegreeModule {
     // Datastructure type can be changed!
     private HashMap<String, Course> courses = new HashMap<>();
     private HashMap<String, StudyModule> submodules = new HashMap<>();
+
     
-    private ArrayList<Course> listOfStudyModules = new ArrayList <>();
-    private ArrayList<StudyModule> listOfCourses = new ArrayList <>();
+
+   
+    private StudyModule parent;
     
+    // not needed probably
+    //private ArrayList<Course> listOfStudyModules = new ArrayList <>();
+    //private ArrayList<StudyModule> listOfCourses = new ArrayList <>();
     
     private boolean gradable;
     private String description;
@@ -62,6 +67,11 @@ public class StudyModule extends DegreeModule {
     public void addCourse(Course course) {
         courses.put(course.getId(), course);
     }
+    
+     public void setParent(StudyModule parent) {
+        this.parent = parent;
+    }
+    
 
 
     /**
@@ -126,5 +136,9 @@ public class StudyModule extends DegreeModule {
     // TODO
     public void removeCourse() {
 
+    }
+    
+    public StudyModule getParent() {
+        return parent;
     }
 }

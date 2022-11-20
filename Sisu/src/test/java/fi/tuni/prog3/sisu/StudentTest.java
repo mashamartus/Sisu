@@ -97,19 +97,6 @@ public class StudentTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of getDegreePrograms method, of class Student.
-     */
-    @Test
-    public void testGetDegreePrograms() {
-        System.out.println("getDegreePrograms");
-        Student instance = null;
-        HashMap<String, DegreeProgram> expResult = null;
-        HashMap<String, DegreeProgram> result = instance.getDegreePrograms();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of getCompletedCredits method, of class Student.

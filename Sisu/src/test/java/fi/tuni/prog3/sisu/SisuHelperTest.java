@@ -124,18 +124,6 @@ public class SisuHelperTest {
     }
     
     
-    /**
-     * Test of createDegreeProgramFromExample method, of class SisuHelper.
-     */
-    @Test
-    public void testCreateDegreeProgramFromExample() throws Exception {
-        System.out.println("createDegreeProgramFromExample");
-        Boolean expResult = true;
-        DegreeProgram result = SisuHelper.createDegreeProgramFromExample();
-        assertEquals(expResult, true);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of navigate method, of class SisuHelper.

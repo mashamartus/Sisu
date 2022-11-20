@@ -139,7 +139,9 @@ public class SisuHelper implements iAPI {
                 studyModule.addCourse(course);
             }
             else{
+                //System.out.print(" "+groupId);
                 StudyModule subStudyModule = createStudyModule(children.get(i).getAsJsonObject().get("moduleGroupId").getAsString());
+                subStudyModule.setParent(studyModule);
                 studyModule.addStudyModule(subStudyModule);
             }    
         }
@@ -280,6 +282,7 @@ public class SisuHelper implements iAPI {
      * @throws FileNotFoundException if any file is missing.
      * @return DegreeProgram the generated DegreeProgram.
      */
+    /*
     public static DegreeProgram createDegreeProgramFromExample() throws FileNotFoundException {
         // This file is the DegreeProgram root
         String fileName = modulePath + "otm-3990be25-c9fd-4dae-904c-547ac11e8302.json";
@@ -306,7 +309,7 @@ public class SisuHelper implements iAPI {
         catch (IOException e) {
             throw new FileNotFoundException(String.format("File %s not found!", fileName));
         }
-    }
+    }*/
 
 
     /**
