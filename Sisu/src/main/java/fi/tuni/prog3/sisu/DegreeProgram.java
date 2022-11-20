@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
  * The root level of a degree structure.
  * Describes e.g. the name and extent (study credits) of the degree.
  */
-/*
+
 public class DegreeProgram extends DegreeModule {
     // Datastructure type can be changed!
     private HashMap<String, StudyModule> studyModules = new HashMap<>();
@@ -30,7 +30,7 @@ public class DegreeProgram extends DegreeModule {
      * @param description description of the DegreeProgram.
      * @param code        short identifier code.
      */
-/*
+
     public DegreeProgram(String name, String id, String groupId, int minCredits, String description, String code) {
         super(name, id, groupId, minCredits);
         this.code = code;
@@ -43,7 +43,7 @@ public class DegreeProgram extends DegreeModule {
      * @param studyModule to be added.
      *
      */
-/*
+
     public void addStudyModule(StudyModule studyModule) {
         studyModules.put(studyModule.getId(), studyModule);
     }
@@ -54,7 +54,7 @@ public class DegreeProgram extends DegreeModule {
      * @return the found StudyModule.
      * @throws NoSuchElementException if Module not found.
      */
-/*
+
     public StudyModule getStudyModule(String id) {
        StudyModule studyModule = studyModules.get(id);
        if (studyModule != null) {
@@ -67,7 +67,7 @@ public class DegreeProgram extends DegreeModule {
      * Returns as all modules as Arraylist (so they can be sorted if needed).
      * @return Arraylist of StudyModules
      */
-/*
+
     public ArrayList<StudyModule> getStudyModules() {
         return new ArrayList<>(studyModules.values());
     }
@@ -82,4 +82,3 @@ public class DegreeProgram extends DegreeModule {
     
     
 }
-*/
