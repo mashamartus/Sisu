@@ -1,5 +1,7 @@
 package fi.tuni.prog3.sisu;
 
+import java.util.ArrayList;
+
 
 /**
  * Course Class for a single course data.
@@ -93,4 +95,6 @@ public class Course extends DegreeModule {
     public String getCode() {
         return code;
     }
+   
+
 }

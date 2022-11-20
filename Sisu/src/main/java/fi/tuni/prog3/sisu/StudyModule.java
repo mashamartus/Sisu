@@ -120,7 +120,32 @@ public class StudyModule extends DegreeModule {
     public ArrayList<StudyModule> getStudyModules() {
         return new ArrayList<>(submodules.values());
     }
+    
+    @Override
+    public ArrayList<DegreeModule> getStudyModulesAndCourses(){
+        ArrayList<DegreeModule> allSubelements = new ArrayList<>(courses.values());
+        ArrayList<DegreeModule> submodulesList = new ArrayList<>(submodules.values());
+        allSubelements.addAll(submodulesList);
+        return allSubelements;
+    }
 
+    public void printModuleDetailed(StudyModule printedModule, String tab){
+        for(DegreeModule subModule : printedModule.getStudyModulesAndCourses()){
+            if(subModule instanceof Course){
+                System.out.println(tab + "Course " + subModule.getName());
+            }
+            else{
+                if(subModule instanceof StudyModule){
+                    System.out.println(tab + "Module " + subModule.getName());
+                    printModuleDetailed((StudyModule)subModule, tab + "  ");
+                }
+                else{
+                    System.out.println("WRONG :( The submodule is neither of Course or StudyModule!");
+                }
+            }
+        }
+    }
+    
     public boolean isGradable() {
         return gradable;
     }

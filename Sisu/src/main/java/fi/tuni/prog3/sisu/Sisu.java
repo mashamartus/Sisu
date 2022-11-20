@@ -90,8 +90,9 @@ public class Sisu extends Application {
     private VBox getCenterVbox() {
         //Creating an HBox.
         
-        DummyModule degree = getDummyDegreeStructure();
-        
+        //DummyModule degree = getDummyDegreeStructure();
+        SisuHelper sh = new SisuHelper();
+        DegreeModule degree = sh.createStudyModule("tut-dp-g-1280");
         VBox centerVBox = new VBox(10);
         //centerVBox.setAlignment(Pos.TOP_CENTER);
         
@@ -119,7 +120,37 @@ public class Sisu extends Application {
         return box;
     }
     
+     //Create tree structure of the course list
+    private Node handleModule(DegreeModule module){
+        
+        
+        if(module instanceof Course){
+            return setSingleCourseBox((Course)module);
+        }
+        else{
+            StudyModule moduleBlock = (StudyModule)module;
+            ArrayList<DegreeModule> innerModules = moduleBlock.getStudyModulesAndCourses();
+            
+            VBox onePaneContent = new VBox();
+            onePaneContent.setSpacing(2);
+            onePaneContent.setStyle("-fx-background-color: " + rightPanelColor);
+            
+            TitledPane titledPane = new TitledPane(moduleBlock.getName()+ " 0/60", onePaneContent);
+            titledPane.setId(moduleBlock.getId());
+            titledPane.setPadding(new Insets(0,0,0,20));
+            titledPane.setStyle("-fx-background-color: " + rightPanelColor);
+            
+            for(DegreeModule innerModule : innerModules){
+                onePaneContent.getChildren().add(handleModule(innerModule));
+            }
+            return titledPane;
+        }
+    }   
     
+    
+    
+    
+    /*
     //Create tree structure of the course list
     private Node handleModule(DummyModule module){
         if(module instanceof DummyCourse){
@@ -143,9 +174,9 @@ public class Sisu extends Application {
             }
             return titledPane;
         }
-    }
+    }*/
     
-    private HBox setSingleCourseBox(DummyModule module){
+    private HBox setSingleCourseBox(Course module){
         
         HBox box = new HBox();
         box.setAlignment(Pos.CENTER);
@@ -154,7 +185,7 @@ public class Sisu extends Application {
         box.setSpacing(10);
         box.setStyle( "-fx-background-radius: 5 5 5 5; -fx-background-color: " + courseBoxColor);
 
-        Label moduleName = new Label(module.toString());
+        Label courseNameLabel = new Label(module.getName());
 
         Region region = new Region();
         box.setHgrow(region, Priority.ALWAYS);
@@ -164,7 +195,7 @@ public class Sisu extends Application {
         creditSection.setPadding(new Insets(0, 15, 0, 5));
         Label cr = new Label("cr");
         cr.setStyle("-fx-font-size:10;");
-        Label creditLabel = new Label(""+((DummyCourse) module).getCredits());
+        Label creditLabel = new Label("2");//+((DummyCourse) module).getCredits());
         creditSection.getChildren().addAll(cr, creditLabel);
 
 
@@ -176,7 +207,7 @@ public class Sisu extends Application {
         
         
 
-        box.getChildren().addAll(moduleName, region, creditSection, 
+        box.getChildren().addAll(courseNameLabel, region, creditSection, 
                 addToMyCoursesBtn);
         return box;
     }
