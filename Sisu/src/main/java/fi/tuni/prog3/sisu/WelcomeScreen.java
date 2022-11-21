@@ -12,6 +12,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -64,13 +65,14 @@ public class WelcomeScreen {
     
     private VBox setWelcomeWindowRight(){
         VBox box = new VBox();
-        box.setSpacing(1);
+        box.setPadding(new Insets(0, 20, 0, 20));
         box.setAlignment(Pos.CENTER);
         box.setStyle("-fx-background-color: " + Constants.rightPanelColor);
         Label heading = new Label("Create a new plan");
         heading.setFont(new Font(20));
         
         GridPane grid = new GridPane();
+        grid.setGridLinesVisible(true);
         grid.setVgap(8);
         
         
