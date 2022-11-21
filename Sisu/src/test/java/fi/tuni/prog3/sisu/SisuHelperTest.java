@@ -98,10 +98,15 @@ public class SisuHelperTest {
         System.out.println("createCourse");
         //String groupId = "tut-cu-g-48243";
         //String groupId = "tut-cu-g-43073";
-        String groupId = "tut-cu-g-48230";
+        //String groupId = "tut-cu-g-48230";
+        String groupId = "tut-cu-g-38576";
         SisuHelper instance = new SisuHelper();
         Boolean expResult = true;
         Course result = instance.createCourse(groupId);
+        String name = result.getName();
+        String code = result.getCode();
+        int credits = result.getMinCredits();
+        System.out.println(name + " : "+ code +" : " +credits);
         assertEquals(expResult, true);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");

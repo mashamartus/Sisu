@@ -2,33 +2,54 @@
 package fi.tuni.prog3.sisu;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.Charset;
+
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-
-
-
 
 public final class StudentDataExport {
     
-    private String studentID;
-
-    public StudentDataExport(String studentID)  {
-        this.studentID = studentID;
+    ArrayList<Course> courses = new ArrayList <>();
+    private Student student;
+    public StudentDataExport(Student student) {
+        this.student = student;
+        courses = student.getTakenCourses();
+        exportDataToWorkstation();
+    }
+    
+    
+    public void exportDataToWorkstation(){
         
+        JsonObject json = new JsonObject(); 
+        //json.addProperty("name", student.getName());
+        json.addProperty("id", student.getStudentID());
+        json.addProperty("degree program", student.getPlanName());
+        json.addProperty("total credits", student.getPlannedCredits());
+        JsonArray coursesCompleted = new JsonArray();
+        for(int i = 0; i<courses.size(); i++){
+            JsonObject oneCourse = new JsonObject();
+            oneCourse.addProperty("name", courses.get(i).getName());
+            oneCourse.addProperty("code", courses.get(i).getCode());
+            oneCourse.addProperty("credits", courses.get(i).getMinCredits());
+            oneCourse.addProperty("grade", courses.get(i).getGrade());
+            coursesCompleted.add(oneCourse);
+        }
+        
+        json.add("courses", coursesCompleted);
+        String jsonString = json.toString();
+
+        PrintWriter out1 = null;
+        try {
+            
+            out1 = new PrintWriter(new FileWriter("src/main/resources/studentCourses.json"));
+            out1.write(jsonString);
+        } catch (Exception ex) {
+            System.out.println("error: " + ex.toString());
+        }
     }
-    
-    // TODO
-    
-    
-    
-    
-    }
+}
     
  
     

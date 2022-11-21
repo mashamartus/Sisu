@@ -16,9 +16,6 @@ public class Course extends DegreeModule {
     private final String code;
     private StudyModule parent;
 
-    
-
-    
 
     /**
      * A constructor for initializing the member variables.

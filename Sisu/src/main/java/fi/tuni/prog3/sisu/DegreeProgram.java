@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
+// Do not use, will be commented out. StudyModule will replace this.
+
 /**
- * DegreeProgram Class. We dont probably need this, we can use StudyModule 
+ * DegreeProgram Class. 
  * The root level of a degree structure.
  * Describes e.g. the name and extent (study credits) of the degree.
  */
