@@ -151,7 +151,7 @@ public class MainWindow {
         //centerVBox.setAlignment(Pos.TOP_CENTER);
         
         ScrollPane scrollPane = new ScrollPane();
-        Node treeStructure = handleModule(degree);
+        Node treeStructure = handleModule(degree); //new Region();//
         ((Region)treeStructure).setPadding(new Insets(0,0,0,0));
         scrollPane.setContent(treeStructure);
         scrollPane.setFitToWidth(true);

@@ -12,6 +12,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -21,7 +22,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -72,23 +75,27 @@ public class WelcomeScreen {
         heading.setFont(new Font(20));
         
         GridPane grid = new GridPane();
-        grid.setGridLinesVisible(true);
         grid.setVgap(8);
+        
         
         
         
         grid.add(new Label("Student name"), 0, 0);
         TextField studentField = new TextField();
-        studentField.setId("StudentName");
+        studentField.setId("studentName");
         //studentField.setPrefWidth(200);
         grid.add(studentField, 1, 0);
         
-        
-        grid.add(new Label("Name your plan"), 0, 1);
+        Label planLabel = new Label("Name your plan");
+        grid.add(planLabel, 0, 1);
         TextField planNameField = new TextField();
         planNameField.setId("planName");
         //planNameField.setPrefWidth(200);
         grid.add(planNameField, 1, 1);
+        
+        
+        grid.setHgrow(planLabel, Priority.ALWAYS);
+        grid.setHgrow(planNameField, Priority.ALWAYS);
         
         grid.add(new Label("Starting year"), 0, 2);
         ChoiceBox yearChoiceBox = new ChoiceBox();
@@ -102,6 +109,10 @@ public class WelcomeScreen {
                 curStudent.setStartYear(Integer.valueOf(yearChoiceBox.getItems().get((Integer) number2).toString()));
             }
         });
+        
+        ColumnConstraints col = new ColumnConstraints();
+        col.setHalignment(HPos.LEFT);
+        grid.getColumnConstraints().add(col);
         
         Label programLabel = new Label("Choose your degree");
         ChoiceBox degreeChoiceBox = new ChoiceBox();
@@ -127,9 +138,6 @@ public class WelcomeScreen {
                 Sisu.addVRegion(addSpace),  programLabel,  
                 degreeChoiceBox, Sisu.addVRegion(addSpace), goButton);
                 
-//        box.getChildren().addAll(heading, Sisu.addVRegion(addSpace), planNameLabel, 
-//                planNameField, Sisu.addVRegion(addSpace),  programLabel,  
-//                degreeChoiceBox, Sisu.addVRegion(addSpace), goButton);
              
         return box;
     }
@@ -143,6 +151,10 @@ public class WelcomeScreen {
             Stage stage = (Stage)((Node) btnPress.getTarget()).getScene().getWindow();
             Scene scene = ((Button)btnPress.getTarget()).getScene();
             curStudent.setPlanName(((TextField)scene.lookup("#planName")).getText());
+            curStudent.setName(((TextField)scene.lookup("#studentName")).getText());
+            
+            
+            
             
             ChoiceBox degreeBox = (ChoiceBox)scene.lookup("#degreeChoiceBox");
             SisuHelper sh = new SisuHelper();

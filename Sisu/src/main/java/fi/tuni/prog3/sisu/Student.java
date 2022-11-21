@@ -20,6 +20,7 @@ import java.util.HashMap;
  */
 public class Student implements iReadAndWriteToFile {
     private String studentID;
+    private String name;
     private String planName;
     private Integer startYear;
     private Program program;
@@ -41,6 +42,14 @@ public class Student implements iReadAndWriteToFile {
 
     public Program getProgram() {
         return program;
+    }
+
+    public String getStudentName() {
+        return name;
+    }
+
+    public void setName(String studentName) {
+        this.name = studentName;
     }
 
     public void setPlanName(String planName) {
