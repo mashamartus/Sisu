@@ -125,7 +125,7 @@ public class StudyModule extends DegreeModule {
         return allSubelements;
     }
 
-    public void printModuleDetailed(StudyModule printedModule, String tab){
+    public static void printModuleDetailed(StudyModule printedModule, String tab){
         for(DegreeModule subModule : printedModule.getStudyModulesAndCourses()){
             if(subModule instanceof Course){
                 System.out.println(tab + "Course " + subModule.getName());

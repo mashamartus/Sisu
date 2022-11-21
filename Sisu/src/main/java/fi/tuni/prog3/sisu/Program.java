@@ -14,6 +14,12 @@ public class Program {
     private int minCredits;
     private ArrayList<Integer> years;
 
+    /**
+     * Create the instance of Program.
+     * @param name name of the program on the language of the program
+     * @param id by this groupId the program is known in Sisu system
+     * @param minCredits credits required by program
+     */
     public Program(String name, String id, int minCredits) {
         this.name = name;
         this.id = id;

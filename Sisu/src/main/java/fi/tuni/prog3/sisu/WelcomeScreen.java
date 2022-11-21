@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -158,15 +159,21 @@ public class WelcomeScreen {
             
             ChoiceBox degreeBox = (ChoiceBox)scene.lookup("#degreeChoiceBox");
             SisuHelper sh = new SisuHelper();
-            String degree = degreeBox.getSelectionModel().getSelectedItem().toString();
-            System.out.println(degree);
+            String degreeName = degreeBox.getSelectionModel().getSelectedItem().toString();
+            System.out.println(degreeName);
             Optional<Program> selProgramOpt = sh.getAllPrograms(2022).stream()
-                .filter(p -> p.getName().equals(degree))
+                .filter(p -> p.getName().equals(degreeName))
                 .findFirst();
             Program selProgram = selProgramOpt.get();
             curStudent.setProgram(selProgram);
             
             System.out.println(curStudent);
+            
+            StudyModule studyModule = sh.createStudyModule(selProgram.getId());
+            StudyModule.printModuleDetailed(studyModule,"");
+            ScrollPane treeNode = (ScrollPane)mainWindow.lookup("#courseTree");
+            MainWindow mw = new MainWindow();
+            treeNode.setContent(mw.handleModule(studyModule));
             
             stage.setScene(Sisu.mainWindow);
             Sisu.mainWindow.getRoot().requestFocus();
