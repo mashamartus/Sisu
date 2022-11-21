@@ -3,8 +3,13 @@ package fi.tuni.prog3.sisu;
 
 import static fi.tuni.prog3.sisu.Sisu.mainWindow;
 import static fi.tuni.prog3.sisu.Sisu.theStage;
+import static fi.tuni.prog3.sisu.Sisu.curStudent;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -27,7 +32,7 @@ import javafx.stage.Stage;
  */
 public class WelcomeScreen {
     
-
+    ArrayList<Program> programList;
     public WelcomeScreen() {
     }
     
@@ -66,23 +71,40 @@ public class WelcomeScreen {
         heading.setFont(new Font(20));
         
         GridPane grid = new GridPane();
+        grid.setVgap(8);
+        
+        
         
         grid.add(new Label("Student name"), 0, 0);
-        grid.add(new Label("Name your plan"), 0, 1);
-        
-        
         TextField studentField = new TextField();
+        studentField.setId("StudentName");
         //studentField.setPrefWidth(200);
         grid.add(studentField, 1, 0);
         
-        //Label planNameLabel = new Label("Name your plan");
+        
+        grid.add(new Label("Name your plan"), 0, 1);
         TextField planNameField = new TextField();
+        planNameField.setId("planName");
         //planNameField.setPrefWidth(200);
         grid.add(planNameField, 1, 1);
         
+        grid.add(new Label("Starting year"), 0, 2);
+        ChoiceBox yearChoiceBox = new ChoiceBox();
+        yearChoiceBox.getItems().addAll("2018","2019", "2020","2021","2022",
+                "2023","2024","2025","2026");
+        grid.add(yearChoiceBox, 1, 2);
+        yearChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
+              
+                curStudent.setStartYear(Integer.valueOf(yearChoiceBox.getItems().get((Integer) number2).toString()));
+            }
+        });
         
         Label programLabel = new Label("Choose your degree");
         ChoiceBox degreeChoiceBox = new ChoiceBox();
+        degreeChoiceBox.setId("degreeChoiceBox");
+        degreeChoiceBox.getItems().add("Please select a year");
         
         SisuHelper sh = new SisuHelper();
         List<String> programNames = 
@@ -90,6 +112,7 @@ public class WelcomeScreen {
           .map(Program::getName)
           .collect(Collectors.toList());
         degreeChoiceBox.getItems().addAll(programNames);
+        
         
         Button goButton = new Button();
         goButton.setText("Start planning");
@@ -116,8 +139,26 @@ public class WelcomeScreen {
             System.out.println("Start planning button pressed");
             
             Stage stage = (Stage)((Node) btnPress.getTarget()).getScene().getWindow();
+            Scene scene = ((Button)btnPress.getTarget()).getScene();
+            curStudent.setPlanName(((TextField)scene.lookup("#planName")).getText());
+            
+            ChoiceBox degreeBox = (ChoiceBox)scene.lookup("#degreeChoiceBox");
+            SisuHelper sh = new SisuHelper();
+            String degree = degreeBox.getSelectionModel().getSelectedItem().toString();
+            System.out.println(degree);
+            Optional<Program> selProgramOpt = sh.getAllPrograms(2022).stream()
+                .filter(p -> p.getName().equals(degree))
+                .findFirst();
+            Program selProgram = selProgramOpt.get();
+            curStudent.setProgram(selProgram);
+            
+            System.out.println(curStudent);
+            
             stage.setScene(Sisu.mainWindow);
             Sisu.mainWindow.getRoot().requestFocus();
+            
+            
+            
             
         }
     };

@@ -21,6 +21,7 @@ import java.util.HashMap;
 public class Student implements iReadAndWriteToFile {
     private String studentID;
     private String planName;
+    private Integer startYear;
     private Program program;
     private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
     private HashMap<String, Course> takenCourses = new HashMap<>();
@@ -32,6 +33,26 @@ public class Student implements iReadAndWriteToFile {
 
     public String getStudentID() {
         return studentID;
+    }
+
+    public Integer getStartYear() {
+        return startYear;
+    }
+
+    public Program getProgram() {
+        return program;
+    }
+
+    public void setPlanName(String planName) {
+        this.planName = planName;
+    }
+
+    public void setStartYear(Integer startYear) {
+        this.startYear = startYear;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
     }
 
     /**
@@ -110,6 +131,12 @@ public class Student implements iReadAndWriteToFile {
      */
     public boolean takeCourse(String courseId){
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" + "studentID=" + studentID + ", planName=" + planName + 
+                ", startYear=" + startYear + ", program=" + program + ", takenCourses=" + takenCourses + '}';
     }
     
     

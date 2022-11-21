@@ -1,5 +1,6 @@
 package fi.tuni.prog3.sisu;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +43,7 @@ public class Sisu extends Application {
     static Stage theStage;
     static Scene welcomeWindow;
     static Scene mainWindow;
+    static Student curStudent;
     
     //Student student = new Student("SomeId");
     
@@ -49,6 +51,8 @@ public class Sisu extends Application {
     public void start(Stage stage) {
         
         theStage = stage;
+        try{curStudent = new Student("Student1");}
+            catch (FileNotFoundException e) {}
         
         String css = this.getClass().getResource("/style.css").toExternalForm(); 
         
@@ -104,19 +108,9 @@ public class Sisu extends Application {
         return centerVBox;
     }
     
-    // make method for recursive creation of the titled panes
-    
-    private Node handleCourse(DummyCourse course){
-        HBox box = new HBox();
-        Label moduleName = new Label(course.getName());
-        Button addToMyCoursesBtn = new Button("pick the course");
-        box.getChildren().addAll(moduleName, addToMyCoursesBtn);
-        return box;
-    }
-    
+   
      //Create tree structure of the course list
     private Node handleModule(DegreeModule module){
-        
         
         if(module instanceof Course){
             return setSingleCourseBox((Course)module);
@@ -161,7 +155,7 @@ public class Sisu extends Application {
         creditSection.setPadding(new Insets(0, 15, 0, 5));
         Label cr = new Label("cr");
         cr.setStyle("-fx-font-size:10;");
-        Label creditLabel = new Label("2");//+((DummyCourse) module).getCredits());
+        Label creditLabel = new Label(Integer.toString(module.getMinCredits()));
         creditSection.getChildren().addAll(cr, creditLabel);
 
 
@@ -264,23 +258,7 @@ public class Sisu extends Application {
         
         return button;
     }
-    
-    private DummyModule getDummyDegreeStructure(){
-        DummyBlock degree = new DummyBlock("Degree_name");
-        for(int i = 0; i<3; i++){
-            DummyBlock module = new DummyBlock("Module lvl 1 - " + i);
-            for(int k = 0; k<2; k++){
-                DummyBlock module2 = new DummyBlock("Module lvl 2 - " + i + "_" + k);
-                    for(int p = 0; p<5; p++){
-                        DummyCourse course = new DummyCourse("Course " + i + "_" + k + "_" + p);
-                        module2.addModule(course);
-                    }
-                module.addModule(module2);
-            }
-            degree.addModule(module);
-        }
-        return degree;
-    }
+
 
     /**
      * Utility function - create an instance of region with defined 
