@@ -1,6 +1,8 @@
 package fi.tuni.prog3.sisu;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -40,10 +42,6 @@ public class Sisu extends Application {
     static Stage theStage;
     static Scene welcomeWindow;
     static Scene mainWindow;
-    String leftPanelColor = "#567B91;";
-    String rightPanelColor = "#99C4DE;";
-    String courseBoxColor = "#C9EAFF;";
-    String courseButtonColor = "#DEC199;";
     
     //Student student = new Student("SomeId");
     
@@ -55,15 +53,12 @@ public class Sisu extends Application {
         String css = this.getClass().getResource("/style.css").toExternalForm(); 
         
         //define welcome window
-        BorderPane welcomeRoot = new BorderPane();
-        welcomeRoot.setLeft(setWelcomeWindowLeft());
-        welcomeRoot.setCenter(setWelcomeWindowRight());
-        welcomeWindow = new Scene(welcomeRoot, 600, 400);
-        
+        WelcomeScreen welcomeScreen = new WelcomeScreen();
+        welcomeWindow = welcomeScreen.setWelcomeWindow();
         welcomeWindow.getStylesheets().add(css);
-        //stage.setScene(welcomeWindow);
+                
+        stage.setScene(welcomeWindow);
         //stage.setResizable(false);
-        
         
         //define main window
         BorderPane root = new BorderPane();
@@ -73,7 +68,7 @@ public class Sisu extends Application {
         
         mainWindow = new Scene(root, 1000, 700);
         stage.setTitle("Sisu - study planner");
-        stage.setScene(mainWindow);
+        //stage.setScene(mainWindow);
          
         mainWindow.getStylesheets().add(css);
         
@@ -102,8 +97,7 @@ public class Sisu extends Application {
         scrollPane.setContent(treeStructure);
         scrollPane.setFitToWidth(true);
         scrollPane.setPadding(new Insets(20, 30, 0, 30));
-        scrollPane.setStyle("-fx-background-color: " + rightPanelColor);
-        
+        scrollPane.setStyle("-fx-background-color: " + Constants.rightPanelColor);
         
         centerVBox.getChildren().add(scrollPane);
         
@@ -133,12 +127,12 @@ public class Sisu extends Application {
             
             VBox onePaneContent = new VBox();
             onePaneContent.setSpacing(2);
-            onePaneContent.setStyle("-fx-background-color: " + rightPanelColor);
+            onePaneContent.setStyle("-fx-background-color: " + Constants.rightPanelColor);
             
             TitledPane titledPane = new TitledPane(moduleBlock.getName()+ " 0/60", onePaneContent);
             titledPane.setId(moduleBlock.getId());
             titledPane.setPadding(new Insets(0,0,0,20));
-            titledPane.setStyle("-fx-background-color: " + rightPanelColor);
+            titledPane.setStyle("-fx-background-color: " + Constants.rightPanelColor);
             
             for(DegreeModule innerModule : innerModules){
                 onePaneContent.getChildren().add(handleModule(innerModule));
@@ -148,34 +142,6 @@ public class Sisu extends Application {
     }   
     
     
-    
-    
-    /*
-    //Create tree structure of the course list
-    private Node handleModule(DummyModule module){
-        if(module instanceof DummyCourse){
-            return setSingleCourseBox(module);
-        }
-        else{
-            DummyBlock moduleBlock = (DummyBlock)module;
-            ArrayList<DummyModule> innerModules = moduleBlock.getModules();
-            
-            VBox onePaneContent = new VBox();
-            onePaneContent.setSpacing(2);
-            onePaneContent.setStyle("-fx-background-color: " + rightPanelColor);
-            
-            TitledPane titledPane = new TitledPane(moduleBlock.toString() + " 0/60", onePaneContent);
-            titledPane.setId(moduleBlock.getName());
-            titledPane.setPadding(new Insets(0,0,0,20));
-            titledPane.setStyle("-fx-background-color: " + rightPanelColor);
-            
-            for(DummyModule innerModule : innerModules){
-                onePaneContent.getChildren().add(handleModule(innerModule));
-            }
-            return titledPane;
-        }
-    }*/
-    
     private HBox setSingleCourseBox(Course module){
         
         HBox box = new HBox();
@@ -183,7 +149,7 @@ public class Sisu extends Application {
         box.setPrefHeight(45);
         box.setPadding(new Insets(0, 15, 0, 15));
         box.setSpacing(10);
-        box.setStyle( "-fx-background-radius: 5 5 5 5; -fx-background-color: " + courseBoxColor);
+        box.setStyle( "-fx-background-radius: 5 5 5 5; -fx-background-color: " + Constants.courseBoxColor);
 
         Label courseNameLabel = new Label(module.getName());
 
@@ -203,7 +169,7 @@ public class Sisu extends Application {
         addToMyCoursesBtn.setPrefWidth(150);
         addToMyCoursesBtn.setId(module.getName());
         addToMyCoursesBtn.setOnAction(takeCourseEventHandler);
-        addToMyCoursesBtn.setStyle( "-fx-background-color: " + courseButtonColor);
+        addToMyCoursesBtn.setStyle( "-fx-background-color: " + Constants.courseButtonColor);
         
         
 
@@ -218,7 +184,7 @@ public class Sisu extends Application {
         BorderPane menuPane = new BorderPane();
         
         menuPane.setPrefWidth(300);
-        menuPane.setStyle("-fx-background-color: " + leftPanelColor);
+        menuPane.setStyle("-fx-background-color: " + Constants.leftPanelColor);
         menuPane.setTop(headingPane());
         
         menuPane.setCenter(progressPane());
@@ -279,7 +245,11 @@ public class Sisu extends Application {
         
         Button writeDataBtn = new Button("Write to file");
         
-        box.getChildren().addAll(writeDataBtn, addVRegion(15), getQuitButton());
+        Button backToWelcomeScreen = new Button("Back");
+        backToWelcomeScreen.setOnAction(goToWelcomeScreen);
+        
+        box.getChildren().addAll(writeDataBtn, addVRegion(15), 
+                backToWelcomeScreen, addVRegion(15), getQuitButton());
         return box;
     }
     private Button getQuitButton(){
@@ -311,77 +281,35 @@ public class Sisu extends Application {
         }
         return degree;
     }
-    
-    private VBox setWelcomeWindowLeft(){
-        VBox box = new VBox();
-        box.setStyle("-fx-background-color: " + leftPanelColor);
-        box.setAlignment(Pos.CENTER);
-        box.setPrefWidth(220);
-        box.setPrefHeight(100);
-        Button continueFromPastBtn = new Button();
-        continueFromPastBtn.setText("Continue from previous session");
-        continueFromPastBtn.setFont(new Font(16));
-        continueFromPastBtn.setTextAlignment(TextAlignment.CENTER);
-        continueFromPastBtn.wrapTextProperty().setValue(true);
-        continueFromPastBtn.setPrefWidth(150);
-        box.getChildren().add(continueFromPastBtn);
-        return box;
-    }
-    
-    private VBox setWelcomeWindowRight(){
-        VBox box = new VBox();
-        box.setSpacing(1);
-        box.setAlignment(Pos.CENTER);
-        box.setStyle("-fx-background-color: " + rightPanelColor);
-        Label heading = new Label("Create a new plan");
-        heading.setFont(new Font(20));
-        
-        Label planNameLabel = new Label("Name your plan");
-        TextField planNameField = new TextField();
-        planNameField.setPrefWidth(200);
-        planNameField.setMaxWidth(200);
-        
-        Label programLabel = new Label("Choose your degree");
-        ChoiceBox degreeChoiceBox = new ChoiceBox();
-        degreeChoiceBox.getItems().addAll("MSc of computer science", 
-                "MSc in Building Technology", "BSc of historical dancing");
-        
-        Button goButton = new Button();
-        goButton.setText("Start planning");
-        goButton.setOnAction(startPlanningEventHandler);
-        goButton.setMinWidth(100);
-        goButton.setMinHeight(40);
-        
-        double addSpace = 20;
-        
-        box.getChildren().addAll(heading, addVRegion(addSpace), planNameLabel, 
-                planNameField, addVRegion(addSpace),  programLabel,  
-                degreeChoiceBox, addVRegion(addSpace), goButton);
-             
-        return box;
-    }
-    
-    private Region addVRegion(double spacing){
+
+    /**
+     * Utility function - create an instance of region with defined 
+     * vertical space.
+     * @param spacing height of the region 
+     * @return region of defined vertical height
+     */
+    public static Region addVRegion(double spacing){
         Region space = new Region();
         space.setPrefHeight(spacing);
         return space;
     }
+ 
+        
+    private void updateBlockHeading(TitledPane pane){
+        String oldHeading = pane.getText();
+        String moduleName = oldHeading.substring(0, oldHeading.lastIndexOf(" "));
+        pane.setText(moduleName + " 5/60");
+    }
     
-    
-    
-    
-    
-    //Event handlers:
-    
-    EventHandler<ActionEvent> startPlanningEventHandler = new EventHandler<ActionEvent>(){
+    EventHandler<ActionEvent> gradeCourseEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
-            System.out.println("Start planning button pressed");
-            theStage.setScene(mainWindow);
-            Sisu.mainWindow.getRoot().requestFocus();
         }
     };
     
+    
+    //Event handlers:
+
     EventHandler<ActionEvent> takeCourseEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
@@ -404,23 +332,20 @@ public class Sisu extends Application {
             }
             else{
                 //remove course
-                courseBtn.getParent().setStyle("-fx-background-color: " + courseBoxColor);
+                courseBtn.getParent().setStyle("-fx-background-color: " + Constants.courseBoxColor);
                 courseBtn.setText("Take course");
                 courseBtn.setPrefWidth(150);
                 ((Pane)courseBtn.getParent()).getChildren().remove(((Pane)courseBtn.getParent()).getChildren().get(4));
             }
         }
     };
-    
-    private void updateBlockHeading(TitledPane pane){
-        String oldHeading = pane.getText();
-        String moduleName = oldHeading.substring(0, oldHeading.lastIndexOf(" "));
-        pane.setText(moduleName + " 5/60");
-    }
-    
-    EventHandler<ActionEvent> gradeCourseEventHandler = new EventHandler<ActionEvent>(){
+
+    EventHandler<ActionEvent> goToWelcomeScreen = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
+            System.out.println("Back button pressed");
+            theStage.setScene(welcomeWindow);
+            
         }
     };
 }
