@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ public final class StudentDataExport {
     public void exportDataToWorkstation(){
         
         JsonObject json = new JsonObject(); 
-        //json.addProperty("name", student.getName());
+        json.addProperty("name", student.getStudentName());
         json.addProperty("id", student.getStudentID());
         json.addProperty("degree program", student.getPlanName());
         json.addProperty("total credits", student.getPlannedCredits());
@@ -40,12 +41,12 @@ public final class StudentDataExport {
         json.add("courses", coursesCompleted);
         String jsonString = json.toString();
 
-        PrintWriter out1 = null;
+        PrintWriter out1;
         try {
             
             out1 = new PrintWriter(new FileWriter("src/main/resources/studentCourses.json"));
             out1.write(jsonString);
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             System.out.println("error: " + ex.toString());
         }
     }
