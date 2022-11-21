@@ -4,6 +4,7 @@ package fi.tuni.prog3.sisu;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.io.File;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -38,15 +39,16 @@ public final class StudentDataExport {
             coursesCompleted.add(oneCourse);
         }
         
-        json.add("courses", coursesCompleted);
+        if(coursesCompleted.size()>0){
+            json.add("courses", coursesCompleted.getAsJsonObject());
+        }
+        
         String jsonString = json.toString();
 
-        PrintWriter out1;
-        try {
-            
-            out1 = new PrintWriter(new FileWriter("src/main/resources/studentCourses.json"));
-            out1.write(jsonString);
-        } catch (IOException ex) {
+            try (PrintWriter file = new PrintWriter( new FileWriter("src/main/resources/studentCourses.json"))) {
+                file.write(jsonString);
+                file.close();
+            }catch (IOException ex) {
             System.out.println("error: " + ex.toString());
         }
     }

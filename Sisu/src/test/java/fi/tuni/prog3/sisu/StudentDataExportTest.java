@@ -4,6 +4,7 @@
  */
 package fi.tuni.prog3.sisu;
 
+import java.io.FileNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,34 +37,26 @@ public class StudentDataExportTest {
     public void tearDown() {
     }
 
-    @Test
-    public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of createJSON method, of class StudentDataExport.
-     */
-    @Test
-    public void testCreateJSON() throws Exception {
-        System.out.println("createJSON");
-        //StudentDataExport instance = new StudentDataExport("ddddd");
-        //instance.createJSON();
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
     /**
      * Test of exportDataToWorkstation method, of class StudentDataExport.
      */
     @Test
-    public void testExportDataToWorkstation() {
+    public void testExportDataToWorkstation() throws FileNotFoundException {
         System.out.println("exportDataToWorkstation");
-        StudentDataExport instance = null;
+        
+        Program program = new Program("Johtamisen ja tietotekniikan DI-ohjelma", "tut-dp-g-1280", 120);
+        
+        Student student = new Student("H1234");
+        student.setName("Maija");
+        student.setPlanName("My Plan");
+        student.setStartYear(2021);
+        student.setProgram(program);
+
+        
+        StudentDataExport instance = new StudentDataExport(student);
         instance.exportDataToWorkstation();
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
     
 }
