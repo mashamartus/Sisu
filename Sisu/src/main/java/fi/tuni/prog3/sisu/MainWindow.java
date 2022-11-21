@@ -145,13 +145,12 @@ public class MainWindow {
         //Creating an HBox.
         
         //DummyModule degree = getDummyDegreeStructure();
-        SisuHelper sh = new SisuHelper();
-        DegreeModule degree = sh.createStudyModule("tut-dp-g-1280");
         VBox centerVBox = new VBox(10);
         //centerVBox.setAlignment(Pos.TOP_CENTER);
         
         ScrollPane scrollPane = new ScrollPane();
-        Node treeStructure = handleModule(degree); //new Region();//
+        scrollPane.setId("courseTree");
+        Node treeStructure = new Region();//handleModule(degree); //
         ((Region)treeStructure).setPadding(new Insets(0,0,0,0));
         scrollPane.setContent(treeStructure);
         scrollPane.setFitToWidth(true);
@@ -165,7 +164,7 @@ public class MainWindow {
     
    
      //Create tree structure of the course list
-    private Node handleModule(DegreeModule module){
+    public Node handleModule(DegreeModule module){
         
         if(module instanceof Course){
             return setSingleCourseBox((Course)module);
