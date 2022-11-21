@@ -26,6 +26,8 @@ public class Student implements iReadAndWriteToFile {
     private Program program;
     private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
     private HashMap<String, Course> takenCourses = new HashMap<>();
+    private HashMap<String, Integer> courseGrades;
+    private ArrayList<String> completed;
   
 
     public Student(String studentID) throws FileNotFoundException {
