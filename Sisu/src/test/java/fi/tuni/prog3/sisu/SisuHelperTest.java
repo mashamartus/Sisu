@@ -6,6 +6,7 @@ package fi.tuni.prog3.sisu;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.util.ArrayList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -165,7 +166,15 @@ public class SisuHelperTest {
         fail("The test case is a prototype.");
     }
 
- 
+    @Test 
+    public void testGetAllPrograms(){
+        SisuHelper sh = new SisuHelper();
+        ArrayList<Program> programs = sh.getAllPrograms(2021);
+        System.out.println("List of programs:");
+        for(int i = 0; i<40; i++){
+            System.out.println(programs.get(i));
+        }
+    }
 
 
 

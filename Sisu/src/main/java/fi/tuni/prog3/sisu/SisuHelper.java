@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 
@@ -428,5 +429,37 @@ public class SisuHelper implements iAPI {
         catch (IOException e) {
             throw new FileNotFoundException(String.format("File %s not found!", fileName));
         }
+    }
+    
+    /**
+     * Getting all programs from Sisu database for relevant year. 
+     * Method return all programs where curriculum exists for given year 
+     * @param startYear the start year of the studies. From 
+     * @return list of @see fi.tuni.prog3.sisu.Program for all programs relevant 
+     * for given year
+     * @author mariia
+     */
+    public ArrayList<Program> getAllPrograms(int startYear) {
+        ArrayList<Program> allPrograms = new ArrayList<>();
+        
+        String url = "https://sis-tuni.funidata.fi/kori/api/module-search?curriculumPeriodId=uta-lvv-" + 
+                startYear + "&universityId=tuni-university-root-id&moduleType=DegreeProgramme&limit=1000";
+        JsonObject programsJSON = getJsonObjectFromApi(url);
+        JsonArray programsArray = programsJSON.get("searchResults").getAsJsonArray();
+        for(JsonElement programJSON : programsArray){
+            JsonObject program = programJSON.getAsJsonObject();
+            String name = program.get("name").getAsString();
+            //System.out.println("Course name: " + name + " : " + groupId);
+            String id = program.get("groupId").getAsString();
+            int minCredits = program.getAsJsonObject("credits").get("min").getAsInt();
+            Program programObj = new Program(name, id, minCredits);
+            JsonArray yearsArray = program.get("curriculumPeriodIds").getAsJsonArray();
+            for(JsonElement yearEl : yearsArray){
+                String[] yearSrtings = yearEl.getAsString().split("-");
+                programObj.addYear(Integer.parseInt(yearSrtings[2]));
+            }
+            allPrograms.add(programObj);
+        }
+        return allPrograms;        
     }
 }

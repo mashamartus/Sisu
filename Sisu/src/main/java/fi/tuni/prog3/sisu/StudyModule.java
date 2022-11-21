@@ -91,7 +91,7 @@ public class StudyModule extends DegreeModule {
      * @return the found StudyModule.
      * @throws NoSuchElementException if the StudyModule is not found.
      */
-    public StudyModule getSubModules(String id) {
+    public StudyModule getSubModule(String id) {
         StudyModule studyModule = submodules.get(id);
         if (studyModule != null) {
             return studyModule;

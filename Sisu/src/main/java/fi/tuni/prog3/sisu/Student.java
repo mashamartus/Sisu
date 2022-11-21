@@ -2,25 +2,28 @@ package fi.tuni.prog3.sisu;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * 
  * (MMa: correct me if our concept is another one) 
- * Class provide functionality for the user course planning. 
+ * Class concerning student plan data. 
  * It can read already saved on pc study plan. Then during the planning 
- * it keep track of the user's actions like including or excluding 
- * the course into/from his plan and putting grades. 
+ * it keep track of the user's actions like including  
+ * the course into his plan and putting grades or excluding it.
  * The class also have a methods to compute parameters about the plan 
  * concerning his degree program and picked courses 
  * ({@link Student.getCompletedCredits getCompletedCredits}, 
  * {@link Student.getPlannedCredits getPlannedCredits} etc.)
  * 
- * Student class
  */
 public class Student implements iReadAndWriteToFile {
     private String studentID;
+    private String planName;
     private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
+    private HashMap<String, Course> takenCourses = new HashMap<>();
+  
 
     public Student(String studentID) throws FileNotFoundException {
         this.studentID = studentID;
@@ -30,10 +33,30 @@ public class Student implements iReadAndWriteToFile {
         return studentID;
     }
 
+    /**
+     * Return the name the user marked his study plan.
+     * @return plan name
+     */
+    public String getPlanName() {
+        return planName;
+    }
+
+    /**
+     * Return all courses the student take.
+     * @return courses that student take in this plan.
+     */
+    public ArrayList<Course> getTakenCourses() {
+        ArrayList<Course> courses = new ArrayList<>();
+        courses.addAll(takenCourses.values());
+        return courses;
+    }
+    
     public HashMap<String, DegreeProgram> getDegreePrograms() {
         return degreePrograms;
     }
 
+    
+    
     @Override
     public boolean readFromFile(String fileName) throws FileNotFoundException {
         return false;
@@ -49,6 +72,10 @@ public class Student implements iReadAndWriteToFile {
      * @return return sum of credits of all completed courses
      */
     public double getCompletedCredits(){
+        
+        for(Course course : this.getTakenCourses()){
+            
+        }
         return 35;
     }
     
