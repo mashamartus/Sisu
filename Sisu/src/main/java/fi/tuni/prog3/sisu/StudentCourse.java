@@ -12,11 +12,7 @@ public class StudentCourse extends Course{
     private boolean completed;
 
     public StudentCourse(Course course) {
-<<<<<<< HEAD
-        super(course.getName(), course.getNameEn(), course.getNameFi(), course.getId(), "", course.getMinCredits(), 
-=======
         super(course.getNameEn(),course.getNameFi(), course.getId(), "", course.getMinCredits(), 
->>>>>>> bc4343e90becfd3c15d6f41a43bb12e6f256bcc8
                 course.isGradable(), course.getDescription(), course.getCode());
     }
 
