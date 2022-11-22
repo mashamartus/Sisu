@@ -33,8 +33,8 @@ public class DegreeProgram extends DegreeModule {
      * @param code        short identifier code.
      */
 
-    public DegreeProgram(String name, String id, String groupId, int minCredits, String description, String code) {
-        super(name, id, groupId, minCredits);
+    public DegreeProgram(String name, String nameEn, String nameFi, String id, String groupId, int minCredits, String description, String code) {
+        super(name, nameEn, nameFi, id, groupId, minCredits);
         this.code = code;
         this.description = description;
     }

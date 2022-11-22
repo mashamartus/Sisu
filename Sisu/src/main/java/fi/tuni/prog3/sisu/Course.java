@@ -28,9 +28,9 @@ public class Course extends DegreeModule {
      * @param description the course description.
      * @param code        the short string course identifier.
      */
-    public Course(String name, String id, String groupId, int minCredits,
+    public Course(String name, String nameEn, String nameFi, String id, String groupId, int minCredits,
                   boolean gradable, String description, String code) {
-        super(name, id, groupId, minCredits);
+        super(name, nameEn, nameFi, id, groupId, minCredits);
         this.gradable = gradable;
         this.grade = 0;
         this.isPassed = false;

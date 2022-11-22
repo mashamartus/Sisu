@@ -91,10 +91,17 @@ public class SisuHelper implements iAPI {
         JsonObject content = newStudyModule.getAsJsonObject("name");
          if (content.has("en")){
                 name = newStudyModule.getAsJsonObject("name").get("en").getAsString();
-            }else{
-                name = newStudyModule.getAsJsonObject("name").get("fi").getAsString();
             }
-        //System.out.println("StudyModule: "+name+" : "+groupId);
+         else{
+                name = newStudyModule.getAsJsonObject("name").get("fi").getAsString();
+         }
+        
+        //System.out.println("StudyModule: "+name+" : "+groupId); 
+        
+         
+        String nameFi =  newStudyModule.getAsJsonObject("name").get("fi").getAsString();
+        //System.out.println("nameFi: "+nameFi);
+        
         String id = newStudyModule.get("id").getAsString();
         //System.out.println("ID: "+id);
         String code = "";
@@ -136,7 +143,7 @@ public class SisuHelper implements iAPI {
         
         }
         //System.out.println(children);
-        StudyModule studyModule = new StudyModule(name, id, groupId, credits, gradable, description, code);
+        StudyModule studyModule = new StudyModule(name, name, nameFi, id, groupId, credits, gradable, description, code);
         
         for (int i = 0; i<children.size();i++){
             if(children.get(i).getAsJsonObject().get("type").getAsString().equals("CourseUnitRule")){
@@ -184,6 +191,17 @@ public class SisuHelper implements iAPI {
         String url = "https://sis-tuni.funidata.fi/kori/api/course-units/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
         JsonObject newCourse = getJsonObjectFromApi(url);
         String name = newCourse.getAsJsonObject("name").get("en").getAsString();
+        //String nameFi = newCourse.getAsJsonObject("name").get("fi").getAsString();
+        String nameFi;
+        JsonObject contentName = newCourse.getAsJsonObject("name");
+         if (contentName.has("fi")){
+                nameFi = newCourse.getAsJsonObject("name").get("fi").getAsString();
+            }
+         else{
+                nameFi = newCourse.getAsJsonObject("name").get("en").getAsString();
+         }
+        
+        
         //System.out.println("Course name: " + name + " : " + groupId);
         String id = newCourse.get("id").getAsString();
         //System.out.println("Course id: "+id);
@@ -204,7 +222,7 @@ public class SisuHelper implements iAPI {
         //System.out.println("Credits: " + credits);
         boolean gradable = newCourse.get("gradeScaleId").getAsString().equals("sis-0-5");
         //System.out.println("gradable: " + gradable);
-        return new Course(name, id, groupId, credits, gradable, description, code);
+        return new Course(name, name, nameFi, id, groupId, credits, gradable, description, code);
   
     }
     
@@ -376,6 +394,7 @@ public class SisuHelper implements iAPI {
 
             // Might need to check if exists first.
             String name = jsonObject.getAsJsonObject("name").get("en").getAsString();
+            String nameFi = jsonObject.getAsJsonObject("name").get("fi").getAsString();
             String id = jsonObject.get("id").getAsString();
             String groupId = jsonObject.get("groupId").getAsString();
 
@@ -397,7 +416,7 @@ public class SisuHelper implements iAPI {
             }
 
             // create and return the module
-            return new StudyModule(name, id, groupId, credits, gradable, description, code);
+            return new StudyModule(name, name, nameFi, id, groupId, credits, gradable, description, code);
         }
         catch (IOException e) {
             throw new FileNotFoundException(String.format("File %s not found!", fileName));
@@ -416,6 +435,7 @@ public class SisuHelper implements iAPI {
 
             // might need to check if exists first
             String name = jsonObject.getAsJsonObject("name").get("en").getAsString();
+            String nameFi = jsonObject.getAsJsonObject("name").get("fi").getAsString();
             String id = jsonObject.get("id").getAsString();
             String groupId = jsonObject.get("groupId").getAsString();
             String description = jsonObject.getAsJsonObject("content").get("en").getAsString();
@@ -424,7 +444,7 @@ public class SisuHelper implements iAPI {
             boolean gradable = jsonObject.get("gradeScaleId").getAsString().equals("sis-0-5");
 
             // create and return the course
-            return new Course(name, id, groupId, credits, gradable, description, code);
+            return new Course(name, name, nameFi, id, groupId, credits, gradable, description, code);
         }
         catch (IOException e) {
             throw new FileNotFoundException(String.format("File %s not found!", fileName));

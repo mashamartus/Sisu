@@ -69,7 +69,8 @@ public class SisuHelperTest {
         //String groupId = "tut-sm-g-4720";
         //String groupId = "tut-dp-g-1280";
         //String groupId = "otm-d16d6df1-92a5-4079-8101-c44e26cb072c";
-        String groupId = "tut-dp-g-1180";
+        //String groupId = "tut-dp-g-1180";
+        String groupId = "tut-dp-g-1105";
         SisuHelper instance = new SisuHelper();
         Boolean expResult = true;
         StudyModule result = instance.createStudyModule(groupId);
@@ -100,6 +101,7 @@ public class SisuHelperTest {
         //String groupId = "tut-cu-g-43073";
         //String groupId = "tut-cu-g-48230";
         String groupId = "tut-cu-g-38576";
+       
         SisuHelper instance = new SisuHelper();
         Boolean expResult = true;
         Course result = instance.createCourse(groupId);
@@ -174,7 +176,7 @@ public class SisuHelperTest {
     @Test 
     public void testGetAllPrograms(){
         SisuHelper sh = new SisuHelper();
-        ArrayList<Program> programs = sh.getAllPrograms(2021);
+        ArrayList<Program> programs = sh.getAllPrograms(2021, "en");
         System.out.println("List of programs:");
         for(int i = 0; i<40; i++){
             System.out.println(programs.get(i));

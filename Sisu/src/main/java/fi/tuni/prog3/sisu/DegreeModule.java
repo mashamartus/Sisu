@@ -13,6 +13,8 @@ public abstract class DegreeModule {
 
 
     private String name;
+    private String nameFi;
+    private String nameEn;
     private String id;
     private String groupId;
     private int minCredits;
@@ -24,14 +26,18 @@ public abstract class DegreeModule {
      * @param groupId group id of the Module or Course.
      * @param minCredits minimum credits of the Module or Course.
      */
-    public DegreeModule(String name, String id, String groupId, 
+    public DegreeModule(String name, String nameEn, String nameFi, String id, String groupId, 
             int minCredits) {
         
         this.name = name;
+        this.nameEn = nameEn;
+        this.nameFi = nameFi;
         this.id = id;
         this.groupId = groupId;
         this.minCredits = minCredits;
     }
+
+   
     
     /**
      * Returns the name of the Module or Course.
@@ -39,6 +45,22 @@ public abstract class DegreeModule {
      */
     public String getName() {
         return this.name;
+    }
+    
+    /**
+     * Returns the nameFi of the Module or Course.
+     * @return finnish name of the Module or Course.
+     */
+     public String getNameFi() {
+        return nameFi;
+    }
+
+     /**
+     * Returns the nameEn of the Module or Course.
+     * @return english name of the Module or Course.
+     */
+    public String getNameEn() {
+        return nameEn;
     }
     
     /**
