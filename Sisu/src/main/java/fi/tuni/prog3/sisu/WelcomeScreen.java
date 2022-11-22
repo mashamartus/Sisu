@@ -95,6 +95,10 @@ public class WelcomeScreen {
         grid.setHgrow(planLabel, Priority.ALWAYS);
         grid.setHgrow(planNameField, Priority.ALWAYS);
         
+        
+        
+        
+        
         grid.add(new Label("Starting year"), 0, 2);
         ChoiceBox yearChoiceBox = new ChoiceBox();
         yearChoiceBox.getItems().addAll("2018","2019", "2020","2021","2022",
@@ -148,7 +152,6 @@ public class WelcomeScreen {
             
             Stage stage = (Stage)((Node) btnPress.getTarget()).getScene().getWindow();
             Scene scene = ((Button)btnPress.getTarget()).getScene();
-            curStudent.setPlanName(((TextField)scene.lookup("#planName")).getText());
             curStudent.setName(((TextField)scene.lookup("#studentName")).getText());
             
             
@@ -163,6 +166,7 @@ public class WelcomeScreen {
                 .findFirst();
             Program selProgram = selProgramOpt.get();
             curStudent.setProgram(selProgram);
+            curStudent.setPlanName(((TextField)scene.lookup("#planName")).getText());
             
             System.out.println(curStudent);
             

@@ -17,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -146,7 +147,19 @@ public class MainWindow {
         
         //DummyModule degree = getDummyDegreeStructure();
         VBox centerVBox = new VBox(10);
-        //centerVBox.setAlignment(Pos.TOP_CENTER);
+        
+        HBox headingBox = new HBox();
+        ChoiceBox languageChoiceBox = new ChoiceBox();
+        languageChoiceBox.getItems().addAll("en", "fi");
+        
+        
+        ChoiceBox showTakenCoursesChoice = new ChoiceBox();
+        showTakenCoursesChoice.getItems().addAll("Show all courses", 
+                "Show taken courses");
+        headingBox.getChildren().addAll(showTakenCoursesChoice, languageChoiceBox);
+        
+                
+        
         
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setId("courseTree");
@@ -157,7 +170,7 @@ public class MainWindow {
         scrollPane.setPadding(new Insets(20, 30, 0, 30));
         scrollPane.setStyle("-fx-background-color: " + Constants.rightPanelColor);
         
-        centerVBox.getChildren().add(scrollPane);
+        centerVBox.getChildren().addAll(headingBox, scrollPane);
         
         return centerVBox;
     }

@@ -37,9 +37,9 @@ public class StudyModule extends DegreeModule {
      * @param description description of the Module.
      * @param code        short code string of the module
      */
-    public StudyModule(String name, String nameEn, String nameFi, String id, String groupId, int minCredits,
+    public StudyModule(String nameEn, String nameFi, String id, String groupId, int minCredits,
                        boolean gradable, String description, String code) {
-        super(name, nameEn, nameFi, id, groupId, minCredits);
+        super(nameEn, nameFi, id, groupId, minCredits);
         this.gradable = gradable;
         this.description = description;
         this.code = code;

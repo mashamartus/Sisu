@@ -25,7 +25,7 @@ public class DegreeProgram extends DegreeModule {
     /**
      * A constructor for initializing the member variables.
      *
-     * @param name        name of the DegreeProgram.
+     * @param nameEn        name of the DegreeProgram.
      * @param id          id of the DegreeProgram.
      * @param groupId     group id of the DegreeProgram.
      * @param minCredits  minimum credits of the DegreeProgram.
@@ -33,8 +33,8 @@ public class DegreeProgram extends DegreeModule {
      * @param code        short identifier code.
      */
 
-    public DegreeProgram(String name, String nameEn, String nameFi, String id, String groupId, int minCredits, String description, String code) {
-        super(name, nameEn, nameFi, id, groupId, minCredits);
+    public DegreeProgram(String nameEn, String nameFi, String id, String groupId, int minCredits, String description, String code) {
+        super(nameEn, nameFi, id, groupId, minCredits);
         this.code = code;
         this.description = description;
     }

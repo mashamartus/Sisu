@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package fi.tuni.prog3.sisu;
 
 import java.util.ArrayList;
@@ -11,8 +8,6 @@ import java.util.ArrayList;
  */
 public abstract class DegreeModule {
 
-
-    private String name;
     private String nameFi;
     private String nameEn;
     private String id;
@@ -21,30 +16,33 @@ public abstract class DegreeModule {
     
     /**
      * A constructor for initializing the member variables.
-     * @param name name of the Module or Course.
+     * @param nameEn name of the Module or Course in English
+     * @param nameFi name of the Module or Course in Finnish
      * @param id id of the Module or Course.
      * @param groupId group id of the Module or Course.
      * @param minCredits minimum credits of the Module or Course.
      */
-    public DegreeModule(String name, String nameEn, String nameFi, String id, String groupId, 
+    public DegreeModule(String nameEn, String nameFi, String id, String groupId, 
             int minCredits) {
         
-        this.name = name;
         this.nameEn = nameEn;
         this.nameFi = nameFi;
         this.id = id;
         this.groupId = groupId;
         this.minCredits = minCredits;
     }
-
-   
     
     /**
      * Returns the name of the Module or Course.
      * @return name of the Module or Course.
      */
     public String getName() {
-        return this.name;
+        if(!this.nameEn.isBlank() && !this.nameEn.equals(null)){
+            return this.nameEn;
+        }
+        else{
+            return this.nameFi;
+        } 
     }
     
     /**
