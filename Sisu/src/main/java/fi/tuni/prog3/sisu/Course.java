@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class Course extends DegreeModule {
     private boolean isPassed;
-    private int grade;
+    //private int grade;
     private final boolean gradable;
     private final String description;
     private final String code;
@@ -32,7 +32,7 @@ public class Course extends DegreeModule {
                   boolean gradable, String description, String code) {
         super(name, nameEn, nameFi, id, groupId, minCredits);
         this.gradable = gradable;
-        this.grade = 0;
+        //this.grade = 0;
         this.isPassed = false;
         this.description = description;
         this.code = code;
@@ -46,25 +46,6 @@ public class Course extends DegreeModule {
         this.isPassed = isPassed;
     }
 
-    /**
-     * Sets the course grade.
-     * @param grade int grade between 0-5 accepted.
-     * @throws IllegalArgumentException if the grade is invalid.
-     */
-    public void setGrade(int grade) throws IllegalArgumentException {
-        if (grade >= 0 && grade <= 5) {
-            this.grade = grade;
-        }
-        else throw new IllegalArgumentException(String.format("Trying set course grade to: %d", grade));
-    }
-
-    /**
-     * Returns the grade given to course.
-     * @return int grade
-     */
-    public int getGrade() {
-        return grade;
-    }
     
     public void setParent(StudyModule parent) {
         this.parent = parent;
