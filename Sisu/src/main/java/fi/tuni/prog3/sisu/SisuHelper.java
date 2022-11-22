@@ -143,7 +143,7 @@ public class SisuHelper implements iAPI {
         
         }
         //System.out.println(children);
-        StudyModule studyModule = new StudyModule(name, name, nameFi, id, groupId, credits, gradable, description, code);
+        StudyModule studyModule = new StudyModule(name, nameFi, id, groupId, credits, gradable, description, code);
         
         for (int i = 0; i<children.size();i++){
             if(children.get(i).getAsJsonObject().get("type").getAsString().equals("CourseUnitRule")){
@@ -222,7 +222,7 @@ public class SisuHelper implements iAPI {
         //System.out.println("Credits: " + credits);
         boolean gradable = newCourse.get("gradeScaleId").getAsString().equals("sis-0-5");
         //System.out.println("gradable: " + gradable);
-        return new Course(name, name, nameFi, id, groupId, credits, gradable, description, code);
+        return new Course(name, nameFi, id, groupId, credits, gradable, description, code);
   
     }
     
@@ -416,7 +416,7 @@ public class SisuHelper implements iAPI {
             }
 
             // create and return the module
-            return new StudyModule(name, name, nameFi, id, groupId, credits, gradable, description, code);
+            return new StudyModule(name, nameFi, id, groupId, credits, gradable, description, code);
         }
         catch (IOException e) {
             throw new FileNotFoundException(String.format("File %s not found!", fileName));
@@ -444,7 +444,7 @@ public class SisuHelper implements iAPI {
             boolean gradable = jsonObject.get("gradeScaleId").getAsString().equals("sis-0-5");
 
             // create and return the course
-            return new Course(name, name, nameFi, id, groupId, credits, gradable, description, code);
+            return new Course(name, nameFi, id, groupId, credits, gradable, description, code);
         }
         catch (IOException e) {
             throw new FileNotFoundException(String.format("File %s not found!", fileName));

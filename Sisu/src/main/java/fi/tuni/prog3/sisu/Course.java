@@ -20,7 +20,8 @@ public class Course extends DegreeModule {
     /**
      * A constructor for initializing the member variables.
      *
-     * @param name        name of the Course.
+     * @param nameEn name of the course in English
+     * @param nameFi name of the course in Finnish
      * @param id          id of the Course.
      * @param groupId     group id of Course.
      * @param minCredits  minimum credits of the Course.
@@ -28,9 +29,9 @@ public class Course extends DegreeModule {
      * @param description the course description.
      * @param code        the short string course identifier.
      */
-    public Course(String name, String nameEn, String nameFi, String id, String groupId, int minCredits,
+    public Course(String nameEn, String nameFi, String id, String groupId, int minCredits,
                   boolean gradable, String description, String code) {
-        super(name, nameEn, nameFi, id, groupId, minCredits);
+        super(nameEn, nameFi, id, groupId, minCredits);
         this.gradable = gradable;
         //this.grade = 0;
         this.isPassed = false;

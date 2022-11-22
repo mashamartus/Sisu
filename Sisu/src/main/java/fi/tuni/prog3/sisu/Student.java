@@ -10,16 +10,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * 
- * (MMa: correct me if our concept is another one) 
- * Class concerning student plan data. 
- * It can read already saved on pc study plan. Then during the planning 
+ * Class concerning student plan data. During the planning 
  * it keep track of the user's actions like including  
- * the course into his plan and putting grades or excluding it.
+ * the course into his plan, completing and putting grades or excluding it.
  * The class also have a methods to compute parameters about the plan 
- * concerning his degree program and picked courses 
+ * concerning his degree program and picked courses. 
  * ({@link Student.getCompletedCredits getCompletedCredits}, 
  * {@link Student.getPlannedCredits getPlannedCredits} etc.)
+ * It can use a plan already stored on user's pc. 
+ * 
  * 
  */
 public class Student implements iReadAndWriteToFile {
@@ -28,6 +27,7 @@ public class Student implements iReadAndWriteToFile {
     private String planName;
     private Integer startYear;
     private Program program;
+    private String language;
     private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
     private HashMap<String, StudentCourse> takenCourses = new HashMap<>();
   
@@ -52,6 +52,12 @@ public class Student implements iReadAndWriteToFile {
         return name;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
+    
+    
     public void setName(String studentName) {
         this.name = studentName;
     }
@@ -68,6 +74,17 @@ public class Student implements iReadAndWriteToFile {
         this.program = program;
     }
 
+    public void setLanguage(String language) {
+        if(language.equals("en") || language.equals("fi")){
+            this.language = language;
+        }
+        else{
+            System.out.println("Language name should be en or fi, but given " + 
+                    language + "!\nLanguage is set as en");
+            this.language = "en";
+        }
+    }
+    
     /**
      * Return the name the user marked his study plan.
      * @return plan name
@@ -95,7 +112,6 @@ public class Student implements iReadAndWriteToFile {
         return degreePrograms;
     }
 
-    
     
     @Override
     public boolean readFromFile(String fileName) throws FileNotFoundException {
