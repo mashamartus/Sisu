@@ -1,3 +1,6 @@
+/*
+
+!!!!   functionality moved to Student class  !!!!!!
 
 package fi.tuni.prog3.sisu;
 
@@ -13,7 +16,7 @@ import java.util.ArrayList;
 
 public final class StudentDataExport {
     
-    ArrayList<Course> courses = new ArrayList <>();
+    ArrayList<StudentCourse> courses = new ArrayList <>();
     private Student student;
     public StudentDataExport(Student student) {
         this.student = student;
@@ -53,7 +56,7 @@ public final class StudentDataExport {
         }
     }
 }
-    
+    */
  
     
 
