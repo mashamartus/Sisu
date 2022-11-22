@@ -49,7 +49,7 @@ public final class StudentDataExport {
                 file.write(jsonString);
                 file.close();
             }catch (IOException ex) {
-            System.out.println("error: " + ex.toString());
+                System.out.println("error: " + ex.toString());
         }
     }
 }
