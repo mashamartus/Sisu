@@ -122,7 +122,7 @@ public class WelcomeScreen {
         
         SisuHelper sh = new SisuHelper();
         List<String> programNames = 
-        sh.getAllPrograms(2022).stream()
+        sh.getAllPrograms(2022, "en").stream()
           .map(Program::getName)
           .collect(Collectors.toList());
         degreeChoiceBox.getItems().addAll(programNames);
@@ -161,7 +161,7 @@ public class WelcomeScreen {
             SisuHelper sh = new SisuHelper();
             String degreeName = degreeBox.getSelectionModel().getSelectedItem().toString();
             System.out.println(degreeName);
-            Optional<Program> selProgramOpt = sh.getAllPrograms(2022).stream()
+            Optional<Program> selProgramOpt = sh.getAllPrograms(2022, "en").stream()
                 .filter(p -> p.getName().equals(degreeName))
                 .findFirst();
             Program selProgram = selProgramOpt.get();

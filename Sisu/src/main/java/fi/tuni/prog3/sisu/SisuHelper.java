@@ -439,20 +439,36 @@ public class SisuHelper implements iAPI {
      * for given year
      * @author mariia
      */
-    public ArrayList<Program> getAllPrograms(int startYear) {
+    public ArrayList<Program> getAllPrograms(int startYear, String language) {
         ArrayList<Program> allPrograms = new ArrayList<>();
         
         String url = "https://sis-tuni.funidata.fi/kori/api/module-search?curriculumPeriodId=uta-lvv-" + 
                 startYear + "&universityId=tuni-university-root-id&moduleType=DegreeProgramme&limit=1000";
+
         JsonObject programsJSON = getJsonObjectFromApi(url);
         JsonArray programsArray = programsJSON.get("searchResults").getAsJsonArray();
         for(JsonElement programJSON : programsArray){
             JsonObject program = programJSON.getAsJsonObject();
-            String name = program.get("name").getAsString();
-            //System.out.println("Course name: " + name + " : " + groupId);
-            String id = program.get("groupId").getAsString();
+            
+            String groupId = program.get("groupId").getAsString();
+            String id = program.get("id").getAsString();
+            //System.out.println(id);
+            // get language dependent name
+            String urlDegreeProgram = "https://sis-tuni.funidata.fi/kori/api/modules/"+id+"?curriculumPeriodId=uta-lvv-"+startYear+"&universityId=tuni-university-root-id";
+            JsonObject newDegreeProgram = getJsonObjectFromApi(urlDegreeProgram);
+            String name = newDegreeProgram.getAsJsonObject("name").get("en").getAsString();
+            //System.out.println(id + " : " + name);
+            JsonObject content = newDegreeProgram.getAsJsonObject("name");
+            String nameFi;
+            if (content.has("fi")){
+                nameFi = newDegreeProgram.getAsJsonObject("name").get("fi").getAsString();
+            } 
+            else {
+                nameFi = newDegreeProgram.getAsJsonObject("name").get("en").getAsString();    
+            }
+
             int minCredits = program.getAsJsonObject("credits").get("min").getAsInt();
-            Program programObj = new Program(name, id, minCredits);
+            Program programObj = new Program(name, name, nameFi, groupId, minCredits);
             JsonArray yearsArray = program.get("curriculumPeriodIds").getAsJsonArray();
             for(JsonElement yearEl : yearsArray){
                 String[] yearSrtings = yearEl.getAsString().split("-");

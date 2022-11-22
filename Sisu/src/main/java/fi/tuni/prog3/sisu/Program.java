@@ -10,6 +10,8 @@ import java.util.ArrayList;
  */
 public class Program {
     private String name;
+    private String nameEn;
+    private String nameFi;
     private String id;
     private int minCredits;
     private ArrayList<Integer> years;
@@ -20,8 +22,10 @@ public class Program {
      * @param id by this groupId the program is known in Sisu system
      * @param minCredits credits required by program
      */
-    public Program(String name, String id, int minCredits) {
+    public Program(String name, String nameEn, String nameFi, String id, int minCredits) {
         this.name = name;
+        this.nameEn = nameEn;
+        this.nameFi = nameFi;
         this.id = id;
         this.minCredits = minCredits;
         this.years = new ArrayList<>();
@@ -39,6 +43,14 @@ public class Program {
     
     public String getName() {
         return name;
+    }
+    
+    public String getNameEn() {
+        return nameEn;
+    }
+    
+    public String getNameFi() {
+        return nameFi;
     }
 
     public String getId() {
