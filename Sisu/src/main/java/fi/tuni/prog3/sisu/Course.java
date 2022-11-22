@@ -32,12 +32,14 @@ public class Course extends DegreeModule {
                   boolean gradable, String description, String code) {
         super(name, id, groupId, minCredits);
         this.gradable = gradable;
-        this.grade = 0;
+        //this.grade = 0;
         this.isPassed = false;
         this.description = description;
         this.code = code;
     }
 
+    
+    
     /**
      * Marks to course as passed (true) or not (false).
      * @param isPassed boolean
@@ -65,6 +67,8 @@ public class Course extends DegreeModule {
     public int getGrade() {
         return grade;
     }
+    
+    
     
     public void setParent(StudyModule parent) {
         this.parent = parent;
