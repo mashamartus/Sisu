@@ -36,32 +36,7 @@ public class CourseTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of setGrade method, of class Course.
-     */
-    @Test
-    public void testSetGrade() {
-        System.out.println("setGrade");
-        int grade = 0;
-        Course instance = null;
-        instance.setGrade(grade);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
-    /**
-     * Test of getGrade method, of class Course.
-     */
-    @Test
-    public void testGetGrade() {
-        System.out.println("getGrade");
-        Course instance = null;
-        int expResult = 0;
-        int result = instance.getGrade();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of isPassed method, of class Course.

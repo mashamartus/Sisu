@@ -25,9 +25,7 @@ public class Student implements iReadAndWriteToFile {
     private Integer startYear;
     private Program program;
     private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
-    private HashMap<String, Course> takenCourses = new HashMap<>();
-    private HashMap<String, Integer> courseGrades;
-    private ArrayList<String> completed;
+    private HashMap<String, StudentCourse> takenCourses;
   
 
     public Student(String studentID) throws FileNotFoundException {
@@ -74,12 +72,17 @@ public class Student implements iReadAndWriteToFile {
         return planName;
     }
 
+    public void takeCourse(Course course){
+        StudentCourse stdCourse = new StudentCourse(course);
+        takenCourses.put(course.getId(), stdCourse);
+    }
+    
     /**
      * Return all courses the student take.
-     * @return courses that student take in this plan.
+     * @return courses that student include in this plan.
      */
-    public ArrayList<Course> getTakenCourses() {
-        ArrayList<Course> courses = new ArrayList<>();
+    public ArrayList<StudentCourse> getTakenCourses() {
+        ArrayList<StudentCourse> courses = new ArrayList<>();
         courses.addAll(takenCourses.values());
         return courses;
     }

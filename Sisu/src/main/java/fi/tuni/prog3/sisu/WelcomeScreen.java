@@ -78,9 +78,6 @@ public class WelcomeScreen {
         GridPane grid = new GridPane();
         grid.setVgap(8);
         
-        
-        
-        
         grid.add(new Label("Student name"), 0, 0);
         TextField studentField = new TextField();
         studentField.setId("studentName");
