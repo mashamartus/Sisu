@@ -1,3 +1,6 @@
+/*
+
+!!!!   functionality moved to Student class  !!!!!!
 
 package fi.tuni.prog3.sisu;
 
@@ -53,7 +56,7 @@ public final class StudentDataExport {
         }
     }
 }
-    
+    */
  
     
 

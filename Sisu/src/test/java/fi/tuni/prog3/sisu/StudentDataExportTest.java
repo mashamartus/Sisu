@@ -2,6 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
+
+/*
 package fi.tuni.prog3.sisu;
 
 import java.io.FileNotFoundException;
@@ -12,10 +14,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author hanna
- */
+
 public class StudentDataExportTest {
     
     public StudentDataExportTest() {
@@ -37,9 +36,7 @@ public class StudentDataExportTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of exportDataToWorkstation method, of class StudentDataExport.
-     */
+  
     @Test
     public void testExportDataToWorkstation() throws FileNotFoundException {
         System.out.println("exportDataToWorkstation");
@@ -59,4 +56,4 @@ public class StudentDataExportTest {
         //fail("The test case is a prototype.");
     }
     
-}
+}*/

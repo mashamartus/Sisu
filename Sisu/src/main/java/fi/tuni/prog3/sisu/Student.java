@@ -1,7 +1,11 @@
 package fi.tuni.prog3.sisu;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,8 +28,8 @@ public class Student implements iReadAndWriteToFile {
     private Integer startYear;
     private Program program;
     private String language;
-    //private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
-    private HashMap<String, StudentCourse> takenCourses = new HashMap<>();;
+    private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
+    private HashMap<String, StudentCourse> takenCourses = new HashMap<>();
   
 
     public Student(String studentID) throws FileNotFoundException {
@@ -202,6 +206,41 @@ public class Student implements iReadAndWriteToFile {
      * For example if that ID don't exist in the degree 
      * (although that shouldn't happen, in theory:)
      */
+    
+    public boolean takeCourse(String courseId){
+        return true;
+    }
+    
+    public void exportDataToWorkstation(){
+        JsonObject json = new JsonObject(); 
+        json.addProperty("name", getStudentName());
+        json.addProperty("id", getStudentID());
+        json.addProperty("degree program", getPlanName());
+        json.addProperty("total credits", getPlannedCredits());
+        JsonArray coursesCompleted = new JsonArray();
+        ArrayList<StudentCourse> courses = new ArrayList<>();
+        if(!getTakenCourses().isEmpty()){
+             courses = getTakenCourses();
+             for(int i = 0; i<courses.size(); i++){
+                 JsonObject oneCourse = new JsonObject();
+                oneCourse.addProperty("name", courses.get(i).getName());
+                oneCourse.addProperty("code", courses.get(i).getCode());
+                oneCourse.addProperty("credits", courses.get(i).getMinCredits());
+                oneCourse.addProperty("grade", courses.get(i).getGrade());
+                coursesCompleted.add(oneCourse);
+             }
+             json.add("courses", coursesCompleted.getAsJsonObject());
+        }
+
+        String jsonString = json.toString();
+
+            try (PrintWriter file = new PrintWriter( new FileWriter("src/main/resources/studentCourses.json"))) {
+                file.write(jsonString);
+                file.close();
+            }catch (IOException ex) {
+                System.out.println("error: " + ex.toString());
+        }
+    }
 
     @Override
     public String toString() {
