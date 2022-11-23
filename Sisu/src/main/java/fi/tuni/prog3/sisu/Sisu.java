@@ -1,8 +1,12 @@
 package fi.tuni.prog3.sisu;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
@@ -16,6 +20,16 @@ public class Sisu extends Application {
     static Scene welcomeWindow;
     static Scene mainWindow;
     static Student curStudent;
+    static String css;
+    /**
+     * It keeps track of all courses which was read from the degree. 
+     */
+    static HashMap<String, Course> allCourses = new HashMap<>();
+    /**
+     * It keeps all HBoxes for the single course. 
+     * It is used to get the course box by course id
+     */
+    static HashMap<String, HBox> allCourseBoxes = new HashMap<>();
     
     //Student student = new Student("SomeId");
     
@@ -27,7 +41,7 @@ public class Sisu extends Application {
         try{curStudent = new Student("Student1");}
             catch (FileNotFoundException e) {}
         
-        String css = this.getClass().getResource("/style.css").toExternalForm(); 
+        css = this.getClass().getResource("/style.css").toExternalForm(); 
         
         //define welcome window
         WelcomeScreen ws = new WelcomeScreen();
@@ -37,14 +51,6 @@ public class Sisu extends Application {
         stage.setScene(welcomeWindow);
         //stage.setResizable(false);
         
-        //define main window
-        
-        MainWindow mw = new MainWindow();
-        mainWindow = mw.setMainWindow();
-        
-        //stage.setScene(mainWindow);
-         
-        mainWindow.getStylesheets().add(css);
         
         
         

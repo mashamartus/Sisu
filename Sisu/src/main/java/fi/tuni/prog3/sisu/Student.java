@@ -24,8 +24,8 @@ public class Student implements iReadAndWriteToFile {
     private Integer startYear;
     private Program program;
     private String language;
-    private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
-    private HashMap<String, StudentCourse> takenCourses;
+    //private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
+    private HashMap<String, StudentCourse> takenCourses = new HashMap<>();;
   
 
     public Student(String studentID) throws FileNotFoundException {
@@ -91,7 +91,28 @@ public class Student implements iReadAndWriteToFile {
 
     public void takeCourse(Course course){
         StudentCourse stdCourse = new StudentCourse(course);
-        takenCourses.put(course.getId(), stdCourse);
+        if(!takenCourses.containsKey(course.getId())){
+            takenCourses.put(course.getId(), stdCourse);
+        }
+        else{
+            System.out.println("WARNING! That course is shown as already taken!\n"+
+                    "Probably there is duplicate course in the degree program!");
+        }
+    }
+    
+    public void dropCourse(String id){
+        if(takenCourses.get(id) != null){
+            takenCourses.remove(id);
+        }
+        else{
+            System.out.println("There was no such course to remove");
+        }
+    }
+    
+    public void gradeCourse(String courseId, int grade){
+        StudentCourse course = takenCourses.get(courseId);
+        course.setCompleted(true);
+        course.setGrade(grade);
     }
     
     /**
@@ -103,10 +124,10 @@ public class Student implements iReadAndWriteToFile {
         courses.addAll(takenCourses.values());
         return courses;
     }
-    
+    /* 
     public HashMap<String, DegreeProgram> getDegreePrograms() {
         return degreePrograms;
-    }
+    }*/
 
     
     @Override
@@ -123,20 +144,42 @@ public class Student implements iReadAndWriteToFile {
      * To implement! - Return the amount of credits completed by student.
      * @return return sum of credits of all completed courses
      */
-    public double getCompletedCredits(){
-        
-        for(Course course : this.getTakenCourses()){
-            
+    public int getCompletedCredits(){
+        int completedCr = 0;
+        for(StudentCourse course : this.getTakenCourses()){
+            if(course.isCompleted()){
+                completedCr += course.getMinCredits();
+            }
         }
-        return 35;
+        return completedCr;
+    }
+    
+    public double getAverageGrade(){
+        int sum = 0;
+        int coursesAmount = 0;
+        System.out.println("Taken courses");
+        this.printTakenCourses();
+        for(StudentCourse course : this.getTakenCourses()){
+            if(course.isCompleted() && course.isGradable() && (course.getGrade() != -1)){
+                coursesAmount += 1;
+                sum += course.getGrade();
+            }
+        }
+        if(coursesAmount == 0) return 0;
+        return sum/coursesAmount;
     }
     
     /**
      * To implement! - Return sum of credits of all courses chosen by student.
      * @return Return sum of credits of all courses chosen by student
      */
-    public double getPlannedCredits(){
-        return 135;
+    public int getPlannedCredits(){
+        
+        int plannedCr = 0;
+        for(StudentCourse course : this.getTakenCourses()){
+            plannedCr += course.getMinCredits();
+        }
+        return plannedCr;
     }
     
     /**
@@ -145,8 +188,8 @@ public class Student implements iReadAndWriteToFile {
      * complete to graduate from the program
      * @return credit amount required by student program 
      */
-    public double getProgramCredits(){
-        return  180;
+    public int getProgramCredits(){
+        return this.program.getMinCredits();
     }
     
     /**
@@ -159,9 +202,6 @@ public class Student implements iReadAndWriteToFile {
      * For example if that ID don't exist in the degree 
      * (although that shouldn't happen, in theory:)
      */
-    public boolean takeCourse(String courseId){
-        return true;
-    }
 
     @Override
     public String toString() {
@@ -169,5 +209,11 @@ public class Student implements iReadAndWriteToFile {
                 ", startYear=" + startYear + ", program=" + program + ", takenCourses=" + takenCourses + '}';
     }
     
+    public void printTakenCourses(){
+        System.out.println("\nStudent taken courses:");
+        for(StudentCourse course : takenCourses.values()){
+            System.out.println("  " + course.getNameEn());
+        }
+    }
     
 }

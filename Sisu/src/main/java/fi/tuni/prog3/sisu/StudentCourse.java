@@ -8,8 +8,8 @@ package fi.tuni.prog3.sisu;
  * @author mariia
  */
 public class StudentCourse extends Course{
-    private int grade;
-    private boolean completed;
+    private int grade = -1;
+    private boolean completed = false;
 
     public StudentCourse(Course course) {
         super(course.getNameEn(),course.getNameFi(), course.getId(), "", course.getMinCredits(), 

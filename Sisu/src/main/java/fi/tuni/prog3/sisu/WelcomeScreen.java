@@ -1,6 +1,8 @@
 
 package fi.tuni.prog3.sisu;
 
+import static fi.tuni.prog3.sisu.Sisu.allCourses;
+import static fi.tuni.prog3.sisu.Sisu.css;
 import static fi.tuni.prog3.sisu.Sisu.mainWindow;
 import static fi.tuni.prog3.sisu.Sisu.theStage;
 import static fi.tuni.prog3.sisu.Sisu.curStudent;
@@ -81,6 +83,7 @@ public class WelcomeScreen {
         grid.add(new Label("Student name"), 0, 0);
         TextField studentField = new TextField();
         studentField.setId("studentName");
+        studentField.setText("Student1");
         //studentField.setPrefWidth(200);
         grid.add(studentField, 1, 0);
         
@@ -88,6 +91,7 @@ public class WelcomeScreen {
         grid.add(planLabel, 0, 1);
         TextField planNameField = new TextField();
         planNameField.setId("planName");
+        planNameField.setText("MyPlan");
         //planNameField.setPrefWidth(200);
         grid.add(planNameField, 1, 1);
         
@@ -103,6 +107,7 @@ public class WelcomeScreen {
         ChoiceBox yearChoiceBox = new ChoiceBox();
         yearChoiceBox.getItems().addAll("2018","2019", "2020","2021","2022",
                 "2023","2024","2025","2026");
+        yearChoiceBox.setValue("2023");
         grid.add(yearChoiceBox, 1, 2);
         yearChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -119,7 +124,7 @@ public class WelcomeScreen {
         Label programLabel = new Label("Choose your degree");
         ChoiceBox degreeChoiceBox = new ChoiceBox();
         degreeChoiceBox.setId("degreeChoiceBox");
-        degreeChoiceBox.getItems().add("Please select a year");
+        //degreeChoiceBox.getItems().add("Please select a year");
         
         SisuHelper sh = new SisuHelper();
         List<String> programNames = 
@@ -170,11 +175,15 @@ public class WelcomeScreen {
             
             System.out.println(curStudent);
             
+            //define main window
+            MainWindow mw = new MainWindow();
+            mainWindow = mw.setMainWindow();
+
             StudyModule studyModule = sh.createStudyModule(selProgram.getId());
             StudyModule.printModuleDetailed(studyModule,"");
             ScrollPane treeNode = (ScrollPane)mainWindow.lookup("#courseTree");
-            MainWindow mw = new MainWindow();
             treeNode.setContent(mw.handleModule(studyModule));
+            System.out.println("All courses:" + allCourses.keySet().toString());
             
             stage.setScene(Sisu.mainWindow);
             Sisu.mainWindow.getRoot().requestFocus();

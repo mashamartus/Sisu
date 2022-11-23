@@ -6,6 +6,8 @@ import java.util.ArrayList;
 /**
  * Class represent a program object and contains just basic data about it 
  * and id to find it in Sisu.
+ * It is used mainly on the welcome screen and to provide id 
+ * for the chosen program
  * @author mariia
  */
 public class Program {
