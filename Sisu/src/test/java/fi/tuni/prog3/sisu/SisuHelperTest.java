@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
+
 package fi.tuni.prog3.sisu;
 
 import com.google.gson.JsonArray;
@@ -151,6 +148,30 @@ public class SisuHelperTest {
         assertEquals(code, result.getCode());
         assertEquals(gradable, result.isGradable());
         assertEquals(description, result.getDescription());
+    }
+    
+    
+     @Test
+    public void testCreateStudyModule4() {
+        System.out.println("createStudyModule test: otm-4d4c4575-a5ae-427e-a860-2f168ad4e8ba");
+        String groupId = "otm-4d4c4575-a5ae-427e-a860-2f168ad4e8ba";
+        SisuHelper instance = new SisuHelper();
+        StudyModule result = instance.createStudyModule(groupId);
+        String engName = "Bachelor's Programme in Science and Engineering";
+        String fiName = "Bachelor's Programme in Science and Engineering";
+        String id = "otm-4d4c4575-a5ae-427e-a860-2f168ad4e8ba";
+        int credits = 180;
+        String code = "SCEK";
+        Boolean gradable = false;
+        //String description = "\"-After completion of the programme, the students<br /><br />- understand the role of mathematics, physical sciences, and information and communications technology in the modern-day society and have the competence to follow the development and societal significance of their field<br /><br />- know the basics of the essential areas of mathematics and physics<br /><br />- are able to apply skills in mathematical and physical modeling, computational methods and numerics to solve problems related to mathematics, physics and information and communications technology<br /><br />- are able to use scientific methods to interpret information, draw conclusions and report on their findings<br /><br />- have active language and intercultural communication skills and are able to communicate fluently in writing and verbally in English in the context of their field<br /><br />- have the competence to apply their acquired knowledge and skills in working life and understand the demands of the Finnish working life as well as of international settings<br /><br />- are prepared for professional development and lifelong learning\"";
+ 
+        assertEquals(engName, result.getNameEn());
+        assertEquals(fiName, result.getNameFi());
+        assertEquals(id, result.getId());
+        assertEquals(credits, result.getMinCredits());
+        assertEquals(code, result.getCode());
+        assertEquals(gradable, result.isGradable());
+        //assertEquals(description, result.getDescription());
     }
 
        /**

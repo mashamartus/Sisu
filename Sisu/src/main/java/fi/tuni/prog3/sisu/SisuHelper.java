@@ -35,8 +35,7 @@ public class SisuHelper implements iAPI {
     public JsonObject getJsonObjectFromApi(String urlString) {
         try {
             InputStream is = new URL(urlString).openStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    is, Charset.forName("UTF-8")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             JsonElement jsonElement = JsonParser.parseReader(br);
             if (jsonElement instanceof JsonObject){
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -50,18 +49,19 @@ public class SisuHelper implements iAPI {
         } catch (MalformedURLException ex) {
              System.out.println("The url is not well formed: " + urlString);
         } catch (IOException ex) {
-             System.out.println("Cannot find the url: " + urlString);
+            System.out.println("Cannot find the url: " + urlString);
         }
         return null;
     }
     
+   
     
      /**
-     * This method create url from groupId
+     * This method create url string from groupId
      * @param String groupId
      * @return url as a string
      */
-    private String createUrl(String groupId){
+    private String createUrlString(String groupId){
         if(groupId.startsWith("tut") || groupId.startsWith("uta")){
             return "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
         }
@@ -175,7 +175,13 @@ public class SisuHelper implements iAPI {
 
         }
         else if(jsonO.has("learningOutcomes")&& !jsonO.get("learningOutcomes").isJsonNull()){
-            return jsonO.getAsJsonObject("learningOutcomes").get("fi").getAsString();    
+            if(jsonO.getAsJsonObject("learningOutcomes").has("fi")){
+                return jsonO.getAsJsonObject("learningOutcomes").get("fi").getAsString();   
+            }
+            else{
+                return jsonO.getAsJsonObject("learningOutcomes").get("en").getAsString();   
+            }
+                
         }
         else{
         
@@ -206,7 +212,7 @@ public class SisuHelper implements iAPI {
      * @return true or false
      */
     private Boolean checkCurriculum(String groupId, String year){
-        JsonObject module = getJsonObjectFromApi(createUrl(groupId)); 
+        JsonObject module = getJsonObjectFromApi(createUrlString(groupId)); 
         for (int i=0; i<module.getAsJsonArray("curriculumPeriodIds").size();i++){
             if(module.getAsJsonArray("curriculumPeriodIds").get(i).getAsString().contains(year)){
                 return true;
@@ -225,7 +231,7 @@ public class SisuHelper implements iAPI {
     
     public StudyModule createStudyModule(String groupId){
         //System.out.println(groupId+" ");
-        JsonObject newStudyModule = getJsonObjectFromApi(createUrl(groupId));
+        JsonObject newStudyModule = getJsonObjectFromApi(createUrlString(groupId));
         JsonArray children = new JsonArray();
         if(newStudyModule.getAsJsonObject("rule").get("type").getAsString().equals("CompositeRule")){
              getChildrenFromOneDocument(newStudyModule.getAsJsonObject("rule").get("rules").getAsJsonArray(), children);

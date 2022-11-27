@@ -295,7 +295,7 @@ public class StudentTest {
     /**
      * Test of getDegreePrograms method, of class Student.
      */
-    @Test
+   /* @Test
     public void testGetDegreePrograms() {
         System.out.println("getDegreePrograms");
         Student instance = null;
@@ -304,7 +304,7 @@ public class StudentTest {
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
-    }
+    }*/
 
     /**
      * Test of takeCourse method, of class Student.
