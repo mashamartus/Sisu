@@ -6,6 +6,7 @@ package fi.tuni.prog3.sisu;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -14,10 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author hanna
- */
+
 public class SisuHelperTest {
     
     public SisuHelperTest() {
@@ -38,24 +36,37 @@ public class SisuHelperTest {
     @AfterEach
     public void tearDown() {
     }
-
-    /**
-     * TODO
-     * Test of getJsonObjectFromApi method, of class SisuHelper.
-     */
+    
+    // how to write this test?
     @Test
-    public void testGetJsonObjectFromApi() {
-        System.out.println("getJsonObjectFromApi");
-        String urlString = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId=tut-dp-g-1280&universityId=tuni-university-root-id";
+    public void testGetJsonObjectFromApi1() {
+        System.out.println("getJsonObjectFromApi1: bad url");
+        String urlString = "sisu";
         SisuHelper instance = new SisuHelper();
-        Boolean expResult = true;
-        Boolean result = true;
-        Object returnValue = instance.getJsonObjectFromApi(urlString);
-        //System.out.print(returnValue);
-        assertEquals(expResult, result);
+        instance.getJsonObjectFromApi(urlString);
+    }
+    
+    // how to write this test?
+    @Test
+    public void testGetJsonObjectFromApi2() {
+        System.out.println("getJsonObjectFromApi3: url not responsive");
+        String urlString = "www.sisuz.fi";
+        SisuHelper instance = new SisuHelper();
+        instance.getJsonObjectFromApi(urlString);
+        Throwable th = assertThrows(MalformedURLException.class, () -> instance.getJsonObjectFromApi(urlString));
+        assertEquals("The url is not well formed: " + urlString, th.getMessage());
 
     }
     
+    @Test
+    public void testGetJsonObjectFromApi3() {
+        System.out.println("getJsonObjectFromApi");
+        String urlString = "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId=tut-dp-g-1280&universityId=tuni-university-root-id";
+        SisuHelper instance = new SisuHelper();
+        Boolean returnValue = instance.getJsonObjectFromApi(urlString).isJsonObject();
+        assertEquals(true, returnValue);
+
+    }
 
 
         /**
@@ -63,18 +74,83 @@ public class SisuHelperTest {
      */
     @Test
     public void testCreateStudyModule() {
-        System.out.println("createStudyModule");
+        System.out.println("createStudyModule test: tut-dp-g-1280");
+        //String groupId = "otm-0185dff0-cc6f-4d5e-8ec8-84854ce44e9c";
+        //String groupId = "otm-07a61546-3a51-429a-9120-2ce1da02298d";
+        //String groupId = "tut-sm-g-4720";
+        String groupId = "tut-dp-g-1280";
+        //String groupId = "otm-d16d6df1-92a5-4079-8101-c44e26cb072c";
+        //String groupId = "tut-dp-g-1180";
+        //String groupId = "tut-dp-g-1105";
+        SisuHelper instance = new SisuHelper();
+        StudyModule result = instance.createStudyModule(groupId);
+        String engName = "Master's Programme in Management and Information Technology";
+        String fiName = "Johtamisen ja tietotekniikan DI-ohjelma";
+        String id = "otm-57bbf28e-a683-435e-a3f6-17db5dd22cdf";
+        int credits = 120;
+        String code = "PJTM";
+        Boolean gradable = false;
+        String description = "Johtamisen ja tietotekniikan DI-ohjelmassa voi opiskella päätoimisesti tai työn ohessa. Opinnot voi suorittaa joustavasti joko lähiopintoina tai verkko-opiskeluna. <br />Verkko-opiskelun tueksi tarjotaan lähiopetusta intensiivitoteutuksena. ";
+        assertEquals(engName, result.getNameEn());
+        assertEquals(fiName, result.getNameFi());
+        assertEquals(id, result.getId());
+        assertEquals(credits, result.getMinCredits());
+        assertEquals(code, result.getCode());
+        assertEquals(gradable, result.isGradable());
+        assertEquals(description, result.getDescription());
+    }
+    
+    @Test
+    public void testCreateStudyModule2() {
+        System.out.println("createStudyModule test: tut-dp-g-1180");
         //String groupId = "otm-0185dff0-cc6f-4d5e-8ec8-84854ce44e9c";
         //String groupId = "otm-07a61546-3a51-429a-9120-2ce1da02298d";
         //String groupId = "tut-sm-g-4720";
         //String groupId = "tut-dp-g-1280";
         //String groupId = "otm-d16d6df1-92a5-4079-8101-c44e26cb072c";
-        //String groupId = "tut-dp-g-1180";
-        String groupId = "tut-dp-g-1105";
+        String groupId = "tut-dp-g-1180";
+        //String groupId = "tut-dp-g-1105";
         SisuHelper instance = new SisuHelper();
-        Boolean expResult = true;
         StudyModule result = instance.createStudyModule(groupId);
-        assertEquals(expResult, true);
+        String engName = "Master's Programme in Information Technology";
+        String fiName = "Tietotekniikan DI-ohjelma";
+        String id = "otm-3990be25-c9fd-4dae-904c-547ac11e8302";
+        int credits = 120;
+        String code = "TTEM";
+        Boolean gradable = false;
+        String description = "Tutkinnon suoritettuaan opiskelija hallitsee syventävien opintojensa alan monipuolisesti ja syvällisesti, ja hänellä on valmiudet toimia työelämässä syventävien opintojensa alan asiantuntijana ja kehittäjänä. Hän hallitsee tieteellisen tiedon ja menetelmien perusteet ja osaa soveltaa niitä ajankohtaisiin ja konkreettisiin tehtäviin.  <br /><br />Hänellä on työelämän, tieteellisen toiminnan ja yhteiskunnallisen keskustelun edellyttämät viestintä- ja yhteistyötaidot, sekä hyvät valmiudet tieteelliseen jatkokoulutukseen ja jatkuvaan ammatilliseen kehittymiseen.";
+ 
+        assertEquals(engName, result.getNameEn());
+        assertEquals(fiName, result.getNameFi());
+        assertEquals(id, result.getId());
+        assertEquals(credits, result.getMinCredits());
+        assertEquals(code, result.getCode());
+        assertEquals(gradable, result.isGradable());
+        assertEquals(description, result.getDescription());
+    }
+    
+    
+    @Test
+    public void testCreateStudyModule3() {
+        System.out.println("createStudyModule test: otm-f351ce33-11a6-42be-a15f-7544cb194bff");
+        String groupId = "otm-f351ce33-11a6-42be-a15f-7544cb194bff";
+        SisuHelper instance = new SisuHelper();
+        StudyModule result = instance.createStudyModule(groupId);
+        String engName = "Specialty Training in Plastic Surgery (56/2015)";
+        String fiName = "Plastiikkakirurgian erikoislääkärikoulutus (56/2015)";
+        String id = "otm-f351ce33-11a6-42be-a15f-7544cb194bff";
+        int credits = 0;
+        String code = "MEDAPLKEL2015";
+        Boolean gradable = false;
+        String description = "";
+ 
+        assertEquals(engName, result.getNameEn());
+        assertEquals(fiName, result.getNameFi());
+        assertEquals(id, result.getId());
+        assertEquals(credits, result.getMinCredits());
+        assertEquals(code, result.getCode());
+        assertEquals(gradable, result.isGradable());
+        assertEquals(description, result.getDescription());
     }
 
        /**
@@ -95,23 +171,50 @@ public class SisuHelperTest {
      * Test of createCourse method, of class SisuHelper.
      */
     @Test
-    public void testCreateCourse() {
-        System.out.println("createCourse");
+    public void testCreateCourse1() {
+        System.out.println("createCourse: tut-cu-g-38576");
         //String groupId = "tut-cu-g-48243";
         //String groupId = "tut-cu-g-43073";
         //String groupId = "tut-cu-g-48230";
         String groupId = "tut-cu-g-38576";
-       
         SisuHelper instance = new SisuHelper();
-        Boolean expResult = true;
         Course result = instance.createCourse(groupId);
-        String name = result.getName();
-        String code = result.getCode();
-        int credits = result.getMinCredits();
-        System.out.println(name + " : "+ code +" : " +credits);
-        assertEquals(expResult, true);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        String nameFi =  "Tietojärjestelmän mallintaminen";
+        String nameEn = "Information System Modelling";
+        String id = "otm-1c79239a-e31c-4819-8342-f6e51783dc86";
+        String code = "COMP.SE.310";
+        int credits = 5;
+        assertEquals(nameFi, result.getNameFi());
+        assertEquals(nameEn, result.getNameEn());
+        assertEquals(id, result.getId());
+        assertEquals(code, result.getCode());
+        assertEquals(credits, result.getMinCredits());
+        assertEquals(true, result.isGradable());
+    }
+    
+        /**
+     * Test of createCourse method, of class SisuHelper.
+     */
+    @Test
+    public void testCreateCourse2() {
+        System.out.println("createCourse: tut-cu-g-43041");
+        //String groupId = "tut-cu-g-48243";
+        //String groupId = "tut-cu-g-43073";
+        //String groupId = "tut-cu-g-48230";
+        String groupId = "tut-cu-g-43041";
+        SisuHelper instance = new SisuHelper();
+        Course result = instance.createCourse(groupId);
+        String nameFi = "Advanced Robotics";
+        String nameEn = "Advanced Robotics";
+        String id = "otm-866e3a16-9772-4a40-9de4-4996f48660a5";
+        String code = "AUT.720";
+        int credits = 5;
+        assertEquals(nameFi, result.getNameFi());
+        assertEquals(nameEn, result.getNameEn());
+        assertEquals(id, result.getId());
+        assertEquals(code, result.getCode());
+        assertEquals(credits, result.getMinCredits());
+        assertEquals(true, result.isGradable());
     }
 
     
@@ -133,54 +236,32 @@ public class SisuHelperTest {
     
     
 
-    /**
-     * Test of navigate method, of class SisuHelper.
-     */
-    @Test
-    public void testNavigate() throws Exception {
-        System.out.println("navigate");
-        JsonObject jsonObject = null;
-        SisuHelper.navigate(jsonObject);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of createStudyModuleFromJsonFile method, of class SisuHelper.
-     */
-    @Test
-    public void testCreateStudyModuleFromJsonFile() throws Exception {
-        System.out.println("createStudyModuleFromJsonFile");
-        String fileName = "";
-        StudyModule expResult = null;
-        StudyModule result = SisuHelper.createStudyModuleFromJsonFile(fileName);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of createCourseFromJsonFile method, of class SisuHelper.
-     */
-    @Test
-    public void testCreateCourseFromJsonFile() throws Exception {
-        System.out.println("createCourseFromJsonFile");
-        String fileName = "";
-        Course expResult = null;
-        Course result = SisuHelper.createCourseFromJsonFile(fileName);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+   
 
     @Test 
     public void testGetAllPrograms(){
+        System.out.println("getAllPrograms 2021");
         SisuHelper sh = new SisuHelper();
         ArrayList<Program> programs = sh.getAllPrograms(2021, "en");
-        System.out.println("List of programs:");
+        int results = 273;
+        /*System.out.println("List of programs:");
         for(int i = 0; i<40; i++){
             System.out.println(programs.get(i));
-        }
+        }*/
+        assertEquals(results, programs.size());  
+    }
+    
+     @Test 
+    public void testGetAllPrograms1(){
+        System.out.println("getAllPrograms 2022");
+        SisuHelper sh = new SisuHelper();
+        ArrayList<Program> programs = sh.getAllPrograms(2022, "en");
+        int results = 277;
+        /*System.out.println("List of programs:");
+        for(int i = 0; i<40; i++){
+            System.out.println(programs.get(i));
+        }*/
+        assertEquals(results, programs.size());  
     }
 
 }

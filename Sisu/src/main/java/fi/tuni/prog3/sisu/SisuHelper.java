@@ -10,9 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
 
 /**
  * SisuHelper class. (Stupid class name?)
@@ -28,8 +25,10 @@ public class SisuHelper implements iAPI {
 
     /**
      * This method create JSON object from url
-     * Structure is generated form given Json files.     *
+     * Structure is generated form given Json files.
+     * @param String url as a string
      * @throws MalformedURLException if url is incorrect.
+     * @throws IOException if url is not responsive
      * @return JSONobject.
      */
     @Override
@@ -39,101 +38,194 @@ public class SisuHelper implements iAPI {
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     is, Charset.forName("UTF-8")));
             JsonElement jsonElement = JsonParser.parseReader(br);
-            //System.out.println("this is elemment" + temp);
             if (jsonElement instanceof JsonObject){
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
-                //System.out.println("this is json" + jsonObject);
                 return jsonObject;
             }
             else {
                 JsonArray jsonArray = jsonElement.getAsJsonArray();
-                //System.out.println("this is jsonarray" + jsonArray);
                 JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
-                //System.out.println("this is json" + jsonObject);
                 return jsonObject;
             }            
-           
         } catch (MalformedURLException ex) {
              System.out.println("The url is not well formed: " + urlString);
         } catch (IOException ex) {
-             System.out.println("The url is not well formed: " + urlString);
+             System.out.println("Cannot find the url: " + urlString);
         }
         return null;
     }
     
+    
+     /**
+     * This method create url from groupId
+     * @param String groupId
+     * @return url as a string
+     */
+    private String createUrl(String groupId){
+        if(groupId.startsWith("tut") || groupId.startsWith("uta")){
+            return "https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
+        }
+        else if (groupId.startsWith("otm")){
+            return "https://sis-tuni.funidata.fi/kori/api/modules/"+groupId+"?universityId=tuni-university-root-id";
+        }
+        else{
+            return "";
+        }
+    }
+    
  
+     /**
+     * This method finds fi name of the course or study module
+     * get finnish name of study module or course
+     * @param jsonObject jsonObject of a studyModule or course
+     * @return finnish name
+     */
+    private String findNameFi(JsonObject jsonO){
+        JsonObject content = jsonO.getAsJsonObject("name");
+         if (content.has("fi")){
+                return jsonO.getAsJsonObject("name").get("fi").getAsString();
+            }
+         else{
+                return jsonO.getAsJsonObject("name").get("en").getAsString();
+         }
+
+    }
+    
+    /**
+     * This method finds en name of the course or study module
+     * get english name of study module or course
+     * @param jsonObject jsonObject of a studyModule or course
+     * @return english name
+     */
+     private String findNameEn(JsonObject jsonO){
+         JsonObject content = jsonO.getAsJsonObject("name");
+         if (content.has("en")){
+                //System.out.println(jsonO.getAsJsonObject("name").get("en").getAsString());
+                return jsonO.getAsJsonObject("name").get("en").getAsString();
+            }
+         else{
+             //System.out.println(jsonO.getAsJsonObject("name").get("fi").getAsString());
+                return jsonO.getAsJsonObject("name").get("fi").getAsString();
+         }
+    }
+     
+    /**
+     * This method finds id of the course or study module
+     * get id of study module or course
+     * @param jsonObject jsonObject of a studyModule or course
+     * @return id
+     */ 
+    private String findId(JsonObject jsonO){
+        return jsonO.get("id").getAsString();
+    }
+     
+     /**
+     * This method finds credits of the course or study module
+     * get credits  of study module or course
+     * @param jsonObject jsonObject of a studyModule or course
+     * @return credits
+     */
+    private int findCredits(JsonObject jsonO){
+        if(jsonO.has("targetCredits")){
+            return jsonO.getAsJsonObject("targetCredits").get("min").getAsInt();
+        } 
+        else if (jsonO.has("credits")){
+            return jsonO.getAsJsonObject("credits").get("min").getAsInt();
+        }
+        else {
+            return 0;
+        }
+    } 
+    
+    /**
+     * This method finds code of the course or study module
+     * get code of study module or course
+     * @param jsonObject jsonObject of a studyModule or course
+     * @return code
+     */
+    private String findCode(JsonObject jsonO){
+        if(jsonO.has("code") && !jsonO.get("code").isJsonNull()){
+                return jsonO.get("code").getAsString();
+        }
+        else{
+            return "";    
+        }
+
+    } 
+    
+    /**
+     * This method finds description of the course or study module
+     * get description of study module or course
+     * @param jsonObject jsonObject of a studyModule or course
+     * @return description
+     */
+    private String findDescription(JsonObject jsonO){
+    
+        if(jsonO.has("contentDescription") && !jsonO.get("contentDescription").isJsonNull()){
+            if(jsonO.getAsJsonObject("contentDescription").has("fi")){
+                return jsonO.getAsJsonObject("contentDescription").get("fi").getAsString();
+            }
+            else {
+                return jsonO.getAsJsonObject("contentDescription").get("en").getAsString();         
+            }
+     
+        }
+        else if(jsonO.has("description") && !jsonO.get("description").isJsonNull()){
+            return jsonO.getAsJsonObject("description").get("fi").getAsString();   
+
+        }
+        else if(jsonO.has("learningOutcomes")&& !jsonO.get("learningOutcomes").isJsonNull()){
+            return jsonO.getAsJsonObject("learningOutcomes").get("fi").getAsString();    
+        }
+        else{
+        
+            return "";
+        }
+    
+    } 
+    
+    /**
+     * This method finds is course or study module gradable
+     * get is study module or course gradable
+     * @param jsonObject jsonObject of a studyModule or course
+     * @return true or false
+     */
+    private Boolean findIsGradable(JsonObject jsonO){
+    
+        if(jsonO.has("gradeScaleId") && !jsonO.get("gradeScaleId").isJsonNull() ){
+            return jsonO.get("gradeScaleId").getAsString().equals("sis-0-5");
+        }else {
+            return false;
+        }
+    
+    } 
+    
+    /**
+     * This method finds is group id part of particular year curriculum
+     * @param jsonObject jsonObject of a studyModule or course
+     * @return true or false
+     */
+    private Boolean checkCurriculum(String groupId, String year){
+        JsonObject module = getJsonObjectFromApi(createUrl(groupId)); 
+        for (int i=0; i<module.getAsJsonArray("curriculumPeriodIds").size();i++){
+            if(module.getAsJsonArray("curriculumPeriodIds").get(i).getAsString().contains(year)){
+                return true;
+            }
+        } 
+        return false;
+    }
 
     
      /**
-     * Create StudyModule
-     * It generates a Degree Program structure for Sisu.
-     * Structure is generated form given Json files.     *
-     * @throws FileNotFoundException if any file is missing.
-     * @return DegreeProgram the generated DegreeProgram.
+     * Create StudyModule to students selected degree program structure
+     * It generates a Degree Program structure for Sisu.  
+     * @param String groupId
+     * @return Study module
      */
     
     public StudyModule createStudyModule(String groupId){
-        //System.out.print(groupId+" ");
-        
-        String url;
-        if(groupId.startsWith("tut") || groupId.startsWith("uta")){
-            url =" https://sis-tuni.funidata.fi/kori/api/modules/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id&curriculumPeriodId=uta-lvv-2021";
-        }
-        else if (groupId.startsWith("otm")){
-            url = "https://sis-tuni.funidata.fi/kori/api/modules/"+groupId+"?universityId=tuni-university-root-id&curriculumPeriodId=uta-lvv-2021";
-        }
-        else{
-            url = "";
-        }
- 
-        JsonObject newStudyModule = getJsonObjectFromApi(url);
-        String name;
-        JsonObject content = newStudyModule.getAsJsonObject("name");
-         if (content.has("en")){
-                name = newStudyModule.getAsJsonObject("name").get("en").getAsString();
-            }
-         else{
-                name = newStudyModule.getAsJsonObject("name").get("fi").getAsString();
-         }
-        
-        //System.out.println("StudyModule: "+name+" : "+groupId); 
-        
-         
-        String nameFi =  newStudyModule.getAsJsonObject("name").get("fi").getAsString();
-        //System.out.println("nameFi: "+nameFi);
-        
-        String id = newStudyModule.get("id").getAsString();
-        //System.out.println("ID: "+id);
-        String code = "";
-        if(newStudyModule.has("code")){
-            if(!newStudyModule.get("code").isJsonNull()){
-                code = newStudyModule.get("code").getAsString();
-            }
-        }
-        
-        //System.out.println("code: "+code);
-        int credits;
-        if(newStudyModule.has("credits")){
-            credits = newStudyModule.getAsJsonObject("targetCredits").get("min").getAsInt();
-        }else{
-            credits = 0;
-        }
-        //System.out.println("credit: " + credits);
-
-        String description; 
-        if(newStudyModule.has("learningOutcomes")){
-            description = newStudyModule.getAsJsonObject("learningOutcomes").get("fi").getAsString();    
-        }else{
-            description = "";
-        }
-        //System.out.println("description: "+description);
-        Boolean gradable = false;
-        if(newStudyModule.has("gradeScaleId")){
-            if(!newStudyModule.get("gradeScaleId").isJsonNull()){
-                gradable = newStudyModule.get("gradeScaleId").getAsString().equals("sis-0-5");
-            }   
-        }
-        //System.out.println(gradable);
+        //System.out.println(groupId+" ");
+        JsonObject newStudyModule = getJsonObjectFromApi(createUrl(groupId));
         JsonArray children = new JsonArray();
         if(newStudyModule.getAsJsonObject("rule").get("type").getAsString().equals("CompositeRule")){
              getChildrenFromOneDocument(newStudyModule.getAsJsonObject("rule").get("rules").getAsJsonArray(), children);
@@ -142,19 +234,16 @@ public class SisuHelper implements iAPI {
             getChildrenFromOneDocument(newStudyModule.getAsJsonObject("rule").getAsJsonObject("rule").get("rules").getAsJsonArray(), children);
         
         }
-        //System.out.println(children);
-        StudyModule studyModule = new StudyModule(name, nameFi, id, groupId, credits, gradable, description, code);
-        
+         StudyModule studyModule = new StudyModule(findNameEn(newStudyModule), findNameFi(newStudyModule), findId(newStudyModule), groupId, findCredits(newStudyModule), findIsGradable(newStudyModule), findDescription(newStudyModule), findCode(newStudyModule));
+
         for (int i = 0; i<children.size();i++){
             if(children.get(i).getAsJsonObject().get("type").getAsString().equals("CourseUnitRule")){
                 Course course = createCourse(children.get(i).getAsJsonObject().get("courseUnitGroupId").getAsString());
                 course.setParent(studyModule);
                 studyModule.addCourse(course);
-                
             }
             else{
-                //System.out.print(" "+groupId);
-                StudyModule subStudyModule = createStudyModule(children.get(i).getAsJsonObject().get("moduleGroupId").getAsString());
+                StudyModule subStudyModule = createStudyModule(children.get(i).getAsJsonObject().get("moduleGroupId").getAsString());                
                 subStudyModule.setParent(studyModule);
                 studyModule.addStudyModule(subStudyModule);
             }    
@@ -164,9 +253,8 @@ public class SisuHelper implements iAPI {
     
      /**
      * Get direct children of one JSON object
-     * It updated ArrayList of children
-     * Structure is generated form given Json files.     *
-     * @param jsonArray JSON objects rules
+     * It updated ArrayList of children   *
+     * @param jsonArray parent
      * @param jsonArray children
      */
     public void getChildrenFromOneDocument(JsonArray rules, JsonArray children){
@@ -181,30 +269,14 @@ public class SisuHelper implements iAPI {
     
  
     /**
-    * Get direct children of one JSON object
-    * It updated ArrayList of children
-    * Structure is generated form given Json files.     *
-    * @param jsonArray JSON objects rules
-    * @param jsonArray children
+    * Create new course to students selected degree program structure 
+    * @param String groupId
+    * return Course
     */
     public Course createCourse(String groupId) {
         String url = "https://sis-tuni.funidata.fi/kori/api/course-units/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
         JsonObject newCourse = getJsonObjectFromApi(url);
-        String name = newCourse.getAsJsonObject("name").get("en").getAsString();
-        //String nameFi = newCourse.getAsJsonObject("name").get("fi").getAsString();
-        String nameFi;
-        JsonObject contentName = newCourse.getAsJsonObject("name");
-         if (contentName.has("fi")){
-                nameFi = newCourse.getAsJsonObject("name").get("fi").getAsString();
-            }
-         else{
-                nameFi = newCourse.getAsJsonObject("name").get("en").getAsString();
-         }
-        
-        
-        //System.out.println("Course name: " + name + " : " + groupId);
-        String id = newCourse.get("id").getAsString();
-        //System.out.println("Course id: "+id);
+        System.out.println("Course name: " + findNameFi(newCourse) + " : " + groupId);
         String description = "";
         if (!newCourse.get("content").isJsonNull()){
             JsonObject content = newCourse.getAsJsonObject("content");
@@ -214,17 +286,42 @@ public class SisuHelper implements iAPI {
                 description = newCourse.getAsJsonObject("content").get("fi").getAsString();
             }
         }
- 
-        //System.out.println("Description: " + description);
-        String code = newCourse.get("code").getAsString();
-        //System.out.println("Code: " + code);
-        int credits = newCourse.getAsJsonObject("credits").get("min").getAsInt();
-        //System.out.println("Credits: " + credits);
-        boolean gradable = newCourse.get("gradeScaleId").getAsString().equals("sis-0-5");
-        //System.out.println("gradable: " + gradable);
-        return new Course(name, nameFi, id, groupId, credits, gradable, description, code);
+        return new Course(findNameEn(newCourse), findNameFi(newCourse), findId(newCourse), groupId, findCredits(newCourse), findIsGradable(newCourse), description, findCode(newCourse));
   
     }
+    
+    
+    /**
+    * Get list of all degree programs in Tampere Universities in certain year
+    * @param int startYear
+    * @param String language
+    * return all degree programs available
+    */
+    public ArrayList<Program> getAllPrograms(int startYear, String language) {
+        ArrayList<Program> allPrograms = new ArrayList<>();
+        
+        String url = "https://sis-tuni.funidata.fi/kori/api/module-search?curriculumPeriodId=uta-lvv-" + 
+                startYear + "&universityId=tuni-university-root-id&moduleType=DegreeProgramme&limit=1000";
+
+        JsonObject programsJSON = getJsonObjectFromApi(url);
+        JsonArray programsArray = programsJSON.get("searchResults").getAsJsonArray();
+        for(JsonElement programJSON : programsArray){
+            JsonObject program = programJSON.getAsJsonObject();
+            String groupId = program.get("groupId").getAsString();
+            String id = program.get("id").getAsString();
+            String urlDegreeProgram = "https://sis-tuni.funidata.fi/kori/api/modules/"+id+"?curriculumPeriodId=uta-lvv-"+startYear+"&universityId=tuni-university-root-id";
+            JsonObject newDegreeProgram = getJsonObjectFromApi(urlDegreeProgram);
+            Program programObj = new Program(findNameEn(newDegreeProgram), findNameEn(newDegreeProgram), findNameFi(newDegreeProgram), groupId, findCredits(newDegreeProgram));
+            JsonArray yearsArray = program.get("curriculumPeriodIds").getAsJsonArray();
+            for(JsonElement yearEl : yearsArray){
+                String[] yearSrtings = yearEl.getAsString().split("-");
+                programObj.addYear(Integer.parseInt(yearSrtings[2]));
+            }
+            allPrograms.add(programObj);
+        }
+        return allPrograms;        
+    }
+    
     
        /**
      * Create DegreeProgram  NOT NEEDED WE WILL USE STUDYMODULE
@@ -343,6 +440,7 @@ public class SisuHelper implements iAPI {
      * @param jsonObject jsonObject to be navigated.
      * @throws FileNotFoundException json file not found.
      */
+    /*
     public static void navigate(JsonObject jsonObject) throws FileNotFoundException {
         //System.out.println(jsonObject);
         if (jsonObject.has("rule" )) {
@@ -388,6 +486,7 @@ public class SisuHelper implements iAPI {
      * @return StudyModule
      * @throws FileNotFoundException file not found
      */
+    /*
     public static StudyModule createStudyModuleFromJsonFile(String fileName) throws FileNotFoundException {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             JsonObject jsonObject = JsonParser.parseReader(br).getAsJsonObject();
@@ -429,6 +528,7 @@ public class SisuHelper implements iAPI {
      * @return
      * @throws FileNotFoundException
      */
+    /*
     public static Course createCourseFromJsonFile(String fileName) throws FileNotFoundException {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             JsonObject jsonObject = JsonParser.parseReader(br).getAsJsonObject();
@@ -459,43 +559,5 @@ public class SisuHelper implements iAPI {
      * for given year
      * @author mariia
      */
-    public ArrayList<Program> getAllPrograms(int startYear, String language) {
-        ArrayList<Program> allPrograms = new ArrayList<>();
-        
-        String url = "https://sis-tuni.funidata.fi/kori/api/module-search?curriculumPeriodId=uta-lvv-" + 
-                startYear + "&universityId=tuni-university-root-id&moduleType=DegreeProgramme&limit=1000";
-
-        JsonObject programsJSON = getJsonObjectFromApi(url);
-        JsonArray programsArray = programsJSON.get("searchResults").getAsJsonArray();
-        for(JsonElement programJSON : programsArray){
-            JsonObject program = programJSON.getAsJsonObject();
-            
-            String groupId = program.get("groupId").getAsString();
-            String id = program.get("id").getAsString();
-            //System.out.println(id);
-            // get language dependent name
-            String urlDegreeProgram = "https://sis-tuni.funidata.fi/kori/api/modules/"+id+"?curriculumPeriodId=uta-lvv-"+startYear+"&universityId=tuni-university-root-id";
-            JsonObject newDegreeProgram = getJsonObjectFromApi(urlDegreeProgram);
-            String name = newDegreeProgram.getAsJsonObject("name").get("en").getAsString();
-            //System.out.println(id + " : " + name);
-            JsonObject content = newDegreeProgram.getAsJsonObject("name");
-            String nameFi;
-            if (content.has("fi")){
-                nameFi = newDegreeProgram.getAsJsonObject("name").get("fi").getAsString();
-            } 
-            else {
-                nameFi = newDegreeProgram.getAsJsonObject("name").get("en").getAsString();    
-            }
-
-            int minCredits = program.getAsJsonObject("credits").get("min").getAsInt();
-            Program programObj = new Program(name, name, nameFi, groupId, minCredits);
-            JsonArray yearsArray = program.get("curriculumPeriodIds").getAsJsonArray();
-            for(JsonElement yearEl : yearsArray){
-                String[] yearSrtings = yearEl.getAsString().split("-");
-                programObj.addYear(Integer.parseInt(yearSrtings[2]));
-            }
-            allPrograms.add(programObj);
-        }
-        return allPrograms;        
-    }
+   
 }
