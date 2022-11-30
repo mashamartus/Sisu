@@ -16,10 +16,16 @@ public class StudentCourse extends Course{
                 course.isGradable(), course.getDescription(), course.getCode());
     }
 
+    
+    /**
+     * Sets the course completed
+     * @param boolean is the course completed
+     */
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
 
+    
     /**
      * Sets the course grade.
      * @param grade int grade between 0-5 accepted.
@@ -32,6 +38,7 @@ public class StudentCourse extends Course{
         else throw new IllegalArgumentException(String.format("Trying set course grade to: %d", grade));
     }
 
+    
     /**
      * Returns the grade given to course.
      * @return int grade
@@ -40,6 +47,11 @@ public class StudentCourse extends Course{
         return grade;
     }
     
+    
+    /**
+     * Returns is course completed
+     * @return true or false values
+     */
     public boolean isCompleted() {
         return completed;
     }

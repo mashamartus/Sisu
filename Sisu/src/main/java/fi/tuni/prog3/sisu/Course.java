@@ -84,10 +84,20 @@ public class Course extends DegreeModule {
         return code;
     }
     
+    
+    /**
+     * Returns the parent of the course
+     * @return the parent (StudyModule) of the course
+     */
     public StudyModule getParent() {
         return parent;
     }
     
+    
+    /**
+     * Returns the parent's id of the course
+     * @return the parent's (StudyModule) id of the course
+     */
     public String getParentID() {
         return parent.getId();
     }
