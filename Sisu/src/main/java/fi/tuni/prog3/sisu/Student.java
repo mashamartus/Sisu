@@ -30,6 +30,7 @@ public class Student implements iReadAndWriteToFile {
     private String language;
     private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
     private HashMap<String, StudentCourse> takenCourses = new HashMap<>();
+    
   
 
     public Student(String studentID) throws FileNotFoundException {
@@ -255,4 +256,12 @@ public class Student implements iReadAndWriteToFile {
         }
     }
     
+    /**
+     * Returns whether student have course taken.
+     * @param courseId id of the course to check
+     * @return true if student have a course with specified id, false otherwise
+     */
+    public boolean isCourseTaken(String courseId){
+        return takenCourses.containsKey(courseId);
+    }
 }

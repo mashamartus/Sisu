@@ -7,6 +7,7 @@ import static fi.tuni.prog3.sisu.Sisu.mainWindow;
 import static fi.tuni.prog3.sisu.Sisu.theStage;
 import static fi.tuni.prog3.sisu.Sisu.curStudent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -127,10 +128,12 @@ public class WelcomeScreen {
         //degreeChoiceBox.getItems().add("Please select a year");
         
         SisuHelper sh = new SisuHelper();
+        
         List<String> programNames = 
         sh.getAllPrograms(2022, "en").stream()
           .map(Program::getName)
           .collect(Collectors.toList());
+        Collections.sort(programNames);
         degreeChoiceBox.getItems().addAll(programNames);
         
         
@@ -160,8 +163,6 @@ public class WelcomeScreen {
             curStudent.setName(((TextField)scene.lookup("#studentName")).getText());
             
             
-            
-            
             ChoiceBox degreeBox = (ChoiceBox)scene.lookup("#degreeChoiceBox");
             SisuHelper sh = new SisuHelper();
             String degreeName = degreeBox.getSelectionModel().getSelectedItem().toString();
@@ -180,16 +181,14 @@ public class WelcomeScreen {
             mainWindow = mw.setMainWindow();
 
             StudyModule studyModule = sh.createStudyModule(selProgram.getId());
-            StudyModule.printModuleDetailed(studyModule,"");
+            //StudyModule.printModuleDetailed(studyModule,"");
             ScrollPane treeNode = (ScrollPane)mainWindow.lookup("#courseTree");
             treeNode.setContent(mw.handleModule(studyModule));
             System.out.println("All courses:" + allCourses.keySet().toString());
             
             stage.setScene(Sisu.mainWindow);
+            stage.setMaximized(true);
             Sisu.mainWindow.getRoot().requestFocus();
-            
-            
-            
             
         }
     };
