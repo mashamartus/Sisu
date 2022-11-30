@@ -32,48 +32,101 @@ public class Student implements iReadAndWriteToFile {
     private HashMap<String, StudentCourse> takenCourses = new HashMap<>();
   
 
+   
+    /**
+    * A constructor for initializing the member variables.
+    * @param studentId student's id number
+    */
     public Student(String studentID) throws FileNotFoundException {
         this.studentID = studentID;
     }
 
+    
+    /**
+    * Returns studentID
+    * @return studnentID as a string
+    */
     public String getStudentID() {
         return studentID;
     }
 
+    
+    /**
+    * Returns start year
+    * @return start year as integer value
+    */
     public Integer getStartYear() {
         return startYear;
     }
 
+    
+    /**
+    * Returns Program which student is participating
+    * @return Program
+    */
     public Program getProgram() {
         return program;
     }
 
+    
+    /**
+    * Returns student's name
+    * @return name as a string
+    */
     public String getStudentName() {
         return name;
     }
 
+    
+    /**
+    * Returns student's selected language
+    * @return language as a string
+    */
     public String getLanguage() {
         return language;
     }
 
     
-    
+    /**
+    * Set student's name
+    * @param String student name
+    */
     public void setName(String studentName) {
         this.name = studentName;
     }
 
+    
+    /**
+    * Set student's plan name
+    * @param String student plan name
+    */
     public void setPlanName(String planName) {
         this.planName = planName;
     }
 
+    
+    /**
+    * Set student's start year
+    * @param int start year
+    */
     public void setStartYear(Integer startYear) {
         this.startYear = startYear;
     }
 
+    
+    /**
+    * Set student's selected program
+    * @param Program selected by student
+    */
     public void setProgram(Program program) {
         this.program = program;
     }
 
+    
+    /**
+    * Set student's selected language
+    * @param String language
+    */
     public void setLanguage(String language) {
         if(language.equals("en") || language.equals("fi")){
             this.language = language;
@@ -85,6 +138,7 @@ public class Student implements iReadAndWriteToFile {
         }
     }
     
+    
     /**
      * Return the name the user marked his study plan.
      * @return plan name
@@ -93,6 +147,11 @@ public class Student implements iReadAndWriteToFile {
         return planName;
     }
 
+    
+    /**
+    * Set course as taken in taken courses list
+    * @param Course taken course
+    */
     public void takeCourse(Course course){
         StudentCourse stdCourse = new StudentCourse(course);
         if(!takenCourses.containsKey(course.getId())){
@@ -104,6 +163,11 @@ public class Student implements iReadAndWriteToFile {
         }
     }
     
+    
+    /**
+    * drop a course from taken courses list
+    * @param Course course to be dropped
+    */
     public void dropCourse(String id){
         if(takenCourses.get(id) != null){
             takenCourses.remove(id);
@@ -113,6 +177,12 @@ public class Student implements iReadAndWriteToFile {
         }
     }
     
+    
+    /**
+    * set course completed and give a grade
+    * @param String courseId
+    * @param int grade
+    */
     public void gradeCourse(String courseId, int grade){
         StudentCourse course = takenCourses.get(courseId);
         course.setCompleted(true);
@@ -211,6 +281,11 @@ public class Student implements iReadAndWriteToFile {
         return true;
     }
     
+    
+    /**
+     * Export student's completed courses to local workstation as json file
+     * @throw IOException filepath is incorrect
+     */
     public void exportDataToWorkstation(){
         JsonObject json = new JsonObject(); 
         json.addProperty("name", getStudentName());

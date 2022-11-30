@@ -111,7 +111,7 @@ public class StudyModule extends DegreeModule {
 
     /**
      * Returns as all submodules in the Module as Arraylist.
-     * @return Arraylist of Courses
+     * @return Arraylist of StudyModules
      */
     public ArrayList<StudyModule> getStudyModules() {
         return new ArrayList<>(submodules.values());
