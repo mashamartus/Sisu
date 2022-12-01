@@ -279,18 +279,19 @@ public class Student implements iReadAndWriteToFile {
         json.addProperty("degree program", getPlanName());
         json.addProperty("total credits", getPlannedCredits());
         JsonArray coursesCompleted = new JsonArray();
-        ArrayList<StudentCourse> courses = new ArrayList<>();
+        //ArrayList<StudentCourse> courses = new ArrayList<>();
         if(!getTakenCourses().isEmpty()){
-             courses = getTakenCourses();
-             for(int i = 0; i<courses.size(); i++){
+            
+             //courses = getTakenCourses();
+             for(int i = 0; i<getTakenCourses().size(); i++){
                  JsonObject oneCourse = new JsonObject();
-                oneCourse.addProperty("name", courses.get(i).getName());
-                oneCourse.addProperty("code", courses.get(i).getCode());
-                oneCourse.addProperty("credits", courses.get(i).getMinCredits());
-                oneCourse.addProperty("grade", courses.get(i).getGrade());
+                oneCourse.addProperty("name", getTakenCourses().get(i).getName());
+                oneCourse.addProperty("code", getTakenCourses().get(i).getCode());
+                oneCourse.addProperty("credits", getTakenCourses().get(i).getMinCredits());
+                oneCourse.addProperty("grade", getTakenCourses().get(i).getGrade());
                 coursesCompleted.add(oneCourse);
              }
-             json.add("courses", coursesCompleted.getAsJsonObject());
+             json.add("courses", coursesCompleted);
         }
 
         String jsonString = json.toString();
