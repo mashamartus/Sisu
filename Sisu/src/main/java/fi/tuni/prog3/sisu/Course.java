@@ -39,6 +39,7 @@ public class Course extends DegreeModule {
         this.code = code;
     }
 
+    
     /**
      * Marks to course as passed (true) or not (false).
      * @param isPassed boolean
@@ -48,10 +49,15 @@ public class Course extends DegreeModule {
     }
 
     
+    /**
+     * Set a parent to StudyModule
+     * @param parent StudyModule
+     */
     public void setParent(StudyModule parent) {
         this.parent = parent;
     }
 
+    
     /**
      * Returns if the course is passed.
      * @return true if it is else false

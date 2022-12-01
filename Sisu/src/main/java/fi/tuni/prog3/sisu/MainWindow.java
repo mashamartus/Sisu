@@ -51,6 +51,10 @@ public class MainWindow {
     static PieChart pieChart; 
     static Label progressLabel;
     
+    /**
+     * setMainWindow
+     * @return mainWindow
+     */
     public Scene setMainWindow(){
         
         BorderPane root = new BorderPane();
@@ -63,6 +67,10 @@ public class MainWindow {
         return mainWindow;
     }
     
+    /**
+     * Create setMenu
+     * @return menuPane
+     */
     private BorderPane setMenuPane() {
         //Creating a BorderPane for the left side.
         BorderPane menuPane = new BorderPane();
@@ -81,7 +89,11 @@ public class MainWindow {
         
         return menuPane;
     }
-        
+   
+    /**
+     * Create headingPane
+     * @return box
+     */
     private VBox headingPane(){
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER_LEFT);
@@ -102,6 +114,10 @@ public class MainWindow {
         return box;
     }
     
+    /**
+     * create progressPane
+     * @return box
+     */
     private VBox progressPane(){
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER); 
@@ -125,6 +141,10 @@ public class MainWindow {
         return box;
     }        
         
+    /**
+     * create menuBottomPane
+     * @return box
+     */
     private VBox menuBottomPane(){
         VBox box = new VBox();
         box.setAlignment(Pos.BOTTOM_LEFT);
@@ -139,6 +159,10 @@ public class MainWindow {
         return box;
     }
     
+    /**
+     * create getQuitButton
+     * @return button
+     */
     private Button getQuitButton(){
         //Creating a button.
         Button button = new Button("Quit");
@@ -206,8 +230,11 @@ public class MainWindow {
         return centerVBox;
     }
     
-   
-     //Create tree structure of the course list
+   /**
+    * Create tree structure of the course list
+    * @param module DegreeModule
+    * @return courseBox or titledBox
+    */
     public Node handleModule(DegreeModule module){
         
         if(module instanceof Course){
@@ -386,7 +413,9 @@ public class MainWindow {
         }
     };       
     
-    
+    /**
+     * updateProgress
+     */
     //it gives an error beacause it can't find objects with lookup function
     public static void updateProgress(){
         

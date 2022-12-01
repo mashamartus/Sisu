@@ -43,7 +43,7 @@ public class StudyModule extends DegreeModule {
 
     /**
      * Adds the param StudyModule to the submodules
-     * @param studyModule studyModule to add.
+     * @param studyModule to be added
      */
     public void addStudyModule(StudyModule studyModule) {
         submodules.put(studyModule.getId(), studyModule);
@@ -181,7 +181,8 @@ public class StudyModule extends DegreeModule {
 
     
     /**
-     * Remove course from courses 
+     * Remove course from courses
+     * @param id as a string
      */
     public void removeCourse(String id) {
         courses.remove(id);

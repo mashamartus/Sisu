@@ -24,8 +24,9 @@ public class DegreeProgram extends DegreeModule {
 
     /**
      * A constructor for initializing the member variables.
-     *
-     * @param nameEn        name of the DegreeProgram.
+     * @hidden
+     * @param nameEn      English name of the DegreeProgram.
+     * @param nameFi      Finnish name of the DegreeProgram.
      * @param id          id of the DegreeProgram.
      * @param groupId     group id of the DegreeProgram.
      * @param minCredits  minimum credits of the DegreeProgram.
@@ -41,17 +42,20 @@ public class DegreeProgram extends DegreeModule {
     
 
     /**
+     * 
      * Adds a new StudyModule to the Degree.
+     * @hidden
      * @param studyModule to be added.
      *
      */
-
     public void addStudyModule(StudyModule studyModule) {
         studyModules.put(studyModule.getId(), studyModule);
     }
 
     /**
+     * 
      * Finds and returns a StudyModule from stored modules, if it exists.
+     * @hidden
      * @param id the id of the StudyModule to be found.
      * @return the found StudyModule.
      * @throws NoSuchElementException if Module not found.
@@ -66,7 +70,9 @@ public class DegreeProgram extends DegreeModule {
     }
 
     /**
+     * 
      * Returns as all modules as Arraylist (so they can be sorted if needed).
+     * @hidden
      * @return Arraylist of StudyModules
      */
 
@@ -74,10 +80,20 @@ public class DegreeProgram extends DegreeModule {
         return new ArrayList<>(studyModules.values());
     }
 
+    /**
+    * getDescription()
+    * @hidden
+    * @return description
+    */ 
     public String getDescription() {
         return description;
     }
 
+    /**
+     * getCode()
+     * @hidden
+     * @return code
+     */
     public String getCode() {
         return code;
     }

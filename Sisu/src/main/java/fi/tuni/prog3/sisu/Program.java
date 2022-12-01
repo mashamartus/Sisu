@@ -39,7 +39,7 @@ public class Program {
     
     /**
      * Adds the param year to the list of years
-     * @param int year 
+     * @param year as a int value
      */
     public void addYear(int year){
         if(!years.contains(year)){
@@ -54,6 +54,7 @@ public class Program {
     
     /**
      * CAN THIS BE REMOVED?
+     * @return name 
      */
     public String getName() {
         return name;

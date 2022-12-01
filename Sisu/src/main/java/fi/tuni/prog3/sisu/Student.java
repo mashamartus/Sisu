@@ -216,7 +216,7 @@ public class Student implements iReadAndWriteToFile {
     }
     
     /**
-     * To implement! - Return the amount of credits completed by student.
+     * Return the amount of credits completed by student.
      * @return return sum of credits of all completed courses
      */
     public int getCompletedCredits(){
@@ -229,6 +229,11 @@ public class Student implements iReadAndWriteToFile {
         return completedCr;
     }
     
+    
+    /**
+     * Return the the average grade of the student.
+     * @return average grade as double value
+     */
     public double getAverageGrade(){
         int sum = 0;
         int coursesAmount = 0;
@@ -245,7 +250,7 @@ public class Student implements iReadAndWriteToFile {
     }
     
     /**
-     * To implement! - Return sum of credits of all courses chosen by student.
+     * Return sum of credits of all courses chosen by student.
      * @return Return sum of credits of all courses chosen by student
      */
     public int getPlannedCredits(){
