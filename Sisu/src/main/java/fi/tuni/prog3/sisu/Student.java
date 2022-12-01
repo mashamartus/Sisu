@@ -276,13 +276,12 @@ public class Student implements iReadAndWriteToFile {
         JsonObject json = new JsonObject(); 
         json.addProperty("name", getStudentName());
         json.addProperty("id", getStudentID());
-        json.addProperty("degree program", getPlanName());
+        json.addProperty("plan name", getPlanName());
+        json.addProperty("start yeat", getStartYear());
+        json.addProperty("degree program", getProgram().getNameEn());
         json.addProperty("total credits", getPlannedCredits());
         JsonArray coursesCompleted = new JsonArray();
-        //ArrayList<StudentCourse> courses = new ArrayList<>();
         if(!getTakenCourses().isEmpty()){
-            
-             //courses = getTakenCourses();
              for(int i = 0; i<getTakenCourses().size(); i++){
                  JsonObject oneCourse = new JsonObject();
                 oneCourse.addProperty("name", getTakenCourses().get(i).getName());
