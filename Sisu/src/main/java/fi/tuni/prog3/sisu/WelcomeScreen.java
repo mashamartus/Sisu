@@ -25,6 +25,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -166,9 +167,17 @@ public class WelcomeScreen {
         public void handle(ActionEvent btnPress) { 
             System.out.println("Start planning button pressed");
             
+            
             Stage stage = (Stage)((Node) btnPress.getTarget()).getScene().getWindow();
             Scene scene = ((Button)btnPress.getTarget()).getScene();
-            curStudent.setName(((TextField)scene.lookup("#studentName")).getText());
+            try{
+                curStudent = new Student(((TextInputControl)scene.lookup("#studentName")).getText());
+            }
+            catch(Exception e){
+                System.out.println("failed to create new student");
+                System.out.println(e.getMessage());
+            }
+            //curStudent.setName(((TextField)scene.lookup("#studentName")).getText());
             
             
             ChoiceBox degreeBox = (ChoiceBox)scene.lookup("#degreeChoiceBox");

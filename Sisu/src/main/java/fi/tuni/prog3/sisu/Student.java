@@ -49,7 +49,6 @@ public class Student implements iReadAndWriteToFile {
     public String getStudentID() {
         return studentID;
     }
-
     
     /**
     * Returns start year
@@ -59,7 +58,6 @@ public class Student implements iReadAndWriteToFile {
         return startYear;
     }
 
-    
     /**
     * Returns Program which student is participating
     * @return Program
@@ -68,7 +66,6 @@ public class Student implements iReadAndWriteToFile {
         return program;
     }
 
-    
     /**
     * Returns student's name
     * @return name as a string
@@ -77,7 +74,6 @@ public class Student implements iReadAndWriteToFile {
         return name;
     }
 
-    
     /**
     * Returns student's selected language
     * @return language as a string
@@ -86,7 +82,6 @@ public class Student implements iReadAndWriteToFile {
         return language;
     }
 
-    
     /**
     * Set student's name
     * @param studentName inputted student name
@@ -95,7 +90,6 @@ public class Student implements iReadAndWriteToFile {
         this.name = studentName;
     }
 
-    
     /**
     * Set student's plan name
     * @param planName inputted plan name
@@ -147,10 +141,11 @@ public class Student implements iReadAndWriteToFile {
         return planName;
     }
 
-    
+       
     /**
-    * Set course as taken in taken courses list
-    * @param course taken course
+    * Method make changes in database when user add a course 
+     * to his study plan. Set course as taken in taken courses list.
+    * @param course taken course object
     */
     public void takeCourse(Course course){
         StudentCourse stdCourse = new StudentCourse(course);
@@ -270,20 +265,7 @@ public class Student implements iReadAndWriteToFile {
     public int getProgramCredits(){
         return this.program.getMinCredits();
     }
-    
-    /**
-     * To implement! Method make changes in database when user add a course 
-     * to his study plan. 
-     * @param courseId (to be decided about the format!) Identificator of 
-     * the course student decide to take.
-     * @return (in the end maybe we don't need a return) 
-     * was modifications to the database successfull or not. 
-     * For example if that ID don't exist in the degree 
-     * (although that shouldn't happen, in theory:)
-     */
-    public boolean takeCourse(String courseId){
-        return true;
-    }
+
     
     
     /**
@@ -334,7 +316,7 @@ public class Student implements iReadAndWriteToFile {
     public void printTakenCourses(){
         System.out.println("\nStudent taken courses:");
         for(StudentCourse course : takenCourses.values()){
-            System.out.println("  " + course.getNameEn());
+            System.out.println("  " + course.getNameEn() + "ID: " + course.getId());
         }
     }
     

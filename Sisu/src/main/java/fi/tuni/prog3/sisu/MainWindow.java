@@ -17,6 +17,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -157,6 +158,7 @@ public class MainWindow {
         box.setAlignment(Pos.BOTTOM_LEFT);
         
         Button writeDataBtn = new Button("Write to file");
+        writeDataBtn.setOnAction(writeDataEventHandler);
         
         Button backToWelcomeScreen = new Button("Back");
         backToWelcomeScreen.setOnAction(goToWelcomeScreen);
@@ -282,7 +284,7 @@ public class MainWindow {
         box.setId(course.getId());
         box.managedProperty().bind(box.visibleProperty());
         box.setAlignment(Pos.CENTER);
-        box.setPrefHeight(45);
+        box.setPrefHeight(40);
         box.setPadding(new Insets(0, 15, 0, 15));
         box.setSpacing(10);
         box.setStyle( "-fx-background-radius: 5 5 5 5; -fx-background-color: " + Constants.courseBoxColor);
@@ -330,6 +332,7 @@ public class MainWindow {
         public void handle(ActionEvent btnPress) { 
             System.out.println("Grade course button pressed");
             Button btn = (Button)btnPress.getSource();
+            System.out.println("button id is" + btn.getId());
             //String grade = ((TextInputControl)((Pane)btn.getParent()).getChildren().get(2)).getText();
             String courseId = btn.getId().split("_grade")[0];
             
@@ -370,12 +373,15 @@ public class MainWindow {
             ((Stage)putGradeBtn.getScene().getWindow()).close();
             System.out.println("Average grade is " + curStudent.getAverageGrade());
             
+            theStage.show();
+            System.out.println(mainWindow.lookup(courseId + "_grade"));
             Button courseGradeBtn = (Button)mainWindow.lookup(courseId + "_grade");
+            System.out.println("Looking up for " + courseId + "_grade");
             courseGradeBtn.setText(grade + "!");
         }
     }; 
     
-
+    // pressing take/drop course button
     private final EventHandler<ActionEvent> takeCourseEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
@@ -386,8 +392,6 @@ public class MainWindow {
             if(courseBtn.getText().equals("Take course")){
                 //add course
                 curStudent.takeCourse(allCourses.get(courseId));
-                curStudent.printTakenCourses();
-                System.out.println(curStudent.getPlannedCredits() + "/" + curStudent.getProgramCredits());
                 updateProgress();
                 
                 //modify button layout
@@ -398,7 +402,8 @@ public class MainWindow {
                 
                 Button putGradeBtn = new Button("Grade");
                 putGradeBtn.setPrefWidth(70);
-                putGradeBtn.setStyle("-fx-background-color: " + Constants.courseButtonColor);
+                putGradeBtn.setStyle("-fx-background-radius: 5 5 5 5; -fx-background-color: " + 
+                        Constants.courseButtonColor);
                 putGradeBtn.setId(courseId + "_grade");
                 putGradeBtn.setOnAction(gradeCourseEventHandler);
                 ((Pane)courseBtn.getParent()).getChildren().add(putGradeBtn);
@@ -407,8 +412,6 @@ public class MainWindow {
             else{
                 //remove course
                 curStudent.dropCourse(courseId);
-                curStudent.printTakenCourses();
-                System.out.println(curStudent.getPlannedCredits() + "/" + curStudent.getProgramCredits());
                 updateProgress();
                 
                 //modify button layout
@@ -426,7 +429,6 @@ public class MainWindow {
     //it gives an error beacause it can't find objects with lookup function
     public static void updateProgress(){
         
-        
         ObservableList<PieChart.Data> pieChartData =
                 FXCollections.observableArrayList(
                 new PieChart.Data("Planned", curStudent.getPlannedCredits()),
@@ -440,23 +442,25 @@ public class MainWindow {
                 totCr+"\nAverage grade "+curStudent.getAverageGrade();
         progressLabel.setText(progressText);
         
-        
     }
     
+    // hide/show untaken courses by the switch change
     private final ChangeListener<Number> courseVisibilityListener = new ChangeListener<Number>() {
       @Override
       public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-        System.out.println("Now selected option "+number2 + "; number2.equals(\"0\") " + number2.equals("0"));
         if(number2.intValue() == 0){
-            System.out.println("Int value == 0");
+            System.out.println("set all courses visible");
             System.out.println("There are "+ allCourseBoxes.values().size() + " course boxes in allCourseBoxes list");
             for(HBox courseBox : allCourseBoxes.values()){
                 courseBox.setVisible(true); 
             }
         }
         else{
+            System.out.println("hide untaken courses");
+            //curStudent.printTakenCourses();
             for(HBox courseBox : allCourseBoxes.values()){
                 String courseId = courseBox.getId();
+                System.out.println(allCourses.get(courseId).getName() + " -> " + courseId + curStudent.isCourseTaken(courseId));
                 if(!curStudent.isCourseTaken(courseId)){
                     courseBox.setVisible(false);                
                 }
@@ -464,5 +468,14 @@ public class MainWindow {
         }
       }
     };
+    
+    // export data to workstation from button press
+    private final EventHandler<ActionEvent> writeDataEventHandler = new EventHandler<ActionEvent>(){
+        @Override 
+        public void handle(ActionEvent btnPress) { 
+            curStudent.exportDataToWorkstation();
+        }
+    };
+    
     
 }
