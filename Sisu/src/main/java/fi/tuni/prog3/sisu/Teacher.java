@@ -10,6 +10,12 @@ import java.io.IOException;
  * Teacher class, this is an additional feature.
  */
 public class Teacher implements iAPI, iReadAndWriteToFile{
+    
+    
+    /**
+     * default construct
+     */
+    public Teacher(){}
 
     @Override
     public JsonObject getJsonObjectFromApi(String urlString) {

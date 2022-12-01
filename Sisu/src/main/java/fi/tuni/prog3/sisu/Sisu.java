@@ -33,6 +33,11 @@ public class Sisu extends Application {
     
     //Student student = new Student("SomeId");
     
+    /**
+     * default construct for Sisu
+     */
+    public Sisu(){};
+    
     @Override
     public void start(Stage stage) {
         
@@ -58,6 +63,10 @@ public class Sisu extends Application {
         System.out.println("method start worked till the end");
     }
 
+    /**
+     * program main
+     * @param args input arguments
+     */
     public static void main(String[] args) {
         launch();
     }

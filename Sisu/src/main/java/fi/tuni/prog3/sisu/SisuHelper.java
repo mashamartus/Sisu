@@ -17,19 +17,34 @@ import java.util.ArrayList;
  * from KORI API and also from the example files.
  */
 public class SisuHelper implements iAPI {
-    //path to the json files.
+    /**
+     * path to the json files.
+     * modulePath {@value #modulePath} 
+     */
     public static final String modulePath = "../json/modules/";
+    /**
+     * path to the json files.
+     * coursePath {@value #coursePath} 
+     */
     public static final String coursePath = "../json/courseunits/";
+    /**
+     * path to the json files.
+     * jsonFile {@value #jsonFile} 
+     */
     public static final String jsonFile = ".json";
 
 
     /**
+     * empty construct for SisuHelper
+     */
+    public SisuHelper(){}
+    
+    
+    /**
      * This method create JSON object from url
      * Structure is generated form given Json files.
-     * @param String url as a string
-     * @throws MalformedURLException if url is incorrect.
-     * @throws IOException if url is not responsive
-     * @return JSONobject.
+     * @param urlString url as a string
+     * @return degree program structure as JSONobject
      */
     @Override
     public JsonObject getJsonObjectFromApi(String urlString) {
@@ -58,7 +73,7 @@ public class SisuHelper implements iAPI {
     
      /**
      * This method create url string from groupId
-     * @param String groupId
+     * @param groupId groupId of StudyModule
      * @return url as a string
      */
     private String createUrlString(String groupId){
@@ -77,7 +92,7 @@ public class SisuHelper implements iAPI {
      /**
      * This method finds fi name of the course or study module
      * get finnish name of study module or course
-     * @param jsonObject jsonObject of a studyModule or course
+     * @param jsonO jsonObject of a studyModule or course
      * @return finnish name
      */
     private String findNameFi(JsonObject jsonO){
@@ -94,7 +109,7 @@ public class SisuHelper implements iAPI {
     /**
      * This method finds en name of the course or study module
      * get english name of study module or course
-     * @param jsonObject jsonObject of a studyModule or course
+     * @param jsonO jsonObject of a studyModule or course
      * @return english name
      */
      private String findNameEn(JsonObject jsonO){
@@ -112,7 +127,7 @@ public class SisuHelper implements iAPI {
     /**
      * This method finds id of the course or study module
      * get id of study module or course
-     * @param jsonObject jsonObject of a studyModule or course
+     * @param jsonO jsonObject of a studyModule or course
      * @return id
      */ 
     private String findId(JsonObject jsonO){
@@ -122,7 +137,7 @@ public class SisuHelper implements iAPI {
      /**
      * This method finds credits of the course or study module
      * get credits  of study module or course
-     * @param jsonObject jsonObject of a studyModule or course
+     * @param jsonO jsonObject of a studyModule or course
      * @return credits
      */
     private int findCredits(JsonObject jsonO){
@@ -140,7 +155,7 @@ public class SisuHelper implements iAPI {
     /**
      * This method finds code of the course or study module
      * get code of study module or course
-     * @param jsonObject jsonObject of a studyModule or course
+     * @param jsonO jsonObject of a studyModule or course
      * @return code
      */
     private String findCode(JsonObject jsonO){
@@ -156,7 +171,7 @@ public class SisuHelper implements iAPI {
     /**
      * This method finds description of the course or study module
      * get description of study module or course
-     * @param jsonObject jsonObject of a studyModule or course
+     * @param jsonO jsonObject of a studyModule or course
      * @return description
      */
     private String findDescription(JsonObject jsonO){
@@ -193,7 +208,7 @@ public class SisuHelper implements iAPI {
     /**
      * This method finds is course or study module gradable
      * get is study module or course gradable
-     * @param jsonObject jsonObject of a studyModule or course
+     * @param jsonO jsonObject of a studyModule or course
      * @return true or false
      */
     private Boolean findIsGradable(JsonObject jsonO){
@@ -208,7 +223,7 @@ public class SisuHelper implements iAPI {
     
     /**
      * This method finds is group id part of particular year curriculum
-     * @param jsonObject jsonObject of a studyModule or course
+     * @param jsonO jsonObject of a studyModule or course
      * @return true or false
      */
     private Boolean checkCurriculum(String groupId, String year){
@@ -225,7 +240,7 @@ public class SisuHelper implements iAPI {
      /**
      * Create StudyModule to students selected degree program structure
      * It generates a Degree Program structure for Sisu.  
-     * @param String groupId
+     * @param groupId StudyModule groupId
      * @return Study module
      */
     
@@ -260,8 +275,8 @@ public class SisuHelper implements iAPI {
      /**
      * Get direct children of one JSON object
      * It updated ArrayList of children   *
-     * @param jsonArray parent
-     * @param jsonArray children
+     * @param rules hierarchy of childred
+     * @param children list of children
      */
     public void getChildrenFromOneDocument(JsonArray rules, JsonArray children){
         for (int i = 0; i<rules.size();i++){
@@ -276,8 +291,8 @@ public class SisuHelper implements iAPI {
  
     /**
     * Create new course to students selected degree program structure 
-    * @param String groupId
-    * return Course
+    * @param groupId course
+    * @return Course
     */
     public Course createCourse(String groupId) {
         String url = "https://sis-tuni.funidata.fi/kori/api/course-units/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
@@ -299,9 +314,9 @@ public class SisuHelper implements iAPI {
     
     /**
     * Get list of all degree programs in Tampere Universities in certain year
-    * @param int startYear
-    * @param String language
-    * return all degree programs available
+    * @param startYear inputted start year
+    * @param language selected language
+    * @return all degree programs available
     */
     public ArrayList<Program> getAllPrograms(int startYear, String language) {
         ArrayList<Program> allPrograms = new ArrayList<>();

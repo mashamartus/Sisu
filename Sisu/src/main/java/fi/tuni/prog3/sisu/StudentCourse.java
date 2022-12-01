@@ -11,6 +11,11 @@ public class StudentCourse extends Course{
     private int grade = -1;
     private boolean completed = false;
 
+    
+    /**
+     * student takes the course
+     * @param course course data
+     */
     public StudentCourse(Course course) {
         super(course.getNameEn(),course.getNameFi(), course.getId(), "", course.getMinCredits(), 
                 course.isGradable(), course.getDescription(), course.getCode());
@@ -19,7 +24,7 @@ public class StudentCourse extends Course{
     
     /**
      * Sets the course completed
-     * @param boolean is the course completed
+     * @param completed is the course completed
      */
     public void setCompleted(boolean completed) {
         this.completed = completed;
@@ -41,7 +46,7 @@ public class StudentCourse extends Course{
     
     /**
      * Returns the grade given to course.
-     * @return int grade
+     * @return grade
      */
     public int getGrade() {
         return grade;

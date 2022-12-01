@@ -51,6 +51,13 @@ public class MainWindow {
     static PieChart pieChart; 
     static Label progressLabel;
     
+    
+    /**
+     * default construct
+     */
+    public MainWindow(){}
+    
+    
     /**
      * setMainWindow
      * @return mainWindow

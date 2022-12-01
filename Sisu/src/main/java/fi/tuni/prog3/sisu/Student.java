@@ -15,8 +15,8 @@ import java.util.HashMap;
  * the course into his plan, completing and putting grades or excluding it.
  * The class also have a methods to compute parameters about the plan 
  * concerning his degree program and picked courses. 
- * ({@link Student.getCompletedCredits getCompletedCredits}, 
- * {@link Student.getPlannedCredits getPlannedCredits} etc.)
+ * ({link Student.getCompletedCredits getCompletedCredits}, 
+ * {link Student.getPlannedCredits getPlannedCredits} etc.)
  * It can use a plan already stored on user's pc. 
  * 
  * 
@@ -31,12 +31,11 @@ public class Student implements iReadAndWriteToFile {
     private HashMap<String, DegreeProgram> degreePrograms = new HashMap<>();
     private HashMap<String, StudentCourse> takenCourses = new HashMap<>();
     
-  
-
    
     /**
     * A constructor for initializing the member variables.
-    * @param studentId student's id number
+    * @param studentID student's id number
+    * @throws FileNotFoundException if student not found
     */
     public Student(String studentID) throws FileNotFoundException {
         this.studentID = studentID;
@@ -90,7 +89,7 @@ public class Student implements iReadAndWriteToFile {
     
     /**
     * Set student's name
-    * @param String student name
+    * @param studentName inputted student name
     */
     public void setName(String studentName) {
         this.name = studentName;
@@ -99,7 +98,7 @@ public class Student implements iReadAndWriteToFile {
     
     /**
     * Set student's plan name
-    * @param String student plan name
+    * @param planName inputted plan name
     */
     public void setPlanName(String planName) {
         this.planName = planName;
@@ -108,7 +107,7 @@ public class Student implements iReadAndWriteToFile {
     
     /**
     * Set student's start year
-    * @param int start year
+    * @param startYear selected start year
     */
     public void setStartYear(Integer startYear) {
         this.startYear = startYear;
@@ -117,7 +116,7 @@ public class Student implements iReadAndWriteToFile {
     
     /**
     * Set student's selected program
-    * @param Program selected by student
+    * @param program selected by student
     */
     public void setProgram(Program program) {
         this.program = program;
@@ -126,7 +125,7 @@ public class Student implements iReadAndWriteToFile {
     
     /**
     * Set student's selected language
-    * @param String language
+    * @param language selected by student
     */
     public void setLanguage(String language) {
         if(language.equals("en") || language.equals("fi")){
@@ -151,7 +150,7 @@ public class Student implements iReadAndWriteToFile {
     
     /**
     * Set course as taken in taken courses list
-    * @param Course taken course
+    * @param course taken course
     */
     public void takeCourse(Course course){
         StudentCourse stdCourse = new StudentCourse(course);
@@ -167,7 +166,7 @@ public class Student implements iReadAndWriteToFile {
     
     /**
     * drop a course from taken courses list
-    * @param Course course to be dropped
+    * @param id course id to be dropped
     */
     public void dropCourse(String id){
         if(takenCourses.get(id) != null){
@@ -181,8 +180,8 @@ public class Student implements iReadAndWriteToFile {
     
     /**
     * set course completed and give a grade
-    * @param String courseId
-    * @param int grade
+    * @param courseId course id
+    * @param grade course grade
     */
     public void gradeCourse(String courseId, int grade){
         StudentCourse course = takenCourses.get(courseId);
@@ -282,7 +281,6 @@ public class Student implements iReadAndWriteToFile {
      * For example if that ID don't exist in the degree 
      * (although that shouldn't happen, in theory:)
      */
-    
     public boolean takeCourse(String courseId){
         return true;
     }
@@ -290,7 +288,7 @@ public class Student implements iReadAndWriteToFile {
     
     /**
      * Export student's completed courses to local workstation as json file
-     * @throw IOException filepath is incorrect
+     * IOException filepath is incorrect
      */
     public void exportDataToWorkstation(){
         JsonObject json = new JsonObject(); 
@@ -329,6 +327,10 @@ public class Student implements iReadAndWriteToFile {
                 ", startYear=" + startYear + ", program=" + program + ", takenCourses=" + takenCourses + '}';
     }
     
+    
+    /**
+     * printTakenCourses
+     */
     public void printTakenCourses(){
         System.out.println("\nStudent taken courses:");
         for(StudentCourse course : takenCourses.values()){

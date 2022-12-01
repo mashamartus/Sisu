@@ -130,10 +130,11 @@ public class StudyModule extends DegreeModule {
         return allSubelements;
     }
 
-    
+   
     /**
      * Returns as all submodules and courses in the Module as Arraylist.
-     * @return Arraylist of submodules and Courses
+     * @param printedModule printed
+     * @param tab tab
      */
     public static void printModuleDetailed(StudyModule printedModule, String tab){
         for(DegreeModule subModule : printedModule.getStudyModulesAndCourses()){

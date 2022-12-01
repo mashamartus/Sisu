@@ -41,9 +41,17 @@ import javafx.stage.Stage;
 public class WelcomeScreen {
     
     ArrayList<Program> programList;
+    
+    /**
+     * empty construct for welcomeScreen
+     */
     public WelcomeScreen() {
     }
     
+    /**
+     * setWelcomeWindow
+     * @return welcomeWindow
+     */
     public Scene setWelcomeWindow(){
         
         BorderPane welcomeRoot = new BorderPane();
