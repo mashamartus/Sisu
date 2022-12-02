@@ -6,7 +6,7 @@ Developers:
   - Name: Hanna Haapanen 
   - Email: hanna.m.haapanen@tuni.fi
 
-  - Name: Mariaa Martus
+  - Name: Mariia Martus
   - Email: 
   
   - Name:  Petri Kaukopuro
