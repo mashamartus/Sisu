@@ -343,6 +343,65 @@ public class SisuHelper implements iAPI {
         return allPrograms;        
     }
     
+       /**
+     * This static method is for the minimum requirement and help testing Sisu.
+     * It generates a Degree Program structure for Sisu.
+     * Structure is generated form given Json files.     *
+     * @throws FileNotFoundException if any file is missing.
+     * @return DegreeProgram the generated DegreeProgram.
+     */
+    
+    public StudyModule importDataFromJson(String filePath) throws FileNotFoundException {
+        
+        String temp = "../Sisu/src/main/resources/studentCourses.json";
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+
+            JsonElement jsonElement = JsonParser.parseReader(br);
+            //System.out.println(jsonElement);
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            System.out.println(jsonObject);
+
+            // might need to check if the fields exists first.
+            String name = "";
+            if(!jsonObject.get("name").isJsonNull()){
+                System.out.println("nulll");
+                name = jsonObject.get("name").getAsString();
+            }   
+            System.out.println("name : " + name);
+            String id = jsonObject.get("id").getAsString();
+            System.out.println("id : " + id);
+            String planName = jsonObject.get("plan name").getAsString();
+            System.out.println("plan Name : " + planName);
+            int startYear = 2021;
+            if(!jsonObject.get("start year").isJsonNull()){
+                startYear = jsonObject.get("start year").getAsInt();
+            }
+            System.out.println("start year : " + startYear);
+            String programGroupId = jsonObject.get("degree program id").getAsString();
+            System.out.println("degree program if: " + programGroupId);
+            JsonArray courses = jsonObject.get("courses").getAsJsonArray();
+            
+            
+            StudyModule newStudyModule = createStudyModule(programGroupId);
+            
+            for (int i=0; i<courses.size(); i++){
+                String idCourse = courses.get(i).getAsJsonObject().get("id").getAsString();
+                int gradeCourse = courses.get(i).getAsJsonObject().get("grade").getAsInt();
+                System.out.println(idCourse + " : " + gradeCourse);
+
+            }
+            return newStudyModule;
+            
+
+ 
+        }
+        catch (IOException e) {
+            throw new FileNotFoundException(String.format("File %s not found!", filePath));
+        }
+        
+    }
+    
     
        /**
      * Create DegreeProgram  NOT NEEDED WE WILL USE STUDYMODULE
