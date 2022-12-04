@@ -511,8 +511,8 @@ public class MainWindow {
         @Override 
         public void handle(ActionEvent btnPress) { 
             System.out.println("Trying to write to file");
-            String fileName = curStudent.getPlanName().replace(" ", "_") + ".json";
-            curStudent.exportDataToWorkstation("studentCourses");
+            String fileName = curStudent.getPlanName().replace(" ", "_") ;
+            curStudent.exportDataToWorkstation(fileName);
         }
     };
 
