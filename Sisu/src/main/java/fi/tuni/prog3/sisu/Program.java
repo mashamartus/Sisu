@@ -4,10 +4,10 @@ package fi.tuni.prog3.sisu;
 import java.util.ArrayList;
 
 /**
- * Class represent a program object and contains just basic data about it 
+ * Class represent a degree program object and contains just basic data about it 
  * and id to find it in Sisu.
- * It is used mainly on the welcome screen and to provide id 
- * for the chosen program
+ * It is used mainly on the welcome screen and to return id 
+ * of the certain program
  * @author mariia
  */
 public class Program {
