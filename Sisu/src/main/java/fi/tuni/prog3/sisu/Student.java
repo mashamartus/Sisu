@@ -272,7 +272,7 @@ public class Student implements iReadAndWriteToFile {
      * Export student's completed courses to local workstation as json file
      * IOException filepath is incorrect
      */
-    public void exportDataToWorkstation(){
+    public void exportDataToWorkstation(String filename){
         JsonObject json = new JsonObject(); 
         json.addProperty("name", getStudentName());
         json.addProperty("id", getStudentID());
@@ -297,7 +297,7 @@ public class Student implements iReadAndWriteToFile {
 
         String jsonString = json.toString();
 
-            try (PrintWriter file = new PrintWriter( new FileWriter("src/main/resources/studentCourses.json"))) {
+            try (PrintWriter file = new PrintWriter( new FileWriter("src/main/resources/"+filename+".json"))) {
                 file.write(jsonString);
                 file.close();
             }catch (IOException ex) {

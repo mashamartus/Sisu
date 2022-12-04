@@ -473,7 +473,7 @@ public class MainWindow {
     private final EventHandler<ActionEvent> writeDataEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
-            curStudent.exportDataToWorkstation();
+            curStudent.exportDataToWorkstation("studentCourses");
         }
     };
     
