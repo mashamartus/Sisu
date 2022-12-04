@@ -285,4 +285,50 @@ public class SisuHelperTest {
         assertEquals(results, programs.size());  
     }
 
+    /**
+     * Test of getJsonObjectFromApi method, of class SisuHelper.
+     */
+    @Test
+    public void testGetJsonObjectFromApi() {
+        System.out.println("getJsonObjectFromApi");
+        String urlString = "";
+        SisuHelper instance = new SisuHelper();
+        JsonObject expResult = null;
+        JsonObject result = instance.getJsonObjectFromApi(urlString);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of createCourse method, of class SisuHelper.
+     */
+    @Test
+    public void testCreateCourse() {
+        System.out.println("createCourse");
+        String groupId = "";
+        SisuHelper instance = new SisuHelper();
+        Course expResult = null;
+        Course result = instance.createCourse(groupId);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of importDataFromJson method, of class SisuHelper.
+     */
+    @Test
+    public void testImportDataFromJson() throws Exception {
+        System.out.println("importDataFromJson");
+        String filePath = "../Sisu/src/main/resources/studentCourses.json";
+                
+        SisuHelper instance = new SisuHelper();
+        //StudyModule expResult = null;
+        StudyModule result = instance.importDataFromJson(filePath);
+        assertEquals(true, true);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
 }

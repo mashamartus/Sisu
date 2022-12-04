@@ -277,7 +277,7 @@ public class Student implements iReadAndWriteToFile {
         json.addProperty("name", getStudentName());
         json.addProperty("id", getStudentID());
         json.addProperty("plan name", getPlanName());
-        json.addProperty("start yeat", getStartYear());
+        json.addProperty("start year", getStartYear());
         json.addProperty("degree program", getProgram().getNameEn());
         json.addProperty("degree program id", getProgram().getId());
         json.addProperty("total credits", getPlannedCredits());
