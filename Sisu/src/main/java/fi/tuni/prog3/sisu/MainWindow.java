@@ -29,6 +29,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
@@ -208,13 +209,7 @@ public class MainWindow {
         languageChoiceBox.getItems().addAll("en", "fi");
         languageChoiceBox.setValue("en");
                 // add a listener
-        languageChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue ov, Number value, Number new_value)
-            {
-                // set the text for the label to the selected item
-                if(new_value.toString().equals("en")){}
-            }
-        });
+        languageChoiceBox.getSelectionModel().selectedIndexProperty().addListener(changeCoursesToEn);
         
         ChoiceBox showTakenCoursesChoice = new ChoiceBox();
         showTakenCoursesChoice.getItems().addAll("Show all courses", 
@@ -469,6 +464,48 @@ public class MainWindow {
       }
     };
     
+    
+  
+    
+    // change the language of the courses
+    private final ChangeListener<Number> changeCoursesToEn = new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observableValue, Number number, Number new_value) {
+            System.out.println(new_value);
+            if(new_value.intValue() == 0){
+                System.out.println("Switch courses to en");
+                changeLanguage("en");
+            }
+            if(new_value.intValue() == 1){
+                System.out.println("Switch courses to fi");
+                changeLanguage("fi");
+            }
+        }
+    };
+    
+    private void changeLanguage(String language) 
+            throws IllegalArgumentException{
+        if(language.equals("en")){
+            for(HBox courseBox : allCourseBoxes.values()){
+                String courseId = courseBox.getId();
+                String courseEnName = allCourses.get(courseId).getNameEn();
+                ((Labeled)courseBox.getChildren().get(0)).setText(courseEnName);
+            }
+            return;
+        }
+        if(language.equals("fi")){
+            for(HBox courseBox : allCourseBoxes.values()){
+                String courseId = courseBox.getId();
+                String courseEnName = allCourses.get(courseId).getNameFi();
+                ((Labeled)courseBox.getChildren().get(0)).setText(courseEnName);
+            }
+        }
+        else{
+            throw new IllegalArgumentException();
+        }
+        
+    }
+    
     // export data to workstation from button press
     private final EventHandler<ActionEvent> writeDataEventHandler = new EventHandler<ActionEvent>(){
         @Override 
@@ -476,6 +513,10 @@ public class MainWindow {
             curStudent.exportDataToWorkstation();
         }
     };
+
+        private Exception IllegalArgumentException() {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
     
     
 }
