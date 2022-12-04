@@ -21,7 +21,7 @@ import java.util.HashMap;
  * 
  * 
  */
-public class Student implements iReadAndWriteToFile {
+public class Student {
     private String studentID;
     private String name;
     private String planName;
@@ -195,15 +195,10 @@ public class Student implements iReadAndWriteToFile {
     }
 
     
-    @Override
     public boolean readFromFile(String fileName) throws FileNotFoundException {
         return false;
     }
 
-    @Override
-    public boolean writeToFile(String fileName) throws IOException {
-        return false;
-    }
     
     /**
      * Return the amount of credits completed by student.
@@ -253,8 +248,7 @@ public class Student implements iReadAndWriteToFile {
     }
     
     /**
-     * To implement (may be another way of getting all program credits is 
-     * needed) - returns minimum amount of credits obligatory for student to 
+     * Returns minimum amount of credits obligatory for student to 
      * complete to graduate from the program
      * @return credit amount required by student program 
      */

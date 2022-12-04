@@ -9,7 +9,7 @@ import java.io.IOException;
  * TODO
  * Teacher class, this is an additional feature.
  */
-public class Teacher implements iAPI, iReadAndWriteToFile{
+public class Teacher implements iAPI{
     
     
     /**
@@ -22,12 +22,12 @@ public class Teacher implements iAPI, iReadAndWriteToFile{
         return null;
     }
 
-    @Override
+    //@Override
     public boolean readFromFile(String fileName) throws FileNotFoundException {
         return false;
     }
 
-    @Override
+   // @Override
     public boolean writeToFile(String fileName) throws IOException {
         return false;
     }

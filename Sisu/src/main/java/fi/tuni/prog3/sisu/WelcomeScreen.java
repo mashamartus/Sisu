@@ -70,6 +70,7 @@ public class WelcomeScreen {
         
     private VBox setWelcomeWindowLeft(){
         VBox box = new VBox();
+        box.setSpacing(15);
         box.setStyle("-fx-background-color: " + Constants.leftPanelColor);
         box.setAlignment(Pos.CENTER);
         box.setPrefWidth(220);
@@ -77,19 +78,24 @@ public class WelcomeScreen {
         
         File folder = new File("src/main/resources");
         ArrayList<String> filesNames = new ArrayList<>();
+        filesNames.add("Select plan");
         for(File file : folder.listFiles()){
-          if (file.isFile()) {
-            filesNames.add(file.getName());
+          if (file.isFile() && file.getName().contains(".json")) {
+            filesNames.add(file.getName().split(".json")[0]);
           } 
         }
         
         ChoiceBox<String> planChoiceBox = new ChoiceBox<>();
+        planChoiceBox.setStyle("-fx-background-color: " + Constants.rightPanelColor);
+        planChoiceBox.setValue("Select plan");
         planChoiceBox.getItems().addAll(filesNames);
         planChoiceBox.setValue("2023");
         planChoiceBox.setId("existingPlansNames");
         
         Button continueFromPastBtn = new Button();
-        continueFromPastBtn.setText("Continue from previous session");
+        continueFromPastBtn.setText("Use saved plan");
+        continueFromPastBtn.setMinWidth(100);
+        continueFromPastBtn.setMinHeight(40);
         continueFromPastBtn.setFont(new Font(16));
         continueFromPastBtn.setTextAlignment(TextAlignment.CENTER);
         continueFromPastBtn.wrapTextProperty().setValue(true);
@@ -112,6 +118,9 @@ public class WelcomeScreen {
             String fileName = choiceBox.getValue();
             try{
                 curStudent.readFromFile(fileName);
+                
+                
+                
             }
             catch(FileNotFoundException e){
                 System.out.println("ERROR: " + e.getMessage());
@@ -194,7 +203,7 @@ public class WelcomeScreen {
         
         
         Button goButton = new Button();
-        goButton.setText("Start planning");
+        goButton.setText("Create new plan");
         goButton.setOnAction(startPlanningEventHandler);
         goButton.setMinWidth(100);
         goButton.setMinHeight(40);
