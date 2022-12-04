@@ -193,10 +193,6 @@ public class Student implements iReadAndWriteToFile {
         courses.addAll(takenCourses.values());
         return courses;
     }
-    /* 
-    public HashMap<String, DegreeProgram> getDegreePrograms() {
-        return degreePrograms;
-    }*/
 
     
     @Override
@@ -296,10 +292,11 @@ public class Student implements iReadAndWriteToFile {
         }
 
         String jsonString = json.toString();
-
+            
             try (PrintWriter file = new PrintWriter( new FileWriter("src/main/resources/"+filename+".json"))) {
                 file.write(jsonString);
                 file.close();
+                System.out.println("Writing to file should be ok");
             }catch (IOException ex) {
                 System.out.println("error: " + ex.toString());
         }

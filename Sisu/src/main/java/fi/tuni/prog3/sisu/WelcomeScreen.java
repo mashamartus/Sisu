@@ -6,6 +6,8 @@ import static fi.tuni.prog3.sisu.Sisu.css;
 import static fi.tuni.prog3.sisu.Sisu.mainWindow;
 import static fi.tuni.prog3.sisu.Sisu.theStage;
 import static fi.tuni.prog3.sisu.Sisu.curStudent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +22,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -69,15 +74,62 @@ public class WelcomeScreen {
         box.setAlignment(Pos.CENTER);
         box.setPrefWidth(220);
         box.setPrefHeight(100);
+        
+        File folder = new File("src/main/resources");
+        ArrayList<String> filesNames = new ArrayList<>();
+        for(File file : folder.listFiles()){
+          if (file.isFile()) {
+            filesNames.add(file.getName());
+          } 
+        }
+        
+        ChoiceBox<String> planChoiceBox = new ChoiceBox<>();
+        planChoiceBox.getItems().addAll(filesNames);
+        planChoiceBox.setValue("2023");
+        planChoiceBox.setId("existingPlansNames");
+        
         Button continueFromPastBtn = new Button();
         continueFromPastBtn.setText("Continue from previous session");
         continueFromPastBtn.setFont(new Font(16));
         continueFromPastBtn.setTextAlignment(TextAlignment.CENTER);
         continueFromPastBtn.wrapTextProperty().setValue(true);
         continueFromPastBtn.setPrefWidth(150);
-        box.getChildren().add(continueFromPastBtn);
+        continueFromPastBtn.setOnAction(restoreSessionEventHandler);
+        box.getChildren().addAll(planChoiceBox, continueFromPastBtn);
         return box;
     }
+    
+    /**
+     * Actions when user wants to continue his previous session.
+     * Get data from the chosen previous session. 
+     */
+    public final EventHandler<ActionEvent> restoreSessionEventHandler = new EventHandler<ActionEvent>(){
+        @Override 
+        public void handle(ActionEvent btnPress) { 
+            
+            Scene scene = ((Node)btnPress.getTarget()).getScene();
+            ChoiceBox<String> choiceBox = (ChoiceBox<String>)scene.lookup("#existingPlansNames");
+            String fileName = choiceBox.getValue();
+            try{
+                curStudent.readFromFile(fileName);
+            }
+            catch(FileNotFoundException e){
+                System.out.println("ERROR: " + e.getMessage());
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Message Here...");
+                alert.setHeaderText("Look, an Information Dialog");
+                alert.setContentText("File " + fileName + "doesn't exist");
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        System.out.println("Pressed OK.");
+                    }
+                });
+            }
+            
+        }
+    };
+    
+    
     
     private VBox setWelcomeWindowRight(){
         VBox box = new VBox();
@@ -105,13 +157,8 @@ public class WelcomeScreen {
         //planNameField.setPrefWidth(200);
         grid.add(planNameField, 1, 1);
         
-        
         grid.setHgrow(planLabel, Priority.ALWAYS);
         grid.setHgrow(planNameField, Priority.ALWAYS);
-        
-        
-        
-        
         
         grid.add(new Label("Starting year"), 0, 2);
         ChoiceBox yearChoiceBox = new ChoiceBox();
@@ -157,19 +204,18 @@ public class WelcomeScreen {
                 Sisu.addVRegion(addSpace),  programLabel,  
                 degreeChoiceBox, Sisu.addVRegion(addSpace), goButton);
                 
-             
         return box;
     }
     
         
-    EventHandler<ActionEvent> startPlanningEventHandler = new EventHandler<ActionEvent>(){
+    final private EventHandler<ActionEvent> startPlanningEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
             System.out.println("Start planning button pressed");
             
             
             Stage stage = (Stage)((Node) btnPress.getTarget()).getScene().getWindow();
-            Scene scene = ((Button)btnPress.getTarget()).getScene();
+            Scene scene = ((Node)btnPress.getTarget()).getScene();
             try{
                 curStudent = new Student(((TextInputControl)scene.lookup("#studentName")).getText());
             }
@@ -189,7 +235,7 @@ public class WelcomeScreen {
                 .findFirst();
             Program selProgram = selProgramOpt.get();
             curStudent.setProgram(selProgram);
-            curStudent.setPlanName(((TextField)scene.lookup("#planName")).getText());
+            curStudent.setPlanName(((TextInputControl)scene.lookup("#planName")).getText());
             
             System.out.println(curStudent);
             
@@ -201,13 +247,13 @@ public class WelcomeScreen {
             //StudyModule.printModuleDetailed(studyModule,"");
             ScrollPane treeNode = (ScrollPane)mainWindow.lookup("#courseTree");
             treeNode.setContent(mw.handleModule(studyModule));
-            System.out.println("All courses:" + allCourses.keySet().toString());
             
-            stage.setScene(Sisu.mainWindow);
+            stage.setScene(mainWindow);
             stage.setMaximized(true);
-            Sisu.mainWindow.getRoot().requestFocus();
+            //Sisu.mainWindow.getRoot().requestFocus();
             
         }
     };
+    
     
 }

@@ -510,13 +510,12 @@ public class MainWindow {
     private final EventHandler<ActionEvent> writeDataEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
+            System.out.println("Trying to write to file");
+            String fileName = curStudent.getPlanName().replace(" ", "_") + ".json";
             curStudent.exportDataToWorkstation("studentCourses");
         }
     };
 
-        private Exception IllegalArgumentException() {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
     
     
 }

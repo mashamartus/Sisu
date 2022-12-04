@@ -1,0 +1,28 @@
+{
+    "name": null,
+    "id": "Student1",
+    "plan name": "MyPlan",
+    "start yeat": null,
+    "degree program": "Bachelor's Programme in Languages",
+    "degree program id": "otm-d8575e77-1ee3-48a6-b3c1-4acb30c146ce",
+    "total credits": 15,
+    "courses": [{
+            "name": "Genres in Context: Introduction to Literary and Cultural Analysis 2",
+            "id": "otm-56a3a094-949e-4ea7-89e1-e06bd12a737d",
+            "code": "KIE.ENA.140",
+            "credits": 5,
+            "grade": -1
+        }, {
+            "name": "Linguistic analysis 2",
+            "id": "otm-376cb93b-7bd8-451c-bc7e-e755b53ebcee",
+            "code": "KIE.ENA.120",
+            "credits": 5,
+            "grade": 4
+        }, {
+            "name": "Linguistic Analysis 1",
+            "id": "otm-82f464bd-78be-4008-b3f7-f9d8b0296f5d",
+            "code": "KIE.ENA.110",
+            "credits": 5,
+            "grade": -1
+        }]
+}
