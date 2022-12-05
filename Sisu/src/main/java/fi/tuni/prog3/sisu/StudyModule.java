@@ -153,6 +153,26 @@ public class StudyModule extends DegreeModule {
         }
     }
     
+    /**
+     * Return arrayList of all courses under this study module.
+     * @param module printed
+     * @param courses array list of courses. it is recursively filled
+     */
+    public static void getAllCourses(StudyModule module, ArrayList<Course> courses){
+        for(DegreeModule subModule : module.getStudyModulesAndCourses()){
+            if(subModule instanceof Course){
+                courses.add((Course)subModule);
+            }
+            else{
+                if(subModule instanceof StudyModule){
+                    getAllCourses((StudyModule)subModule, courses);
+                }
+                else{
+                    System.out.println("WRONG :( The submodule is neither of Course or StudyModule!");
+                }
+            }
+        }
+    }
     
     /**
      * Returns is study modules gradable

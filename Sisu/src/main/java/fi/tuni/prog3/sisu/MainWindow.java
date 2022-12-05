@@ -110,7 +110,7 @@ public class MainWindow {
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER_LEFT);
         // add plan name
-        Label planName = new Label(curStudent.getStudentName());
+        Label planName = new Label(curStudent.getStudentName() + "\n" + curStudent.getPlanName());
         planName.setStyle("-fx-font-size: 16pt ;");
         
         // add degree heading label
@@ -335,12 +335,29 @@ public class MainWindow {
         return box;
     }
     
-        
-    private void updateBlockHeading(TitledPane pane){
-        String oldHeading = pane.getText();
+    /**
+     * Idea was to update the chosen credits in the every module, but we
+     * don't have time to implement it properly.
+     * Now it updates only the specified module but not all where current is 
+     * a submodule
+     * @param moduleTitledPane titledpane object of corresponding module
+     * @param module StudyModule of corresponding module
+     */    
+    private void updateBlockHeading(TitledPane moduleTitledPane, StudyModule module){
+        System.out.println("Block heading updating");
+        String oldHeading = moduleTitledPane.getText();
         String moduleName = oldHeading.substring(0, oldHeading.lastIndexOf(" "));
-        pane.setText(moduleName + " 5/60");
+        int takenCredits = 0;
+        for(Course course : module.getCourses()){
+            if(curStudent.isCourseTaken(course.getId())){
+                takenCredits += course.getMinCredits();
+            }
+        }
+        String text = moduleName + " " + takenCredits + "/" + module.getMinCredits();
+        moduleTitledPane.setText(text);
     }
+    
+
     
     // button on the course is pressed. Open window for grading if needed 
     // and update Student data if course is pass/fail
@@ -374,12 +391,12 @@ public class MainWindow {
                 System.out.println("Course is ungradable");
                 btn.setText("Pass");
                 gradeLabel.setText("Pass");
-                updateProgress();
                 curStudent.gradeCourse(courseId, 1);
+                updateProgress();
             }
         }
     };
-    
+   /* 
     // button pressed in the grading window. if grade is correct it should 
     // add the grade to studentCourse and update course button
     EventHandler<ActionEvent> inputGradeEventHandler = new EventHandler<ActionEvent>(){
@@ -399,7 +416,7 @@ public class MainWindow {
             System.out.println("Looking up for " + courseId + "_grade");
             courseGradeBtn.setText(grade + "!");
         }
-    }; 
+    }; */
     
     // pressing take/drop course button
     private final EventHandler<ActionEvent> takeCourseEventHandler = new EventHandler<ActionEvent>(){
@@ -418,7 +435,7 @@ public class MainWindow {
                 courseBtn.getParent().setStyle("-fx-background-radius: 5 5 5 5; -fx-background-color: ffffff");
                 courseBtn.setText("Drop");
                 courseBtn.setPrefWidth(70);
-                updateBlockHeading((TitledPane)courseBtn.getParent().getParent().getParent().getParent());
+                //updateBlockHeading((TitledPane)courseBtn.getParent().getParent().getParent().getParent());
                 
                 Button putGradeBtn = new Button("Grade");
                 putGradeBtn.setPrefWidth(70);
@@ -427,6 +444,11 @@ public class MainWindow {
                 putGradeBtn.setId(courseId + "_grade");
                 putGradeBtn.setOnAction(gradeCourseEventHandler);
                 ((Pane)courseBtn.getParent()).getChildren().add(putGradeBtn);
+                
+                StudyModule module = allCourses.get(courseId).getParent();
+                TitledPane moduleTitledPane = (TitledPane)mainWindow.lookup("#" + module.getId());
+                updateBlockHeading(moduleTitledPane, module);
+                
                 
             }
             else{
