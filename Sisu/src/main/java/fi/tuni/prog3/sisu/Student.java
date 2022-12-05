@@ -276,15 +276,15 @@ public class Student {
         if(!getTakenCourses().isEmpty()){
              for(int i = 0; i<getTakenCourses().size(); i++){
                  JsonObject oneCourse = new JsonObject();
-                //oneCourse.addProperty("nameEn", getTakenCourses().get(i).getNameEn());
-                oneCourse.addProperty("nameFi", getTakenCourses().get(i).getNameFi());
-                oneCourse.addProperty("id", getTakenCourses().get(i).getId());
-                oneCourse.addProperty("groupId", getTakenCourses().get(i).getGroupId());
-                //oneCourse.addProperty("code", getTakenCourses().get(i).getCode());
-                //oneCourse.addProperty("credits", getTakenCourses().get(i).getMinCredits());
-                //oneCourse.addProperty("gradable", getTakenCourses().get(i).isGradable());
-                oneCourse.addProperty("grade", getTakenCourses().get(i).getGrade());
-                //oneCourse.addProperty("description", getTakenCourses().get(i).getDescription());
+                 oneCourse.addProperty("nameEn", getTakenCourses().get(i).getNameEn());
+                 oneCourse.addProperty("nameFi", getTakenCourses().get(i).getNameFi());
+                 oneCourse.addProperty("id", getTakenCourses().get(i).getId());
+                 oneCourse.addProperty("groupId", getTakenCourses().get(i).getGroupId());
+                 oneCourse.addProperty("code", getTakenCourses().get(i).getCode());
+                 oneCourse.addProperty("credits", getTakenCourses().get(i).getMinCredits());
+                 oneCourse.addProperty("gradable", getTakenCourses().get(i).isGradable());
+                 oneCourse.addProperty("grade", getTakenCourses().get(i).getGrade());
+                 oneCourse.addProperty("description", getTakenCourses().get(i).getDescription());
                 coursesCompleted.add(oneCourse);
              }
              json.add("courses", coursesCompleted);

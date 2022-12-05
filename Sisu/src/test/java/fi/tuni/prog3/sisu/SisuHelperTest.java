@@ -321,7 +321,7 @@ public class SisuHelperTest {
     @Test
     public void testImportDataFromJson() throws Exception {
         System.out.println("importDataFromJson");
-        String filePath = "../Sisu/src/main/resources/MyNewPlan.json";
+        String filePath = "../Sisu/src/main/resources/MyPlan.json";
                 
         SisuHelper instance = new SisuHelper();
         //StudyModule expResult = null;

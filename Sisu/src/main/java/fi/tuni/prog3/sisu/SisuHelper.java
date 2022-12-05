@@ -374,29 +374,29 @@ public class SisuHelper implements iAPI {
             
             Student newStudent = new Student(studentId);
             Program newProgram = new Program(nameEn, nameEn, nameFi, programGroupId, programCredits);
-            StudyModule newStudyModule = createStudyModule(programGroupId);
+            //StudyModule newStudyModule = createStudyModule(programGroupId);
             newStudent.setProgram(newProgram);
             newStudent.setPlanName(planName);
             
             for (int i=0; i<courses.size(); i++){
                 String idCourse = courses.get(i).getAsJsonObject().get("id").getAsString();
-                System.out.println("id: " + idCourse);
                 String groupIdCourse = courses.get(i).getAsJsonObject().get("groupId").getAsString();
-                System.out.println("groupIdCourse: " + groupIdCourse);
                 int gradeCourse = courses.get(i).getAsJsonObject().get("grade").getAsInt();
-                System.out.println("gradeCourse: " + gradeCourse);
                 
-                //String nameEnCourse = courses.get(i).getAsJsonObject().get("nameEn").getAsString();
+                String nameEnCourse = courses.get(i).getAsJsonObject().get("nameEn").getAsString();
                 String nameFiCourse  = courses.get(i).getAsJsonObject().get("nameFi").getAsString();
                 System.out.println(idCourse + " : " +nameFiCourse + " : " + gradeCourse);
-                /*String codeCourse = courses.get(i).getAsJsonObject().get("code").getAsString();
+                String codeCourse = courses.get(i).getAsJsonObject().get("code").getAsString();
                 int credits = courses.get(i).getAsJsonObject().get("credits").getAsInt();
                 boolean gradable = courses.get(i).getAsJsonObject().get("gradable").getAsBoolean();
-                int gradeCourse = courses.get(i).getAsJsonObject().get("grade").getAsInt();
                 String descriptionCourse = courses.get(i).getAsJsonObject().get("description").getAsString();
-                Course newCourse = new Course(nameEnCourse, nameFiCourse, idCourse, idCourse, credits, gradable, descriptionCourse, codeCourse);*/
-                newStudent.takeCourse(newStudyModule.getCourse(idCourse));
-                newStudent.gradeCourse(idCourse, gradeCourse);
+                Course newCourse = new Course(nameEnCourse, nameFiCourse, idCourse, groupIdCourse, credits, gradable, descriptionCourse, codeCourse);
+                newStudent.takeCourse(newCourse);
+                if(gradeCourse >= 0 && gradeCourse <= 5){
+                    newStudent.gradeCourse(idCourse, gradeCourse);
+                }
+
+                
             }
             return newStudent;
             
