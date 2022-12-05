@@ -223,7 +223,6 @@ public class Student {
         int sum = 0;
         int coursesAmount = 0;
         System.out.println("Taken courses");
-        this.printTakenCourses();
         for(StudentCourse course : this.getTakenCourses()){
             if(course.isCompleted() && course.isGradable() && (course.getGrade() != -1)){
                 coursesAmount += 1;

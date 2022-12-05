@@ -46,16 +46,14 @@ import javafx.stage.Stage;
  */
 public class WelcomeScreen {
     
-    ArrayList<Program> programList;
-    
     /**
-     * empty construct for welcomeScreen
+     * empty constructor for welcomeScreen
      */
     public WelcomeScreen() {
     }
     
     /**
-     * setWelcomeWindow
+     * Method sets the gui for welcome window
      * @return welcomeWindow
      */
     public Scene setWelcomeWindow(){
@@ -118,9 +116,6 @@ public class WelcomeScreen {
             String fileName = choiceBox.getValue();
             try{
                 curStudent.readFromFile(fileName);
-                
-                
-                
             }
             catch(FileNotFoundException e){
                 System.out.println("ERROR: " + e.getMessage());
@@ -138,7 +133,10 @@ public class WelcomeScreen {
         }
     };
     
-    
+    /**
+     * 
+     * @return 
+     */
     
     private VBox setWelcomeWindowRight(){
         VBox box = new VBox();
@@ -170,7 +168,7 @@ public class WelcomeScreen {
         grid.setHgrow(planNameField, Priority.ALWAYS);
         
         grid.add(new Label("Starting year"), 0, 2);
-        ChoiceBox yearChoiceBox = new ChoiceBox();
+        ChoiceBox<String> yearChoiceBox = new ChoiceBox<>();
         yearChoiceBox.getItems().addAll("2018","2019", "2020","2021","2022",
                 "2023","2024","2025","2026");
         yearChoiceBox.setValue("2023");
@@ -188,7 +186,7 @@ public class WelcomeScreen {
         grid.getColumnConstraints().add(col);
         
         Label programLabel = new Label("Choose your degree");
-        ChoiceBox degreeChoiceBox = new ChoiceBox();
+        ChoiceBox<String> degreeChoiceBox = new ChoiceBox<>();
         degreeChoiceBox.setId("degreeChoiceBox");
         //degreeChoiceBox.getItems().add("Please select a year");
         
@@ -232,12 +230,12 @@ public class WelcomeScreen {
                 System.out.println("failed to create new student");
                 System.out.println(e.getMessage());
             }
-            //curStudent.setName(((TextField)scene.lookup("#studentName")).getText());
+            curStudent.setName(((TextInputControl)scene.lookup("#studentName")).getText());
             
             
-            ChoiceBox degreeBox = (ChoiceBox)scene.lookup("#degreeChoiceBox");
+            ChoiceBox<String> degreeBox = (ChoiceBox<String>)scene.lookup("#degreeChoiceBox");
             SisuHelper sh = new SisuHelper();
-            String degreeName = degreeBox.getSelectionModel().getSelectedItem().toString();
+            String degreeName = degreeBox.getSelectionModel().getSelectedItem();
             System.out.println(degreeName);
             Optional<Program> selProgramOpt = sh.getAllPrograms(2022, "en").stream()
                 .filter(p -> p.getName().equals(degreeName))

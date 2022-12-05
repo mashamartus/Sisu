@@ -33,6 +33,7 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -77,8 +78,9 @@ public class MainWindow {
     }
     
     /**
-     * Create setMenu
-     * @return menuPane
+     * Create left side of the screen with program name, progress indicators 
+     * and menu buttons. 
+     * @return BorderPane for the left side of the screen. 
      */
     private BorderPane setMenuPane() {
         //Creating a BorderPane for the left side.
@@ -100,7 +102,8 @@ public class MainWindow {
     }
    
     /**
-     * Create headingPane
+     * Create heading at the menu left pane.
+     * It contains 
      * @return box
      */
     private VBox headingPane(){
@@ -209,7 +212,7 @@ public class MainWindow {
         languageChoiceBox.getItems().addAll("en", "fi");
         languageChoiceBox.setValue("en");
                 // add a listener
-        languageChoiceBox.getSelectionModel().selectedIndexProperty().addListener(changeCoursesToEn);
+        languageChoiceBox.getSelectionModel().selectedIndexProperty().addListener(changeCourseLanguage);
         
         ChoiceBox showTakenCoursesChoice = new ChoiceBox();
         showTakenCoursesChoice.getItems().addAll("Show all courses", 
@@ -226,7 +229,7 @@ public class MainWindow {
         scrollPane.setContent(treeStructure);
         scrollPane.setFitToWidth(true);
         scrollPane.setPadding(new Insets(20, 30, 0, 30));
-        scrollPane.setStyle("-fx-background-color: transparent");
+        scrollPane.setStyle("-fx-background-color: " + Constants.rightPanelColor);
         
         centerVBox.getChildren().addAll(headingBox, scrollPane);
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
@@ -269,7 +272,13 @@ public class MainWindow {
         }
     }   
     
-    
+    /**
+     * Setup a HBox which is single course row in the course table.
+     * Objects inside the HBox is addressed by the number further in app, 
+     * so check it before adding/deleting new children.
+     * @param course the Course object from which data are taken
+     * @return HBox - course row
+     */
     private HBox setSingleCourseBox(Course course){
         
         
@@ -291,14 +300,29 @@ public class MainWindow {
         Region region = new Region();
         box.setHgrow(region, Priority.ALWAYS);
 
+        VBox gradeSection = new VBox();
+        gradeSection.setAlignment(Pos.CENTER);
+        gradeSection.setPadding(new Insets(0, 15, 0, 5));
+        gradeSection.setPrefWidth(100);
+        Label grade = new Label("grade");
+        grade.setStyle("-fx-font-size:10;");
+        Label gradeLabel = new Label();
+        if(course.isGradable()){
+            gradeLabel.setText("1-5");
+        }
+        else {
+            gradeLabel.setText("Pass/fail");
+        }     
+        gradeSection.getChildren().addAll(grade, gradeLabel);
+        
         VBox creditSection = new VBox();
         creditSection.setAlignment(Pos.CENTER);
         creditSection.setPadding(new Insets(0, 15, 0, 5));
         Label cr = new Label("cr");
         cr.setStyle("-fx-font-size:10;");
         Label creditLabel = new Label(Integer.toString(course.getMinCredits()));
+        creditLabel.setId(course.getId() + "_grade_label");
         creditSection.getChildren().addAll(cr, creditLabel);
-
 
         Button addToMyCoursesBtn = new Button("Take course");
         addToMyCoursesBtn.setPrefWidth(150);
@@ -306,9 +330,7 @@ public class MainWindow {
         addToMyCoursesBtn.setOnAction(takeCourseEventHandler);
         addToMyCoursesBtn.setStyle( "-fx-background-color: " + Constants.courseButtonColor);
         
-        
-
-        box.getChildren().addAll(courseNameLabel, region, creditSection, 
+        box.getChildren().addAll(courseNameLabel, region, gradeSection, creditSection, 
                 addToMyCoursesBtn);
         return box;
     }
@@ -331,28 +353,31 @@ public class MainWindow {
             //String grade = ((TextInputControl)((Pane)btn.getParent()).getChildren().get(2)).getText();
             String courseId = btn.getId().split("_grade")[0];
             
+            VBox gradeSection = (VBox)(((Pane)btn.getParent()).getChildren().get(2));
+            Label gradeLabel = (Label)(gradeSection.getChildren().get(1));
+            gradeLabel.setStyle("-fx-font-weight: bold;");
+            
             if(allCourses.get(courseId).isGradable()){
-                final Stage dialog = new Stage();
-                dialog.initModality(Modality.APPLICATION_MODAL);
-                dialog.initOwner(theStage.getOwner());
-                VBox dialogVbox = new VBox(20);
-                dialogVbox.getChildren().add(new Text("Grade for course"));
-                TextField gradeField = new TextField();
-                Button gradeButton = new Button("Input grade");
-                gradeButton.setId(courseId + "_setGradeBtn");
-                gradeButton.setOnAction(inputGradeEventHandler);
-                dialogVbox.getChildren().addAll(gradeField, gradeButton);
-                Scene dialogScene = new Scene(dialogVbox, 300, 200);
-                dialog.setScene(dialogScene);
-                dialog.show();
+                TextInputDialog gradeDialog = new TextInputDialog("1");
+                gradeDialog.setHeaderText("Grade the course, 1-5");
+                gradeDialog.showAndWait();
+                String grade = gradeDialog.getEditor().getText();
+                System.out.println(grade);
+                curStudent.gradeCourse(courseId, Integer.parseInt(grade));
+                updateProgress();
+                
+                btn.setText("Pass");
+                gradeLabel.setText(grade);
+
             }
             else{
                 System.out.println("Course is ungradable");
-                btn.setText("Passed");
+                btn.setText("Pass");
+                gradeLabel.setText("Pass");
+                updateProgress();
+                curStudent.gradeCourse(courseId, 1);
             }
-            
         }
-    
     };
     
     // button pressed in the grading window. if grade is correct it should 
@@ -413,7 +438,7 @@ public class MainWindow {
                 courseBtn.getParent().setStyle("-fx-background-color: " + Constants.courseBoxColor);
                 courseBtn.setText("Take course");
                 courseBtn.setPrefWidth(150);
-                ((Pane)courseBtn.getParent()).getChildren().remove(((Pane)courseBtn.getParent()).getChildren().get(4));
+                ((Pane)courseBtn.getParent()).getChildren().remove(((Pane)courseBtn.getParent()).getChildren().get(5));
             }
         }
     };       
@@ -452,7 +477,6 @@ public class MainWindow {
         }
         else{
             System.out.println("hide untaken courses");
-            //curStudent.printTakenCourses();
             for(HBox courseBox : allCourseBoxes.values()){
                 String courseId = courseBox.getId();
                 System.out.println(allCourses.get(courseId).getName() + " -> " + courseId + curStudent.isCourseTaken(courseId));
@@ -468,7 +492,7 @@ public class MainWindow {
   
     
     // change the language of the courses
-    private final ChangeListener<Number> changeCoursesToEn = new ChangeListener<Number>() {
+    private final ChangeListener<Number> changeCourseLanguage = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observableValue, Number number, Number new_value) {
             System.out.println(new_value);
@@ -487,9 +511,12 @@ public class MainWindow {
             throws IllegalArgumentException{
         if(language.equals("en")){
             for(HBox courseBox : allCourseBoxes.values()){
+                System.out.println("\nCourse renaming to en");
                 String courseId = courseBox.getId();
                 String courseEnName = allCourses.get(courseId).getNameEn();
+                System.out.println(courseEnName);
                 ((Labeled)courseBox.getChildren().get(0)).setText(courseEnName);
+                System.out.println("Should be successful");
             }
             return;
         }
