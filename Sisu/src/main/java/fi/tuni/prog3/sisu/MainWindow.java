@@ -199,8 +199,39 @@ public class MainWindow {
     EventHandler<ActionEvent> goToWelcomeScreen = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
-            System.out.println("Back button pressed");
-            theStage.setScene(welcomeWindow);
+            Stage popupwindow=new Stage();
+            popupwindow.initModality(Modality.APPLICATION_MODAL);
+            popupwindow.setTitle("Starting over");
+            Label label1= new Label("Do you want to save your current plan with the name " + 
+                    curStudent.getPlanName() + " first?");
+            HBox buttonBox = new HBox();
+            buttonBox.setSpacing(20);
+            buttonBox.setAlignment(Pos.CENTER);
+            
+            Button saveBtn = new Button("Save");
+            saveBtn.addEventHandler(ActionEvent.ACTION, writeDataEventHandler);
+            saveBtn.setOnAction(e -> {
+                popupwindow.close();
+                theStage.setScene(welcomeWindow);
+            });
+            Button dontSaveBtn = new Button("Don't save");
+            dontSaveBtn.setOnAction(e -> {
+                popupwindow.close();
+                theStage.setScene(welcomeWindow);
+            });
+            Button cancelBtn = new Button("Cancel");
+            cancelBtn.setOnAction(e -> popupwindow.close());
+            
+            buttonBox.getChildren().addAll(saveBtn, dontSaveBtn, cancelBtn);
+            
+            VBox layout= new VBox(10);
+            layout.getChildren().addAll(label1, buttonBox);
+            layout.setAlignment(Pos.CENTER);
+            Scene scene1= new Scene(layout, 300, 250);
+            popupwindow.setScene(scene1);
+            popupwindow.showAndWait();
+       
+            
             
         }
     };    
@@ -517,9 +548,6 @@ public class MainWindow {
       }
     };
     
-    
-  
-    
     /**
      * Handles changing the language of the courses with switching the language
      * switch.
@@ -568,7 +596,6 @@ public class MainWindow {
         else{
             throw new IllegalArgumentException();
         }
-        
     }
     
     /**
@@ -578,8 +605,37 @@ public class MainWindow {
         @Override 
         public void handle(ActionEvent btnPress) { 
             System.out.println("Trying to write to file");
-            String fileName = curStudent.getPlanName().replace(" ", "_") ;
-            curStudent.exportDataToWorkstation(fileName);
+            
+            Stage popupwindow=new Stage();
+            popupwindow.initModality(Modality.APPLICATION_MODAL);
+            popupwindow.setTitle("Save the plan");
+            
+            Label label = new Label("Plan name:");
+            TextField planNameField = new TextField(curStudent.getPlanName());
+            
+            HBox buttonBox = new HBox();
+            buttonBox.setSpacing(20);
+            buttonBox.setAlignment(Pos.CENTER);
+            
+            Button saveBtn = new Button("Save");
+            saveBtn.setOnAction(e -> {
+                String fileName = planNameField.getText().replace(" ", "_");
+                curStudent.exportDataToWorkstation(fileName);
+                popupwindow.close();
+            });
+            Button cancelBtn = new Button("Cancel");
+            cancelBtn.setOnAction(e -> popupwindow.close());
+            
+            buttonBox.getChildren().addAll(saveBtn, cancelBtn);
+            
+            VBox layout= new VBox(10);
+            layout.getChildren().addAll(planNameField, label, buttonBox);
+            layout.setAlignment(Pos.CENTER);
+            Scene scene1= new Scene(layout, 300, 250);
+            
+            popupwindow.setScene(scene1);
+            popupwindow.showAndWait();
+       
         }
     };
 
