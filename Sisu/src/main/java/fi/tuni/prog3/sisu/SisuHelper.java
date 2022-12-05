@@ -308,6 +308,7 @@ public class SisuHelper implements iAPI {
                 description = newCourse.getAsJsonObject("content").get("fi").getAsString();
             }
         }
+        //System.out.println(groupId + " : " +findId(newCourse));
         return new Course(findNameEn(newCourse), findNameFi(newCourse), findId(newCourse), groupId, findCredits(newCourse), findIsGradable(newCourse), description, findCode(newCourse));
   
     }
@@ -359,30 +360,16 @@ public class SisuHelper implements iAPI {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             System.out.println(jsonObject);
 
-            // might need to check if the fields exists first.
-            //String nameFi = "";
-            //if(!jsonObject.get("name").isJsonNull()){
-            //    System.out.println("nulll");    
-            //}   
-           
-
             String studentId = jsonObject.get("id").getAsString();
-            System.out.println("id : " + studentId);
             String planName = jsonObject.get("plan name").getAsString();
-            System.out.println("plan Name : " + planName);
             int startYear = 2021;
             if(!jsonObject.get("start year").isJsonNull()){
                 startYear = jsonObject.get("start year").getAsInt();
             }
-            System.out.println("start year : " + startYear);
             String programGroupId = jsonObject.get("degree program id").getAsString();
-            System.out.println("degree program id: " + programGroupId);
             String nameFi = jsonObject.get("degree program fi").getAsString();
-            System.out.println("name fi: " + nameFi);
             String nameEn = jsonObject.get("degree program eng").getAsString();
-            System.out.println("name en: " + nameEn);
             int programCredits = jsonObject.get("total program credits").getAsInt();
-            System.out.println("programCredits: " + programCredits);
             JsonArray courses = jsonObject.get("courses").getAsJsonArray();
             
             Student newStudent = new Student(studentId);
@@ -393,10 +380,14 @@ public class SisuHelper implements iAPI {
             
             for (int i=0; i<courses.size(); i++){
                 String idCourse = courses.get(i).getAsJsonObject().get("id").getAsString();
+                System.out.println("id: " + idCourse);
+                String groupIdCourse = courses.get(i).getAsJsonObject().get("groupId").getAsString();
+                System.out.println("groupIdCourse: " + groupIdCourse);
                 int gradeCourse = courses.get(i).getAsJsonObject().get("grade").getAsInt();
+                System.out.println("gradeCourse: " + gradeCourse);
                 
-                String nameEnCourse = courses.get(i).getAsJsonObject().get("nameEn").getAsString();
-                String nameFiCourse  = courses.get(i).getAsJsonObject().get("NameFi").getAsString();
+                //String nameEnCourse = courses.get(i).getAsJsonObject().get("nameEn").getAsString();
+                String nameFiCourse  = courses.get(i).getAsJsonObject().get("nameFi").getAsString();
                 System.out.println(idCourse + " : " +nameFiCourse + " : " + gradeCourse);
                 /*String codeCourse = courses.get(i).getAsJsonObject().get("code").getAsString();
                 int credits = courses.get(i).getAsJsonObject().get("credits").getAsInt();
@@ -406,9 +397,6 @@ public class SisuHelper implements iAPI {
                 Course newCourse = new Course(nameEnCourse, nameFiCourse, idCourse, idCourse, credits, gradable, descriptionCourse, codeCourse);*/
                 newStudent.takeCourse(newStudyModule.getCourse(idCourse));
                 newStudent.gradeCourse(idCourse, gradeCourse);
-                //newStudent.
-               
-
             }
             return newStudent;
             
