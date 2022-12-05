@@ -394,29 +394,12 @@ public class MainWindow {
                 curStudent.gradeCourse(courseId, 1);
                 updateProgress();
             }
+            
+            ((Pane)btn.getParent()).getChildren().remove(((Pane)btn.getParent()).getChildren().get(4));
+            btn.setPrefWidth(150);
+            btn.setDisable(true);
         }
     };
-   /* 
-    // button pressed in the grading window. if grade is correct it should 
-    // add the grade to studentCourse and update course button
-    EventHandler<ActionEvent> inputGradeEventHandler = new EventHandler<ActionEvent>(){
-        @Override 
-        public void handle(ActionEvent btnPress) { 
-            Button putGradeBtn = (Button)btnPress.getSource();
-            String grade = ((TextInputControl)((Pane)putGradeBtn.getParent()).getChildren().get(1)).getText();
-            String courseId = putGradeBtn.getId().split("_setGradeBtn")[0];
-            curStudent.gradeCourse(courseId, Integer.parseInt(grade));
-            updateProgress();
-            ((Stage)putGradeBtn.getScene().getWindow()).close();
-            System.out.println("Average grade is " + curStudent.getAverageGrade());
-            
-            theStage.show();
-            System.out.println(mainWindow.lookup(courseId + "_grade"));
-            Button courseGradeBtn = (Button)mainWindow.lookup(courseId + "_grade");
-            System.out.println("Looking up for " + courseId + "_grade");
-            courseGradeBtn.setText(grade + "!");
-        }
-    }; */
     
     // pressing take/drop course button
     private final EventHandler<ActionEvent> takeCourseEventHandler = new EventHandler<ActionEvent>(){
