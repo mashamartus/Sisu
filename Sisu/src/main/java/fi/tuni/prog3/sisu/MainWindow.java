@@ -48,6 +48,9 @@ import javafx.stage.Stage;
 
 /**
  * Class contains methods for arranging the main window of the program.
+ * The main window contains list of courses and progress information. 
+ * Also here are stored event handlers for all the functionality connected
+ * with course picking, dropping and grading.
  * @author mariia
  */
 public class MainWindow {
@@ -127,8 +130,10 @@ public class MainWindow {
     }
     
     /**
-     * create progressPane
-     * @return box
+     * Setup progress section.
+     * It contains data about planned and completed credits, as well as average 
+     * grade. Also information about planned credits is present with a pie chart.
+     * @return VBox containing with info and chart
      */
     private VBox progressPane(){
         VBox box = new VBox();
@@ -154,8 +159,9 @@ public class MainWindow {
     }        
         
     /**
-     * create menuBottomPane
-     * @return box
+     * Setup menuBottomPane with action buttons.
+     * Buttons: write to file, return to the welcome window, quit the app.
+     * @return VBox with buttons
      */
     private VBox menuBottomPane(){
         VBox box = new VBox();
@@ -164,7 +170,7 @@ public class MainWindow {
         Button writeDataBtn = new Button("Write to file");
         writeDataBtn.setOnAction(writeDataEventHandler);
         
-        Button backToWelcomeScreen = new Button("Back");
+        Button backToWelcomeScreen = new Button("Start over");
         backToWelcomeScreen.setOnAction(goToWelcomeScreen);
         
         box.getChildren().addAll(writeDataBtn, addVRegion(15), 
@@ -187,6 +193,9 @@ public class MainWindow {
         return button;
     }
     
+    /**
+     * Opens the first window of the program.
+     */
     EventHandler<ActionEvent> goToWelcomeScreen = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
@@ -196,7 +205,11 @@ public class MainWindow {
         }
     };    
     
-    
+    /**
+     * Setups main section of the app - list of courses and filtering options.
+     * 
+     * @return VBox with filtering section and course tree in a scroll pane.
+     */
     private VBox getCenterVbox() {
         //Creating an HBox.
         
@@ -238,8 +251,11 @@ public class MainWindow {
     }
     
    /**
-    * Create tree structure of the course list
-    * @param module DegreeModule
+    * Create tree structure of the course list.
+    * Recursively creates the course tree structure with courses being inside 
+    * the tree of study modules. 
+    * @param module when calling from outside it meant be DegreeModule 
+    * containing the whole degree program. 
     * @return courseBox or titledBox
     */
     public Node handleModule(DegreeModule module){
@@ -274,14 +290,18 @@ public class MainWindow {
     
     /**
      * Setup a HBox which is single course row in the course table.
-     * Objects inside the HBox is addressed by the number further in app, 
-     * so check it before adding/deleting new children.
+     * Objects inside the HBox is addressed by its position number further in app, 
+     * so check it before adding/deleting new children. Pay attention that there
+     * is a region after the course name, when counting the position number 
+     * of the element.
      * @param course the Course object from which data are taken
      * @return HBox - course row
      */
     private HBox setSingleCourseBox(Course course){
         
-        
+        if(allCourses.containsKey(course.getId())){
+            System.out.println("There is a double:" + course.getNameEn());
+        }
         allCourses.put(course.getId(), course);
         
         HBox box = new HBox();
@@ -296,7 +316,6 @@ public class MainWindow {
         allCourseBoxes.put(course.getId(), box);
 
         Label courseNameLabel = new Label(course.getName());
-
         Region region = new Region();
         box.setHgrow(region, Priority.ALWAYS);
 
@@ -338,8 +357,8 @@ public class MainWindow {
     /**
      * Idea was to update the chosen credits in the every module, but we
      * don't have time to implement it properly.
-     * Now it updates only the specified module but not all where current is 
-     * a submodule
+     * Now it updates only the specified module but not all where current module  
+     * is a submodule
      * @param moduleTitledPane titledpane object of corresponding module
      * @param module StudyModule of corresponding module
      */    
@@ -358,9 +377,11 @@ public class MainWindow {
     }
     
 
-    
-    // button on the course is pressed. Open window for grading if needed 
-    // and update Student data if course is pass/fail
+    /**
+    * Handles the grade course button pressing. 
+    * Open window for grading if needed (if course is gradable) or just 
+    * signal that course is passed. And update Student data accordingly
+    */
     private final EventHandler<ActionEvent> gradeCourseEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
@@ -401,7 +422,9 @@ public class MainWindow {
         }
     };
     
-    // pressing take/drop course button
+    /** Handles pressing take/drop course button.
+     * 
+     */
     private final EventHandler<ActionEvent> takeCourseEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
@@ -449,9 +472,8 @@ public class MainWindow {
     };       
     
     /**
-     * updateProgress
+     * Updates progress in the left side of the window.
      */
-    //it gives an error beacause it can't find objects with lookup function
     public static void updateProgress(){
         
         ObservableList<PieChart.Data> pieChartData =
@@ -469,7 +491,9 @@ public class MainWindow {
         
     }
     
-    // hide/show untaken courses by the switch change
+    /** Handles hide/show untaken courses by the switch change.
+     * 
+     */
     private final ChangeListener<Number> courseVisibilityListener = new ChangeListener<Number>() {
       @Override
       public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
@@ -496,7 +520,10 @@ public class MainWindow {
     
   
     
-    // change the language of the courses
+    /**
+     * Handles changing the language of the courses with switching the language
+     * switch.
+     */
     private final ChangeListener<Number> changeCourseLanguage = new ChangeListener<Number>() {
         @Override
         public void changed(ObservableValue<? extends Number> observableValue, Number number, Number new_value) {
@@ -512,6 +539,12 @@ public class MainWindow {
         }
     };
     
+    /**
+     * Go through all course boxes from allCourseBoxes list and switch its 
+     * language.
+     * @param language en or fi
+     * @throws IllegalArgumentException is thrown if input is not en or fi
+     */
     private void changeLanguage(String language) 
             throws IllegalArgumentException{
         if(language.equals("en")){
@@ -538,7 +571,9 @@ public class MainWindow {
         
     }
     
-    // export data to workstation from button press
+    /**
+     * Handle write to file button with calling exportDataToWorkstation method.
+     */
     private final EventHandler<ActionEvent> writeDataEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
@@ -548,6 +583,4 @@ public class MainWindow {
         }
     };
 
-    
-    
 }
