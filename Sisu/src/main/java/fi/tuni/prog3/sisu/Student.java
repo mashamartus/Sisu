@@ -267,18 +267,23 @@ public class Student {
         json.addProperty("id", getStudentID());
         json.addProperty("plan name", getPlanName());
         json.addProperty("start year", getStartYear());
-        json.addProperty("degree program", getProgram().getNameEn());
+        json.addProperty("degree program eng", getProgram().getNameEn());
+        json.addProperty("degree program fi", getProgram().getNameFi());
         json.addProperty("degree program id", getProgram().getId());
-        json.addProperty("total credits", getPlannedCredits());
+        json.addProperty("total program credits", getProgram().getMinCredits());
+        json.addProperty("total planned credits", getPlannedCredits());
         JsonArray coursesCompleted = new JsonArray();
         if(!getTakenCourses().isEmpty()){
              for(int i = 0; i<getTakenCourses().size(); i++){
                  JsonObject oneCourse = new JsonObject();
-                oneCourse.addProperty("name", getTakenCourses().get(i).getName());
+                //oneCourse.addProperty("nameEn", getTakenCourses().get(i).getNameEn());
+                //oneCourse.addProperty("nameFi", getTakenCourses().get(i).getNameFi());
                 oneCourse.addProperty("id", getTakenCourses().get(i).getId());
-                oneCourse.addProperty("code", getTakenCourses().get(i).getCode());
-                oneCourse.addProperty("credits", getTakenCourses().get(i).getMinCredits());
+                //oneCourse.addProperty("code", getTakenCourses().get(i).getCode());
+                //oneCourse.addProperty("credits", getTakenCourses().get(i).getMinCredits());
+                //oneCourse.addProperty("gradable", getTakenCourses().get(i).isGradable());
                 oneCourse.addProperty("grade", getTakenCourses().get(i).getGrade());
+                //oneCourse.addProperty("description", getTakenCourses().get(i).getDescription());
                 coursesCompleted.add(oneCourse);
              }
              json.add("courses", coursesCompleted);

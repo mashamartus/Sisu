@@ -4,7 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
+import static fi.tuni.prog3.sisu.Sisu.allCourses;
+import static fi.tuni.prog3.sisu.Sisu.curStudent;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -351,26 +352,22 @@ public class SisuHelper implements iAPI {
      * @return DegreeProgram the generated DegreeProgram.
      */
     
-    public StudyModule importDataFromJson(String filePath) throws FileNotFoundException {
-        
-        String temp = "../Sisu/src/main/resources/studentCourses.json";
-        
+    public Student importDataFromJson(String filePath) throws FileNotFoundException {
+            
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-
             JsonElement jsonElement = JsonParser.parseReader(br);
-            //System.out.println(jsonElement);
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             System.out.println(jsonObject);
 
             // might need to check if the fields exists first.
-            String name = "";
-            if(!jsonObject.get("name").isJsonNull()){
-                System.out.println("nulll");
-                name = jsonObject.get("name").getAsString();
-            }   
-            System.out.println("name : " + name);
-            String id = jsonObject.get("id").getAsString();
-            System.out.println("id : " + id);
+            //String nameFi = "";
+            //if(!jsonObject.get("name").isJsonNull()){
+            //    System.out.println("nulll");    
+            //}   
+           
+
+            String studentId = jsonObject.get("id").getAsString();
+            System.out.println("id : " + studentId);
             String planName = jsonObject.get("plan name").getAsString();
             System.out.println("plan Name : " + planName);
             int startYear = 2021;
@@ -379,19 +376,41 @@ public class SisuHelper implements iAPI {
             }
             System.out.println("start year : " + startYear);
             String programGroupId = jsonObject.get("degree program id").getAsString();
-            System.out.println("degree program if: " + programGroupId);
+            System.out.println("degree program id: " + programGroupId);
+            String nameFi = jsonObject.get("degree program fi").getAsString();
+            System.out.println("name fi: " + nameFi);
+            String nameEn = jsonObject.get("degree program eng").getAsString();
+            System.out.println("name en: " + nameEn);
+            int programCredits = jsonObject.get("total program credits").getAsInt();
+            System.out.println("programCredits: " + programCredits);
             JsonArray courses = jsonObject.get("courses").getAsJsonArray();
             
-            
+            Student newStudent = new Student(studentId);
+            Program newProgram = new Program(nameEn, nameEn, nameFi, programGroupId, programCredits);
             StudyModule newStudyModule = createStudyModule(programGroupId);
+            newStudent.setProgram(newProgram);
+            newStudent.setPlanName(planName);
             
             for (int i=0; i<courses.size(); i++){
                 String idCourse = courses.get(i).getAsJsonObject().get("id").getAsString();
                 int gradeCourse = courses.get(i).getAsJsonObject().get("grade").getAsInt();
-                System.out.println(idCourse + " : " + gradeCourse);
+                
+                String nameEnCourse = courses.get(i).getAsJsonObject().get("nameEn").getAsString();
+                String nameFiCourse  = courses.get(i).getAsJsonObject().get("NameFi").getAsString();
+                System.out.println(idCourse + " : " +nameFiCourse + " : " + gradeCourse);
+                /*String codeCourse = courses.get(i).getAsJsonObject().get("code").getAsString();
+                int credits = courses.get(i).getAsJsonObject().get("credits").getAsInt();
+                boolean gradable = courses.get(i).getAsJsonObject().get("gradable").getAsBoolean();
+                int gradeCourse = courses.get(i).getAsJsonObject().get("grade").getAsInt();
+                String descriptionCourse = courses.get(i).getAsJsonObject().get("description").getAsString();
+                Course newCourse = new Course(nameEnCourse, nameFiCourse, idCourse, idCourse, credits, gradable, descriptionCourse, codeCourse);*/
+                newStudent.takeCourse(newStudyModule.getCourse(idCourse));
+                newStudent.gradeCourse(idCourse, gradeCourse);
+                //newStudent.
+               
 
             }
-            return newStudyModule;
+            return newStudent;
             
 
  

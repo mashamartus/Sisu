@@ -321,11 +321,11 @@ public class SisuHelperTest {
     @Test
     public void testImportDataFromJson() throws Exception {
         System.out.println("importDataFromJson");
-        String filePath = "../Sisu/src/main/resources/studentCourses.json";
+        String filePath = "../Sisu/src/main/resources/MaijaPlan.json";
                 
         SisuHelper instance = new SisuHelper();
         //StudyModule expResult = null;
-        StudyModule result = instance.importDataFromJson(filePath);
+        Student result = instance.importDataFromJson(filePath);
         assertEquals(true, true);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
