@@ -34,6 +34,7 @@ import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -257,7 +258,7 @@ public class WelcomeScreen {
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Warning");
                 alert.setHeaderText("Warning");
-                alert.setContentText("File " + fileName + "doesn't exist");
+                alert.setContentText("File " + fileName + " doesn't exist");
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
                         System.out.println("Pressed OK.");
@@ -279,6 +280,16 @@ public class WelcomeScreen {
             theStage.setScene(mainWindow);
             theStage.setMaximized(true);
             
+            for(StudentCourse course : curStudent.getTakenCourses()){
+                String courseId = course.getId();
+                HBox courseBox = (HBox)mainWindow.lookup("#" + courseId);
+                Button takeCourseBtn = (Button)courseBox.getChildren().get(4);
+                mw.takeCourseGui(courseId, takeCourseBtn);
+                Button gradeCourseBtn = (Button)courseBox.getChildren().get(5);
+                mw.gradeCourseGui(gradeCourseBtn, Integer.toString(course.getGrade()));
+            }
+            
+            MainWindow.updateProgress();
             
             
         }

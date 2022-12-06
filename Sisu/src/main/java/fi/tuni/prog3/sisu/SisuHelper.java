@@ -298,7 +298,7 @@ public class SisuHelper implements iAPI {
     public Course createCourse(String groupId) {
         String url = "https://sis-tuni.funidata.fi/kori/api/course-units/by-group-id?groupId="+groupId+"&universityId=tuni-university-root-id";
         JsonObject newCourse = getJsonObjectFromApi(url);
-        System.out.println("Course name: " + findNameFi(newCourse) + " : " + groupId);
+        //System.out.println("Course name: " + findNameFi(newCourse) + " : " + groupId);
         String description = "";
         if (!newCourse.get("content").isJsonNull()){
             JsonObject content = newCourse.getAsJsonObject("content");

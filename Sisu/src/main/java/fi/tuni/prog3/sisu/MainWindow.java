@@ -239,6 +239,9 @@ public class MainWindow {
      */
     private void goToWelcomeScreen(){
         theStage.setScene(welcomeWindow);
+        theStage.setX(600);
+        theStage.setY(400);
+        theStage.setMaximized(false);
         ChoiceBox<String> planChoiceBox = (ChoiceBox<String>)welcomeWindow.lookup("#existingPlansNames");
         WelcomeScreen.updateExistingPlansList(planChoiceBox);
     }
@@ -426,12 +429,8 @@ public class MainWindow {
             System.out.println("Grade course button pressed");
             Button btn = (Button)btnPress.getSource();
             System.out.println("button id is" + btn.getId());
-            //String grade = ((TextInputControl)((Pane)btn.getParent()).getChildren().get(2)).getText();
             String courseId = btn.getId().split("_grade")[0];
             
-            VBox gradeSection = (VBox)(((Pane)btn.getParent()).getChildren().get(2));
-            Label gradeLabel = (Label)(gradeSection.getChildren().get(1));
-            gradeLabel.setStyle("-fx-font-weight: bold;");
             
             if(allCourses.get(courseId).isGradable()){
                 TextInputDialog gradeDialog = new TextInputDialog("1");
@@ -442,23 +441,28 @@ public class MainWindow {
                 curStudent.gradeCourse(courseId, Integer.parseInt(grade));
                 updateProgress();
                 
-                btn.setText("Pass");
-                gradeLabel.setText(grade);
-
+                gradeCourseGui(btn, grade);
             }
             else{
                 System.out.println("Course is ungradable");
-                btn.setText("Pass");
-                gradeLabel.setText("Pass");
                 curStudent.gradeCourse(courseId, 1);
+                gradeCourseGui(btn, "Pass");
                 updateProgress();
             }
+            
+        }
+    };
+    
+    void gradeCourseGui(Button btn, String grade){
+            VBox gradeSection = (VBox)(((Pane)btn.getParent()).getChildren().get(2));
+            Label gradeLabel = (Label)(gradeSection.getChildren().get(1));
+            btn.setText("Pass");
+            gradeLabel.setText(grade);
             
             ((Pane)btn.getParent()).getChildren().remove(((Pane)btn.getParent()).getChildren().get(4));
             btn.setPrefWidth(150);
             btn.setDisable(true);
-        }
-    };
+    }
     
     /** Handles pressing take/drop course button.
      * 
@@ -495,7 +499,7 @@ public class MainWindow {
      * @param courseId ID of the course in hand
      * @param courseBtn take/drop course button
      */
-    private void takeCourseGui (String courseId, Button courseBtn){
+    void takeCourseGui (String courseId, Button courseBtn){
         //modify button layout
         courseBtn.getParent().setStyle("-fx-background-radius: 5 5 5 5; -fx-background-color: ffffff");
         courseBtn.setText("Drop");
