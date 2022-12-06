@@ -74,21 +74,13 @@ public class WelcomeScreen {
         box.setPrefWidth(220);
         box.setPrefHeight(100);
         
-        File folder = new File("src/main/resources");
-        ArrayList<String> filesNames = new ArrayList<>();
-        filesNames.add("Select plan");
-        for(File file : folder.listFiles()){
-          if (file.isFile() && file.getName().contains(".json")) {
-            filesNames.add(file.getName().split(".json")[0]);
-          } 
-        }
         
         ChoiceBox<String> planChoiceBox = new ChoiceBox<>();
         planChoiceBox.setStyle("-fx-background-color: " + Constants.rightPanelColor);
         planChoiceBox.setValue("Select plan");
-        planChoiceBox.getItems().addAll(filesNames);
         planChoiceBox.setValue("2023");
         planChoiceBox.setId("existingPlansNames");
+        updateExistingPlansList(planChoiceBox);
         
         Button continueFromPastBtn = new Button();
         continueFromPastBtn.setText("Use saved plan");
@@ -103,36 +95,20 @@ public class WelcomeScreen {
         return box;
     }
     
-    /**
-     * Actions when user wants to continue his previous session.
-     * Get data from the chosen previous session. 
-     */
-    public final EventHandler<ActionEvent> restoreSessionEventHandler = new EventHandler<ActionEvent>(){
-        @Override 
-        public void handle(ActionEvent btnPress) { 
-            
-            Scene scene = ((Node)btnPress.getTarget()).getScene();
-            ChoiceBox<String> choiceBox = (ChoiceBox<String>)scene.lookup("#existingPlansNames");
-            String fileName = choiceBox.getValue();
-            try{
-                curStudent.readFromFile(fileName);
-            }
-            catch(FileNotFoundException e){
-                System.out.println("ERROR: " + e.getMessage());
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Message Here...");
-                alert.setHeaderText("Look, an Information Dialog");
-                alert.setContentText("File " + fileName + "doesn't exist");
-                alert.showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.OK) {
-                        System.out.println("Pressed OK.");
-                    }
-                });
-            }
-            
+    static void updateExistingPlansList(ChoiceBox<String> plans){
+        plans.getItems().clear();
+        
+        File folder = new File("src/main/resources");
+        ArrayList<String> filesNames = new ArrayList<>();
+        filesNames.add("Select plan");
+        for(File file : folder.listFiles()){
+          if (file.isFile() && file.getName().contains(".json")) {
+            filesNames.add(file.getName().split(".json")[0]);
+          } 
         }
-    };
-    
+        plans.getItems().addAll(filesNames);
+    }
+   
     /**
      * 
      * @return 
@@ -232,7 +208,6 @@ public class WelcomeScreen {
             }
             curStudent.setName(((TextInputControl)scene.lookup("#studentName")).getText());
             
-            
             ChoiceBox<String> degreeBox = (ChoiceBox<String>)scene.lookup("#degreeChoiceBox");
             SisuHelper sh = new SisuHelper();
             String degreeName = degreeBox.getSelectionModel().getSelectedItem();
@@ -257,10 +232,56 @@ public class WelcomeScreen {
             
             stage.setScene(mainWindow);
             stage.setMaximized(true);
-            //Sisu.mainWindow.getRoot().requestFocus();
-            
         }
     };
     
+    /**
+     * Actions when user wants to continue his previous session.
+     * Get data from the chosen previous session. 
+     * If file not found gives alert info window and do nothing.
+     */
+    public final EventHandler<ActionEvent> restoreSessionEventHandler = new EventHandler<ActionEvent>(){
+        @Override 
+        public void handle(ActionEvent btnPress) { 
+            System.out.println("Starting from saved session");
+            Scene scene = ((Node)btnPress.getTarget()).getScene();
+            ChoiceBox<String> choiceBox = (ChoiceBox<String>)scene.lookup("#existingPlansNames");
+            String fileName = choiceBox.getValue();
+            SisuHelper sh = new SisuHelper();
+            //load the student
+            try{
+                curStudent = sh.importDataFromJson(fileName);
+            }
+            catch(FileNotFoundException e){
+                System.out.println("ERROR: " + e.getMessage());
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Warning");
+                alert.setHeaderText("Warning");
+                alert.setContentText("File " + fileName + "doesn't exist");
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        System.out.println("Pressed OK.");
+                    }
+                });
+                return;
+            }
+            
+            curStudent.printStudent();
+            //define main window
+            MainWindow mw = new MainWindow();
+            mainWindow = mw.setMainWindow();
+            
+            // load course tree
+            StudyModule studyModule = sh.createStudyModule(curStudent.getProgram().getId());
+            ScrollPane treeNode = (ScrollPane)mainWindow.lookup("#courseTree");
+            treeNode.setContent(mw.handleModule(studyModule));
+            
+            theStage.setScene(mainWindow);
+            theStage.setMaximized(true);
+            
+            
+            
+        }
+    };
     
 }

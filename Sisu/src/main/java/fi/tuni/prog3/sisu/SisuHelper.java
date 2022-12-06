@@ -353,8 +353,8 @@ public class SisuHelper implements iAPI {
      * @return DegreeProgram the generated DegreeProgram.
      */
     
-    public Student importDataFromJson(String filePath) throws FileNotFoundException {
-            
+    public Student importDataFromJson(String fileName) throws FileNotFoundException {
+        String filePath = "src/main/resources/"+fileName+".json";    
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             JsonElement jsonElement = JsonParser.parseReader(br);
             JsonObject jsonObject = jsonElement.getAsJsonObject();

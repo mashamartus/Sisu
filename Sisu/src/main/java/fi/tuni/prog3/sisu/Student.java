@@ -303,10 +303,23 @@ public class Student {
 
     @Override
     public String toString() {
-        return "Student{" + "studentID=" + studentID + ", planName=" + planName + 
-                ", startYear=" + startYear + ", program=" + program + ", takenCourses=" + takenCourses + '}';
+        String text = "Student: " + "studentID=" + studentID + ", \nplanName=" + planName + 
+                ", \nstartYear=" + startYear + ", \nprogram=" + program + ", \ntakenCourses=" + takenCourses + '}';
+        
+        return text;
     }
     
+    public void printStudent(){
+        System.out.println("Student:");
+        System.out.println("id: " + studentID);
+        System.out.println("Plan name: " + planName);
+        System.out.println("Program: " + program);
+        for(StudentCourse course : takenCourses.values()){
+            System.out.println("   Course: " + course.getNameEn());
+            System.out.println("      grade: " + course.getGrade() + " completed: " + course.isCompleted());
+        }
+        System.out.println();
+    }
     
     /**
      * printTakenCourses

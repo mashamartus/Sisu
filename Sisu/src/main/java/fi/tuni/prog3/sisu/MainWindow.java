@@ -171,7 +171,7 @@ public class MainWindow {
         writeDataBtn.setOnAction(writeDataEventHandler);
         
         Button backToWelcomeScreen = new Button("Start over");
-        backToWelcomeScreen.setOnAction(goToWelcomeScreen);
+        backToWelcomeScreen.setOnAction(goToWelcomeScreenEventHandler);
         
         box.getChildren().addAll(writeDataBtn, addVRegion(15), 
                 backToWelcomeScreen, addVRegion(15), getQuitButton());
@@ -196,7 +196,7 @@ public class MainWindow {
     /**
      * Opens the first window of the program.
      */
-    EventHandler<ActionEvent> goToWelcomeScreen = new EventHandler<ActionEvent>(){
+    EventHandler<ActionEvent> goToWelcomeScreenEventHandler = new EventHandler<ActionEvent>(){
         @Override 
         public void handle(ActionEvent btnPress) { 
             Stage popupwindow=new Stage();
@@ -212,12 +212,12 @@ public class MainWindow {
             saveBtn.addEventHandler(ActionEvent.ACTION, writeDataEventHandler);
             saveBtn.setOnAction(e -> {
                 popupwindow.close();
-                theStage.setScene(welcomeWindow);
+                goToWelcomeScreen();
             });
             Button dontSaveBtn = new Button("Don't save");
             dontSaveBtn.setOnAction(e -> {
                 popupwindow.close();
-                theStage.setScene(welcomeWindow);
+                goToWelcomeScreen();
             });
             Button cancelBtn = new Button("Cancel");
             cancelBtn.setOnAction(e -> popupwindow.close());
@@ -230,11 +230,18 @@ public class MainWindow {
             Scene scene1= new Scene(layout, 300, 250);
             popupwindow.setScene(scene1);
             popupwindow.showAndWait();
-       
-            
-            
         }
-    };    
+    };   
+    
+    /**
+     * Execute switching back to welcome screen.
+     * Also updates list of the saved plans.
+     */
+    private void goToWelcomeScreen(){
+        theStage.setScene(welcomeWindow);
+        ChoiceBox<String> planChoiceBox = (ChoiceBox<String>)welcomeWindow.lookup("#existingPlansNames");
+        WelcomeScreen.updateExistingPlansList(planChoiceBox);
+    }
     
     /**
      * Setups main section of the app - list of courses and filtering options.
@@ -467,26 +474,7 @@ public class MainWindow {
                 //add course
                 curStudent.takeCourse(allCourses.get(courseId));
                 updateProgress();
-                
-                //modify button layout
-                courseBtn.getParent().setStyle("-fx-background-radius: 5 5 5 5; -fx-background-color: ffffff");
-                courseBtn.setText("Drop");
-                courseBtn.setPrefWidth(70);
-                //updateBlockHeading((TitledPane)courseBtn.getParent().getParent().getParent().getParent());
-                
-                Button putGradeBtn = new Button("Grade");
-                putGradeBtn.setPrefWidth(70);
-                putGradeBtn.setStyle("-fx-background-radius: 5 5 5 5; -fx-background-color: " + 
-                        Constants.courseButtonColor);
-                putGradeBtn.setId(courseId + "_grade");
-                putGradeBtn.setOnAction(gradeCourseEventHandler);
-                ((Pane)courseBtn.getParent()).getChildren().add(putGradeBtn);
-                
-                StudyModule module = allCourses.get(courseId).getParent();
-                TitledPane moduleTitledPane = (TitledPane)mainWindow.lookup("#" + module.getId());
-                updateBlockHeading(moduleTitledPane, module);
-                
-                
+                takeCourseGui (courseId, courseBtn);
             }
             else{
                 //remove course
@@ -503,7 +491,32 @@ public class MainWindow {
     };       
     
     /**
+     * Modifies course box to looks like taken.
+     * @param courseId ID of the course in hand
+     * @param courseBtn take/drop course button
+     */
+    private void takeCourseGui (String courseId, Button courseBtn){
+        //modify button layout
+        courseBtn.getParent().setStyle("-fx-background-radius: 5 5 5 5; -fx-background-color: ffffff");
+        courseBtn.setText("Drop");
+        courseBtn.setPrefWidth(70);
+
+        Button putGradeBtn = new Button("Grade");
+        putGradeBtn.setPrefWidth(70);
+        putGradeBtn.setStyle("-fx-background-radius: 5 5 5 5; -fx-background-color: " + 
+                Constants.courseButtonColor);
+        putGradeBtn.setId(courseId + "_grade");
+        putGradeBtn.setOnAction(gradeCourseEventHandler);
+        ((Pane)courseBtn.getParent()).getChildren().add(putGradeBtn);
+
+        StudyModule module = allCourses.get(courseId).getParent();
+        TitledPane moduleTitledPane = (TitledPane)mainWindow.lookup("#" + module.getId());
+        updateBlockHeading(moduleTitledPane, module);
+    }
+    
+    /**
      * Updates progress in the left side of the window.
+     * 
      */
     public static void updateProgress(){
         
@@ -600,6 +613,9 @@ public class MainWindow {
     
     /**
      * Handle write to file button with calling exportDataToWorkstation method.
+     * Pop up window asking for plan name is opened. By defauld the student plan
+     * name is assumed. User can save the work or cancel the operation with 
+     * Cancel button.
      */
     private final EventHandler<ActionEvent> writeDataEventHandler = new EventHandler<ActionEvent>(){
         @Override 

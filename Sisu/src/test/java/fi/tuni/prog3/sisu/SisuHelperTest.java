@@ -326,6 +326,8 @@ public class SisuHelperTest {
         SisuHelper instance = new SisuHelper();
         //StudyModule expResult = null;
         Student result = instance.importDataFromJson(filePath);
+        System.out.println("Student: " + result.toString());
+        //result.printStudent();
         assertEquals(true, true);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
