@@ -20,11 +20,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
@@ -169,7 +171,7 @@ public class MainWindow {
         VBox box = new VBox();
         box.setAlignment(Pos.BOTTOM_LEFT);
         
-        Button writeDataBtn = new Button("Write to file");
+        Button writeDataBtn = new Button("Save the plan");
         writeDataBtn.setOnAction(writeDataEventHandler);
         
         Button backToWelcomeScreen = new Button("Start over");
@@ -189,6 +191,7 @@ public class MainWindow {
         Button button = new Button("Quit");
         
         //Adding an event to the button to terminate the application.
+        button.addEventHandler(ActionEvent.ACTION, writeDataEventHandler);
         button.setOnAction((ActionEvent event) -> {
             Platform.exit();
         });     
@@ -440,7 +443,8 @@ public class MainWindow {
                 Optional<String> result = gradeDialog.showAndWait();
                 System.out.println(result);
                 if (result.isPresent()) {
-                    if(StudentCourse.isValidGrade(result.get())){
+                    if(StudentCourse.isValidGrade(result.get()) && 
+                            !result.get().equals("Pass")){
                         String grade = gradeDialog.getEditor().getText();
                         curStudent.gradeCourse(courseId, grade);
                         updateProgress();
@@ -448,6 +452,15 @@ public class MainWindow {
                     }
                     else{
                         System.out.println("Values is not between 1 and 5");
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Warning");
+                        alert.setHeaderText("Warning");
+                        alert.setContentText("Grade should be a number between 1 and 5");
+                        alert.showAndWait().ifPresent(response -> {
+                            if (response == ButtonType.OK) {
+                                System.out.println("Pressed OK.");
+                            }
+                        });
                     }
                 }
             }
@@ -640,6 +653,7 @@ public class MainWindow {
             
             Label label = new Label("Plan name:");
             TextField planNameField = new TextField(curStudent.getPlanName());
+            planNameField.setAlignment(Pos.CENTER);
             
             HBox buttonBox = new HBox();
             buttonBox.setSpacing(20);
@@ -649,6 +663,7 @@ public class MainWindow {
             saveBtn.setOnAction(e -> {
                 String fileName = planNameField.getText().replace(" ", "_");
                 curStudent.exportDataToWorkstation(fileName);
+                curStudent.setPlanName(fileName);
                 popupwindow.close();
             });
             Button cancelBtn = new Button("Cancel");
@@ -657,7 +672,7 @@ public class MainWindow {
             buttonBox.getChildren().addAll(saveBtn, cancelBtn);
             
             VBox layout= new VBox(10);
-            layout.getChildren().addAll(planNameField, label, buttonBox);
+            layout.getChildren().addAll(label, planNameField, buttonBox);
             layout.setAlignment(Pos.CENTER);
             Scene scene1= new Scene(layout, 300, 250);
             

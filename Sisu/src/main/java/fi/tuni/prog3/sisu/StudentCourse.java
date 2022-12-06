@@ -45,7 +45,7 @@ public class StudentCourse extends Course{
     public static boolean isValidGrade(String grade){
         return grade.equals("0") || grade.equals("1") || grade.equals("2") || 
                 grade.equals("3") || grade.equals("4") || grade.equals("5") ||
-                grade.equals("Pass");
+                (grade.equals("Pass"));
     }
     
     /**
