@@ -286,7 +286,8 @@ public class WelcomeScreen {
                 Button takeCourseBtn = (Button)courseBox.getChildren().get(4);
                 mw.takeCourseGui(courseId, takeCourseBtn);
                 Button gradeCourseBtn = (Button)courseBox.getChildren().get(5);
-                mw.gradeCourseGui(gradeCourseBtn, Integer.toString(course.getGrade()));
+                //if(!course.isGradable() && )
+                mw.gradeCourseGui(gradeCourseBtn, course.getGrade());
             }
             
             MainWindow.updateProgress();

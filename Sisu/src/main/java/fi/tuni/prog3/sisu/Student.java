@@ -178,7 +178,7 @@ public class Student {
     * @param courseId course id
     * @param grade course grade
     */
-    public void gradeCourse(String courseId, int grade){
+    public void gradeCourse(String courseId, String grade){
         StudentCourse course = takenCourses.get(courseId);
         course.setCompleted(true);
         course.setGrade(grade);
@@ -224,9 +224,9 @@ public class Student {
         int coursesAmount = 0;
         System.out.println("Taken courses");
         for(StudentCourse course : this.getTakenCourses()){
-            if(course.isCompleted() && course.isGradable() && (course.getGrade() != -1)){
+            if(course.isCompleted() && course.isGradable() && (!course.getGrade().equals(""))){
                 coursesAmount += 1;
-                sum += course.getGrade();
+                sum += Integer.parseInt(course.getGrade());
             }
         }
         if(coursesAmount == 0) return 0;

@@ -7,7 +7,7 @@ package fi.tuni.prog3.sisu;
  * @author mariia
  */
 public class StudentCourse extends Course{
-    private int grade = -1;
+    private String grade = "";
     private boolean completed = false;
 
     
@@ -35,19 +35,24 @@ public class StudentCourse extends Course{
      * @param grade int grade between 0-5 accepted.
      * @throws IllegalArgumentException if the grade is invalid.
      */
-    public void setGrade(int grade) throws IllegalArgumentException {
-        if (grade >= 0 && grade <= 5) {
+    public void setGrade(String grade) throws IllegalArgumentException {
+        if (isValidGrade(grade)) {
             this.grade = grade;
         }
-        else throw new IllegalArgumentException(String.format("Trying set course grade to: %d", grade));
+        else throw new IllegalArgumentException(String.format("Trying set course grade to: %s", grade));
     }
-
+    
+    public static boolean isValidGrade(String grade){
+        return grade.equals("0") || grade.equals("1") || grade.equals("2") || 
+                grade.equals("3") || grade.equals("4") || grade.equals("5") ||
+                grade.equals("Pass");
+    }
     
     /**
      * Returns the grade given to course.
      * @return grade
      */
-    public int getGrade() {
+    public String getGrade() {
         return grade;
     }
     

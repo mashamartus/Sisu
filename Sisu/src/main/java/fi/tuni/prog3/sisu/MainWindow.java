@@ -11,6 +11,7 @@ import static fi.tuni.prog3.sisu.Sisu.allCourseBoxes;
 import static fi.tuni.prog3.sisu.Sisu.css;
 import static fi.tuni.prog3.sisu.Sisu.mainWindow;
 import java.util.ArrayList;
+import java.util.Optional;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,6 +26,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Dialog;
@@ -435,17 +437,23 @@ public class MainWindow {
             if(allCourses.get(courseId).isGradable()){
                 TextInputDialog gradeDialog = new TextInputDialog("1");
                 gradeDialog.setHeaderText("Grade the course, 1-5");
-                gradeDialog.showAndWait();
-                String grade = gradeDialog.getEditor().getText();
-                System.out.println(grade);
-                curStudent.gradeCourse(courseId, Integer.parseInt(grade));
-                updateProgress();
-                
-                gradeCourseGui(btn, grade);
+                Optional<String> result = gradeDialog.showAndWait();
+                System.out.println(result);
+                if (result.isPresent()) {
+                    if(StudentCourse.isValidGrade(result.get())){
+                        String grade = gradeDialog.getEditor().getText();
+                        curStudent.gradeCourse(courseId, grade);
+                        updateProgress();
+                        gradeCourseGui(btn, grade);
+                    }
+                    else{
+                        System.out.println("Values is not between 1 and 5");
+                    }
+                }
             }
             else{
                 System.out.println("Course is ungradable");
-                curStudent.gradeCourse(courseId, 1);
+                curStudent.gradeCourse(courseId, "Pass");
                 gradeCourseGui(btn, "Pass");
                 updateProgress();
             }

@@ -381,7 +381,7 @@ public class SisuHelper implements iAPI {
             for (int i=0; i<courses.size(); i++){
                 String idCourse = courses.get(i).getAsJsonObject().get("id").getAsString();
                 String groupIdCourse = courses.get(i).getAsJsonObject().get("groupId").getAsString();
-                int gradeCourse = courses.get(i).getAsJsonObject().get("grade").getAsInt();
+                String gradeCourse = courses.get(i).getAsJsonObject().get("grade").getAsString();
                 
                 String nameEnCourse = courses.get(i).getAsJsonObject().get("nameEn").getAsString();
                 String nameFiCourse  = courses.get(i).getAsJsonObject().get("nameFi").getAsString();
@@ -392,9 +392,7 @@ public class SisuHelper implements iAPI {
                 String descriptionCourse = courses.get(i).getAsJsonObject().get("description").getAsString();
                 Course newCourse = new Course(nameEnCourse, nameFiCourse, idCourse, groupIdCourse, credits, gradable, descriptionCourse, codeCourse);
                 newStudent.takeCourse(newCourse);
-                if(gradeCourse >= 0 && gradeCourse <= 5){
-                    newStudent.gradeCourse(idCourse, gradeCourse);
-                }
+                newStudent.gradeCourse(idCourse, gradeCourse);
 
                 
             }
